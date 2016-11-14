@@ -1,6 +1,6 @@
 import React from 'react';
 import Sidebar from './sidebar';
-
+import TextGraph from './text_graph';
 
 export default class HomePage extends React.Component {
   render() {
@@ -12,7 +12,7 @@ export default class HomePage extends React.Component {
             <Sidebar user={this.props.user}/>
             </div>
             <div className="col-md-9 main-app-canvas">
-              <img src="../img/main_mock_1.png" className="img-responsive" />
+            <TextGraph />
             </div>
           </div>
         </div>
