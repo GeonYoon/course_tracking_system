@@ -85,7 +85,9 @@ export function getFeedbackNum(fbnum){
 export function getFeedbackData(){
   return readDocumentCollection('feedback');
 }
-
+export function getCollectionData(collection_id){
+  return readDocumentCollection(collection_id);
+}
 export function getPageData(user){
   var userData = readDocument('users', user);
   var pageData = readDocument('savePage',userData.savedGraphs);
