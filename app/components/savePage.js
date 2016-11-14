@@ -25,17 +25,10 @@ export default class SavePages extends React.Component {
     return (
       <div className="container">
         <div className="row">
-          <div className="col-md-2 ">
+          <div className="col-md-4 ">
+
+    <div className="marginUpSide">
             <div className="sidebar">
-              <div className="form-group form-inline">
-                <label><p className="white-font">Sorted By:</p></label>
-                <br />
-                <select className="form-control" title="Choose one of the following...">
-                  <option>Saved Date</option>
-                  <option>Edited Date</option>
-                </select>
-                <button className="btn btn-default pull-right" type="button" ><span className="glyphicon glyphicon-ok"></span></button>
-              </div>
               <div className="input-group">
                 <input type="text"
                       className="form-control"
@@ -50,11 +43,11 @@ export default class SavePages extends React.Component {
                 </span>
               </div>
               <br />
-            </div>
           </div>
-          <div className="col-md-2">
+</div>
           </div>
-          <div className="col-md-7 main-body">
+
+          <div className="col-md-8 main-body">
             <div className="row bottom-space">
               {
                 filteredDAta.map((page,i) => {

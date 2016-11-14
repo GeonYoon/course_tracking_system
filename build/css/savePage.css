@@ -13,14 +13,16 @@ body {
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
   border:1px solid black;
-  margin-top: 20px;
+  margin-top: 90px;
+  margin-left: 20px;
   position: fixed;
   height:inherit;
   width:inherit;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
   padding-top: 20px;
-  padding-bottom: 20px;
+  padding-bottom: 60px;
+
 }
 
 .white-font{
@@ -64,6 +66,11 @@ body {
 .marginUp{
   margin-top: 40px;
 }
+
+.marginUpSide{
+  margin-top: 20px;
+}
+
 
 
 .box-line {
