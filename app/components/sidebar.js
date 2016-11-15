@@ -9,9 +9,13 @@ import {saveAGraph} from '../server.js';
 export default class Sidebar extends React.Component{
   constructor(props) {
     super(props);
-    this.state = {shown_majors: [], selcted_major: "select a major.."};
+    this.state = {shown_majors: [],
+                  shown_minors: [],
+                  selected_major: "select a major..",
+                  selected_minor: "select a minor.."
+    };
   }
-  addMajor(event){
+  addMajor(){
     var already_added = false;
       if (this.state.shown_majors.indexOf(this.state.selected_major) > -1){
         already_added = true;
@@ -23,6 +27,19 @@ export default class Sidebar extends React.Component{
   }
   updateSelectedMajor(event){
     this.setState({'selected_major': event.target.value});
+  }
+  addMinor(){
+    var already_added = false;
+      if (this.state.shown_minors.indexOf(this.state.selected_minor) > -1){
+        already_added = true;
+      }
+    if (!already_added  && !(this.state.selected_minor === "select a minor..")){
+      this.state.shown_minors.push(this.state.selected_minor);
+      this.setState({'selected_minors': this.state.shown_minors});
+    }
+  }
+  updateSelectedMinor(event){
+    this.setState({'selected_minor': event.target.value});
   }
   render(){
     var userInfo = getUserData(this.props.user);
@@ -51,7 +68,7 @@ export default class Sidebar extends React.Component{
         <div className="form-group form-inline">
           <label>Add a Minor:</label>
           <br />
-          <select className="form-control">
+          <select className="form-control" onChange={this.updateSelectedMinor.bind(this)}>
             <option>select a minor..</option>
               {userInfo.minors.map((majornum)=>{
                   return(
@@ -59,7 +76,7 @@ export default class Sidebar extends React.Component{
                   )
                 })}
           </select>
-            <button className="btn btn-default pull-right" type="button" ><span className="glyphicon glyphicon-plus"></span></button>
+            <button className="btn btn-default pull-right" type="button" onClick={this.addMinor.bind(this)}><span className="glyphicon glyphicon-plus"></span></button>
         </div>
 
         <div className="checkbox">
@@ -74,9 +91,14 @@ export default class Sidebar extends React.Component{
         Currently Showing: <br />
       {this.state.shown_majors.map((major)=>{
             return(
-              <p>{major}</p>
+              <p>{major} Major</p>
             )
           })}
+          {this.state.shown_minors.map((minor)=>{
+                return(
+                  <p>{minor} Minor</p>
+                )
+              })}
       </div>
       <hr />
 
