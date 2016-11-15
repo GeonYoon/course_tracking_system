@@ -88,7 +88,14 @@ export default class GraphHome extends React.Component {
      window.location.assign(("#/course/"+this.id()));
      //browserHistory.push('/course/'+this.id());//This is broken, not sure how to fix.
    });
-
+   this.cy.on('mouseover', 'node', function(event) {
+    var node = event.cyTarget;
+    node.style({'width': '120px', 'height':'120px'});
+});
+this.cy.on('mouseout', 'node', function(event) {
+ var node = event.cyTarget;
+ node.style({'width': '100px', 'height':'100px'});
+});
    //this.cy.png()
  }
  componentDidMount(){
