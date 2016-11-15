@@ -7,6 +7,23 @@ import {saveAGraph} from '../server.js';
 
 
 export default class Sidebar extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state = {shown_majors: [], selcted_major: "select a major.."};
+  }
+  addMajor(event){
+    var already_added = false;
+      if (this.state.shown_majors.indexOf(this.state.selected_major) > -1){
+        already_added = true;
+      }
+    if (!already_added  && !(this.state.selected_major === "select a major..")){
+      this.state.shown_majors.push(this.state.selected_major);
+      this.setState({'shown_majors': this.state.shown_majors});
+    }
+  }
+  updateSelectedMajor(event){
+    this.setState({'selected_major': event.target.value});
+  }
   render(){
     var userInfo = getUserData(this.props.user);
     return(
@@ -21,7 +38,7 @@ export default class Sidebar extends React.Component{
         <div className="form-group form-inline">
           <label>Add a Major:</label>
           <br />
-          <select className="form-control" title="Choose one of the following...">
+          <select className="form-control" title="Choose one of the following..." onChange={this.updateSelectedMajor.bind(this)}>
             <option>select a major..</option>
             {userInfo.majors.map((majornum)=>{
                 return(
@@ -29,7 +46,7 @@ export default class Sidebar extends React.Component{
                 )
               })}
           </select>
-            <button className="btn btn-default pull-right" type="button" ><span className="glyphicon glyphicon-plus"></span></button>
+            <button className="btn btn-default pull-right" type="button" onClick={this.addMajor.bind(this)}><span className="glyphicon glyphicon-plus"></span></button>
         </div>
         <div className="form-group form-inline">
           <label>Add a Minor:</label>
@@ -55,7 +72,11 @@ export default class Sidebar extends React.Component{
 
       <div className="settings-current">
         Currently Showing: <br />
-        Computer Science Major
+      {this.state.shown_majors.map((major)=>{
+            return(
+              <p>{major}</p>
+            )
+          })}
       </div>
       <hr />
 
@@ -66,7 +87,7 @@ export default class Sidebar extends React.Component{
         </button>
         <br />
         <button type="button" className="btn navbar-btn btn-default">
-          
+
           <a className="glyphicon glyphicon-save" href = "file.pdf" download> Download PDF</a>
         </button>
       </div>
