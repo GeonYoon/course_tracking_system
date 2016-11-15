@@ -1,5 +1,6 @@
 import React from 'react';
 import {getCourseData} from '../server'
+import {getUserData} from '../server'
 
 
 export default class CourseDetails extends React.Component{
@@ -14,6 +15,13 @@ export default class CourseDetails extends React.Component{
 
   var data = getCourseData(this.props.params.course);
   var prereqs = data.prereqs.map(course =>{getCourseData(course).number})
+  var takentext = "Eligible"
+  // console.log(this.props.params.course)
+  getUserData(1).classesTaken.map(course =>{
+    if(course == this.props.params.course){
+      takentext = "Taken"
+    }
+  })
 
     return(
       <div className = "container">
@@ -27,7 +35,7 @@ export default class CourseDetails extends React.Component{
                       <strong>{data.department + " " + data.number}:</strong> {data.name}
                     </h1>
                     <h4>
-                      <strong>Status:</strong> Eligible
+                      <strong>Status:</strong> {takentext}
                     </h4>
                   </div>
                   <div className = "media-right media-middle">
