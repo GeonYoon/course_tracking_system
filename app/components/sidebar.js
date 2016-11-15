@@ -79,12 +79,7 @@ export default class Sidebar extends React.Component{
             <button className="btn btn-default pull-right" type="button" onClick={this.addMinor.bind(this)}><span className="glyphicon glyphicon-plus"></span></button>
         </div>
 
-        <div className="checkbox">
-          <label><input type="checkbox" />Show Gen-ED Dependencies</label>
-        </div>
-        <div className="checkbox">
-          <label><input type="checkbox" value="" />Hide In-Elligible classNamees</label>
-        </div>
+      
       <hr />
 
       <div className="settings-current">

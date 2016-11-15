@@ -4,16 +4,16 @@ import Navbar from './components/navbar';
 import {IndexRoute,Router, Route, browserHistory } from 'react-router';
 import SavePages from './components/savePage';
 import HomePage from './components/home';
+import GraphHome from './components/hometwo';
 import AboutPage from './components/about';
 import ProfilePage from './components/profile';
 import CourseHistoryPage from './components/courseHistory';
 import CourseDetails from './components/coursedetails';
 
 class Home extends React.Component {
-
   render() {
     return (
-      <HomePage user={1} />
+      <GraphHome user={1}/>
     );
   }
 }

@@ -26,11 +26,11 @@ var initialData = {
   "majors":{
     "1":{
       "title": "Computer Science",
-      "courses":[1,2]
+      "courses":[1,2,3,4,5,6,7,8,9,10,11]
     },
     "2":{
-      "title": "Mathematics",
-      "courses":[]
+      "title": "Math",
+      "courses":[3,4]
     },
     "3":{
       "title": "Philosophy",
@@ -48,12 +48,60 @@ var initialData = {
       "name": "Programming Methodology",
       "department": "CS",
       "number": 220,
-      "prereqs": []
+      "prereqs": [5]
     },
     "3":{
       "name": "Calculus II",
       "department": "MATH",
       "number": 132,
+      "prereqs": [4]
+    },
+    "4":{
+      "name": "Calculus I",
+      "department": "MATH",
+      "number": 131,
+      "prereqs": []
+    },
+    "5":{
+      "name": "Programming with Data Structures",
+      "department": "CS",
+      "number": 187,
+      "prereqs": [6]
+    },
+    "6":{
+      "name": "Introduction to Problem Solving",
+      "department": "CS",
+      "number": 121,
+      "prereqs": []
+    },
+    "7":{
+      "name": "Reasoning Under Uncertainty",
+      "department": "CS",
+      "number": 240,
+      "prereqs": [5]
+    },
+    "8":{
+      "name": "Computer Systems Principles",
+      "department": "CS",
+      "number": 230,
+      "prereqs": [5]
+    },
+    "9":{
+      "name": "Introduction to Computation",
+      "department": "CS",
+      "number": 250,
+      "prereqs": [5]
+    },
+    "10":{
+      "name": "Algorithms",
+      "department": "CS",
+      "number": 311,
+      "prereqs": [9]
+    },
+    "11":{
+      "name": "CS Junior Year Writing",
+      "department": "CS",
+      "number": 305,
       "prereqs": []
     }
 },
