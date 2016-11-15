@@ -18,6 +18,10 @@ var initialData = {
       "email":"sone@umass.edu"
     }
   },
+  "accountData":{
+    "username": "sone@umass.edu",
+    "password": "Pasword1"
+  },
   "feedback":{
     "1":{
       "content": "first feedback"
