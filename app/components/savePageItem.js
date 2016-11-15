@@ -20,7 +20,7 @@ export default class SavePageItem extends React.Component {
         <button onClick={this.onClick.bind(this)} className="btn btn-default pull-left">{this.props.name}</button>
         <a className="pull-right">{this.props.time}</a>
         <br />
-        <hr className="black" />
+      
 
         {this.state.showReply &&
           <img className="img-responsive" src={"img/" + this.props.picture}  width="100%" />
