@@ -70,8 +70,15 @@ export function getUserData(user) {
   // invokes (calls) the "cb" function some time in the future.
   //emulateServerReturn(userData, cb);
 }
+export function getCollectionData(collection_id){
+  return readDocumentCollection(collection_id);
+}
 export function getMajorData(major){
   var majorData = readDocument('majors', major);
+  return majorData;
+}
+export function getCourseData(major){
+  var majorData = readDocument('courses', major);
   return majorData;
 }
 export function getMinorData(minor){
@@ -85,9 +92,7 @@ export function getFeedbackNum(fbnum){
 export function getFeedbackData(){
   return readDocumentCollection('feedback');
 }
-export function getCollectionData(collection_id){
-  return readDocumentCollection(collection_id);
-}
+
 export function getPageData(user){
   var userData = readDocument('users', user);
   var pageData = readDocument('savePage',userData.savedGraphs);

@@ -16,7 +16,13 @@ body {
   position: fixed;
 }
 
-
+.cy1 {
+    width: 700px;
+    height: 600px;
+    position: absolute;
+    top: 10px;
+    left: 10%;
+}
 
 .main-app-canvas{
   background-color: #FFFFFF;
