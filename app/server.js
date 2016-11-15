@@ -60,6 +60,7 @@ function getUserItemSync(userId) {
 export function getUserData(user) {
   // Get the User object with the id "user".
   var userData = readDocument('users', user);
+  emulateServerReturn(userData, (info)=>{info});
   return userData;
   // Get the Feed object for the user.
   // Map the Feed's FeedItem references to actual FeedItem objects.

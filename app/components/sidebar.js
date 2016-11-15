@@ -102,7 +102,7 @@ export default class Sidebar extends React.Component{
 
       <div className="btn-group" role="group">
 
-        <button type="button" className="btn navbar-btn btn-default" onClick={this.saveGraph.bind(this)}>
+        <button type="button" className="btn navbar-btn btn-default">
           <span className="glyphicon glyphicon-floppy-disk"> Save Progress</span>
         </button>
         <br />

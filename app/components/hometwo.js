@@ -4,7 +4,6 @@ import cytoscape from '../../build/js/cytoscape.js';
 import {getMajorData} from '../server.js';
 import {getUserData} from '../server.js';
 import {getCourseData} from '../server.js';
-import {browserHistory} from 'react-router';
 export default class GraphHome extends React.Component {
   constructor(props){
     super(props);
@@ -104,7 +103,7 @@ export default class GraphHome extends React.Component {
         <div className="container">
           <div className="row">
             <div className="col-md-3" id="side-bar">
-              <Sidebar user={this.props.user}/>
+              <Sidebar user={this.props.user} cyto={this.cy}/>
             </div>
             <div className="col-md-9 main-app-canvas">
               <div className="cy1" id="cy"/>
