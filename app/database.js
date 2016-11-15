@@ -16,7 +16,6 @@ var initialData = {
       "minors":[2],
       "gradDate":"May 2018",
       "email":"sone@umass.edu"
-
     }
   },
   "feedback":{
@@ -30,7 +29,7 @@ var initialData = {
       "courses":[1,2]
     },
     "2":{
-      "title": "Math",
+      "title": "Mathematics",
       "courses":[]
     },
     "3":{
