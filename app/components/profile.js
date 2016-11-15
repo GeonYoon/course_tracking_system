@@ -1,9 +1,32 @@
 import React from 'react';
 import {Link} from 'react-router';
-import {getUserData} from '../server';
+import {getUserData,getMajorData,getMinorData} from '../server';
 export default class Profile extends React.Component{
   render(){
     var userInfo = getUserData(1);
+
+
+    var strMaj = "";
+    for(var count = 0; count<userInfo.majors.length;count++){
+      var x = getMajorData(userInfo.majors[count]);
+      if(count==userInfo.majors.length-1){
+        strMaj +=x.title;
+      }else{
+      strMaj+= (x.title + ", ");
+      }
+    }
+    var strMin = "";
+    for(var ctr = 0; ctr<userInfo.minors.length;ctr++){
+      var y = getMinorData(userInfo.minors[ctr]);
+      if(ctr==userInfo.minors.length-1){
+        strMin +=y.title;
+      }else{
+        strMin+= (y.title + ", ");
+      }
+    }
+    // str+=(userInfo.majors[count] + " ");
+
+
     return(
       <div className="container">
         <div className="row">
@@ -30,9 +53,9 @@ export default class Profile extends React.Component{
             <p></p>
             <span className="data">{userInfo.sId}</span>
             <p></p>
-            <span className="data">Computer Science</span>
+            <span className="data">{strMaj}</span>
             <p></p>
-            <span className="data">Mathematics</span>
+            <span className="data">{strMin}</span>
             <p></p>
             <span className="data">{userInfo.gradDate}</span>
             <p></p>
