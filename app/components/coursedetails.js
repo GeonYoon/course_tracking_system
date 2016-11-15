@@ -14,14 +14,22 @@ export default class CourseDetails extends React.Component{
   render(){
 
   var data = getCourseData(this.props.params.course);
-  var prereqs = data.prereqs.map(course =>{getCourseData(course).number})
-  var takentext = "Eligible"
-  // console.log(this.props.params.course)
+  var prereqs = data.prereqs.map(course =>{
+    var info = getCourseData(course);
+    return (info.department + " " + info.number + ": " + info.name);
+  });
+
+  if (prereqs.length == 0){
+    prereqs = "None."
+  }
+
+  var takentext = "Ineligible"
+
   getUserData(1).classesTaken.map(course =>{
     if(course == this.props.params.course){
       takentext = "Taken"
     }
-  })
+  });
 
     return(
       <div className = "container">

@@ -10,13 +10,14 @@ var initialData = {
     "1":{
       "_id":1,
       "fullName": "Student One",
+      "classesTaken":[1,2,4,5,6],
       "sId":12345678,
       "savedGraphs":1,
       "majors":[1,3],
       "minors":[2],
       "gradDate":"May 2018",
-      "email":"sone@umass.edu",
-      "classesTaken":[1,2,4,5,6]
+      "email":"sone@umass.edu"
+
     }
   },
   "accountData":{
