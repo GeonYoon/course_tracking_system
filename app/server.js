@@ -43,10 +43,8 @@ function getUserItemSync(userId) {
   // Resolve 'like' counter.
   // feedItem.savedGraphs =
   // feedItem.savedGraphs.map((id) => readDocument('savePage', id));
-  feedItem.majors =
-  feedItem.majors.map((id) => readDocument('majors', id));
-  feedItem.minors =
-  feedItem.minors.map((id) => readDocument('majors', id));
+  feedItem.majors = feedItem.majors.map((id) => readDocument('majors', id));
+  feedItem.minors = feedItem.minors.map((id) => readDocument('majors', id));
   // Assuming a StatusUpdate. If we had other types of
   // FeedItems in the DB, we would
   // need to check the type and have logic for each type.
