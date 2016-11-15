@@ -19,6 +19,10 @@ var initialData = {
       "classesTaken":[1,2,4,5,6]
     }
   },
+  "accountData":{
+    "username": "sone@umass.edu",
+    "password": "Pasword1"
+  },
   "feedback":{
     "1":{
       "content": "first feedback"

@@ -94,6 +94,13 @@ export function getFeedbackNum(fbnum){
 export function getFeedbackData(){
   return readDocumentCollection('feedback');
 }
+// export function getPassword(accountNum){
+//   return readDocumentCollection('accountData',accountNum);
+// }
+// export function setPassword(password){
+//
+//   return password;
+// }
 
 export function getPageData(user){
   var userData = readDocument('users', user);
