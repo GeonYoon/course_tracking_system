@@ -26,6 +26,7 @@ var initialData = {
   },
   "feedback":{
     "1":{
+      "user": 1,
       "content": "first feedback"
     }
   },
