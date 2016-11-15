@@ -51,10 +51,9 @@ export default class Sidebar extends React.Component{
     return(
       <div className="main-app-settings main-app-border">
 
-        <button type="button" className="btn navbar-btn btn-default pull-right">
-          <span className="glyphicon glyphicon-arrow-left"> Settings Panel</span>
-        </button>
-        <br /><br />
+
+          <p id="settings-title"> Graph Settings </p>
+
         <hr />
 
         <div className="form-group form-inline">

@@ -12,6 +12,11 @@ body {
   color: #FFFFFF !important;
 }
 
+#settings-title {
+    text-align: center;
+}
+
+
 .main-app-border{
   padding: 10px;
   position: fixed;
