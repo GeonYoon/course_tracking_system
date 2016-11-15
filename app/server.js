@@ -18,8 +18,8 @@ export function saveAGraph(user, title){//will add more info like courses and st
     "name": title,
     "time": (new Date).getTime()
   };
-  var newNew = readDocument('savePage', readDocument('users',user).savedGraphs).push(newSaved)
-  writeDocument('savePage', newNew)
+  var newNew = readDocument('savePage', readDocument('users',user).savedGraphs)['pages'].push(newSaved);
+  writeDocument('savePage', newNew);
 }
 
 

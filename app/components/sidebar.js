@@ -15,6 +15,9 @@ export default class Sidebar extends React.Component{
                   selected_minor: "select a minor.."
     };
   }
+  saveGraph(){
+    saveAGraph(this.props.user);
+  }
   addMajor(){
     var already_added = false;
       if (this.state.shown_majors.indexOf(this.state.selected_major) > -1){
@@ -99,7 +102,7 @@ export default class Sidebar extends React.Component{
 
       <div className="btn-group" role="group">
 
-        <button type="button" className="btn navbar-btn btn-default">
+        <button type="button" className="btn navbar-btn btn-default" onClick={this.saveGraph.bind(this)}>
           <span className="glyphicon glyphicon-floppy-disk"> Save Progress</span>
         </button>
         <br />
