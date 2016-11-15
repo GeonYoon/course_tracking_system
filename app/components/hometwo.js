@@ -76,7 +76,9 @@ export default class GraphHome extends React.Component {
      name: 'breadthfirst'
    });
    this.cy.on('tap', 'node', function (evt) {
-     browserHistory.push('/course/'+evt.cyEvent.target.id);//This is broken, not sure how to fix.
+     //console.log(this.id())
+     window.location.assign(("#/course/"+this.id()));
+     //browserHistory.push('/course/'+this.id());//This is broken, not sure how to fix.
    });
 
 
