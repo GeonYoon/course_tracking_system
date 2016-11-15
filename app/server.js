@@ -4,6 +4,7 @@ import {readDocument, writeDocument, addDocument, readDocumentCollection} from '
 
 export function postFeedback(user, contents){
   var newFeedback = {
+    "user": user,
     "contents": contents
   };
   newFeedback = addDocument('feedback', newFeedback);

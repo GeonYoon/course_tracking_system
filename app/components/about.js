@@ -71,7 +71,7 @@ export default class AboutPage extends React.Component{
                     <h5 className="about-subtext"><a href="https://www.spire.umass.edu/">Spire</a></h5>
                     <h5 className="about-subtext"><a href="http://www.umass.edu/">UMass</a></h5>
                   <h2 className="about-title">Contact Us</h2>
-                    <FormSub />
+                    <FormSub user={this.props.user}/>
           </div>
         </div>
       </div>
