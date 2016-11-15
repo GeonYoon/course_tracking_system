@@ -1,14 +1,18 @@
 import React from 'react';
 // import FormSub from './formsubmit';
 import {getUserData} from '../server.js';
+import {getUserData2} from '../server.js';
 import {getMajorData} from '../server.js';
 import FormSub from './formsubmit';
 import {Link} from 'react-router';
 
 export default class AboutPage extends React.Component{
+  constructor(props){
+    super(props);
+  }
   render(){
-    var userInfo = getUserData(this.props.user);
-    return(
+    var userInfo = getUserData(this.props.user)
+        return(
       <div className="container">
         <div className="row">
           <div className="col-md-3">

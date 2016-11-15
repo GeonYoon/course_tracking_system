@@ -41,8 +41,8 @@ function emulateServerReturn(data, cb) {
 function getUserItemSync(userId) {
   var feedItem = readDocument('users', userId);
   // Resolve 'like' counter.
-  feedItem.savedGraphs =
-  feedItem.savedGraphs.map((id) => readDocument('savePage', id));
+  // feedItem.savedGraphs =
+  // feedItem.savedGraphs.map((id) => readDocument('savePage', id));
   feedItem.majors =
   feedItem.majors.map((id) => readDocument('majors', id));
   feedItem.minors =
@@ -66,11 +66,25 @@ export function getUserData(user) {
   // Map the Feed's FeedItem references to actual FeedItem objects.
   // Note: While map takes a callback function as an argument, it is
   // synchronous, not asynchronous. It calls the callback immediately.
-  //userData = userData.map(getUserItemSync);
+  // userData = userData.map(getUserItemSync);
   // Return FeedData with resolved references.
   // emulateServerReturn will emulate an asynchronous server operation, which
   // invokes (calls) the "cb" function some time in the future.
-  //emulateServerReturn(userData, cb);
+  // emulateServerReturn(userData, cb);
+}
+export function getUserData2(user, cb) {
+  // Get the User object with the id "user".
+  //var userData = readDocument('users', user);
+  //return userData;
+  // Get the Feed object for the user.
+  // Map the Feed's FeedItem references to actual FeedItem objects.
+  // Note: While map takes a callback function as an argument, it is
+  // synchronous, not asynchronous. It calls the callback immediately.
+  var userData = getUserItemSync(user);
+  // Return FeedData with resolved references.
+  // emulateServerReturn will emulate an asynchronous server operation, which
+  // invokes (calls) the "cb" function some time in the future.
+  emulateServerReturn(userData, cb);
 }
 export function getCollectionData(collection_id){
   return readDocumentCollection(collection_id);
