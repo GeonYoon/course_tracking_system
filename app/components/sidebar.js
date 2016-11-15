@@ -3,7 +3,7 @@ import {getUserData} from '../server.js';
 import {getMajorData} from '../server.js';
 import {getMinorData} from '../server.js';
 import {saveAGraph} from '../server.js';
-
+import {Link} from 'react-router';
 
 
 export default class Sidebar extends React.Component{
@@ -113,6 +113,7 @@ export default class Sidebar extends React.Component{
 
           <a className="glyphicon glyphicon-save" href = "file.pdf" download> Download PDF</a>
         </button>
+        <br />
       </div>
 
       </div>

@@ -4,6 +4,7 @@ import cytoscape from '../../build/js/cytoscape.js';
 import {getMajorData} from '../server.js';
 import {getUserData} from '../server.js';
 import {getCourseData} from '../server.js';
+import {Link} from 'react-router';
 export default class GraphHome extends React.Component {
   constructor(props){
     super(props);
@@ -106,6 +107,11 @@ export default class GraphHome extends React.Component {
               <Sidebar user={this.props.user} cyto={this.cy}/>
             </div>
             <div className="col-md-9 main-app-canvas">
+              <Link to={"/textgraph"}>
+              <button type="button" className="btn btn-default">
+                Go to text
+              </button>
+              </Link>
               <div className="cy1" id="cy"/>
             </div>
           </div>
