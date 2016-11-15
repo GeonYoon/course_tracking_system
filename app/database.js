@@ -44,69 +44,91 @@ var initialData = {
   "courses":{
     "1":{
       "name": "Web Programming",
+      "description": "THIS IS A DESCRIPTION",
       "department": "CS",
       "number": 326,
-      "prereqs": [2]
+      "prereqs": [2],
+      "textbooks": ["Web Programming for Nerds"]
     },
     "2":{
       "name": "Programming Methodology",
+      "description": "THIS IS A DESCRIPTION",
       "department": "CS",
       "number": 220,
-      "prereqs": [5]
+      "prereqs": [5],
+      "textbooks": ["Scala 4 Kidz"]
     },
     "3":{
       "name": "Calculus II",
+      "description": "THIS IS A DESCRIPTION",
       "department": "MATH",
       "number": 132,
-      "prereqs": [4]
+      "prereqs": [4],
+      "textbooks": ["INTEGRATE THIS"]
     },
     "4":{
       "name": "Calculus I",
+      "description": "THIS IS A DESCRIPTION",
       "department": "MATH",
       "number": 131,
-      "prereqs": []
+      "prereqs": [],
+      "textbooks": ["DERIVE THIS"]
     },
     "5":{
       "name": "Programming with Data Structures",
+      "description": "THIS IS A DESCRIPTION",
       "department": "CS",
       "number": 187,
-      "prereqs": [6]
+      "prereqs": [6],
+      "textbooks": ["How do i linked list?"]
     },
     "6":{
       "name": "Introduction to Problem Solving",
+      "description": "THIS IS A DESCRIPTION",
       "department": "CS",
       "number": 121,
-      "prereqs": []
+      "prereqs": [],
+      "textbooks": ["Gordon 'G Money' Anderson: A tour of Umass CS"]
     },
     "7":{
       "name": "Reasoning Under Uncertainty",
+      "description": "THIS IS A DESCRIPTION",
       "department": "CS",
       "number": 240,
-      "prereqs": [5]
+      "prereqs": [5],
+      "textbooks": ["Stats with Computers"]
     },
     "8":{
       "name": "Computer Systems Principles",
+      "description": "THIS IS A DESCRIPTION",
       "department": "CS",
       "number": 230,
-      "prereqs": [5]
+      "prereqs": [5],
+      "textbooks": ["C Compilers"]
     },
     "9":{
       "name": "Introduction to Computation",
+      "description": "THIS IS A DESCRIPTION",
       "department": "CS",
       "number": 250,
-      "prereqs": [5]
+      "prereqs": [5],
+      "textbooks": ["Computers are whack, yo"]
     },
     "10":{
       "name": "Algorithms",
+      "description": "THIS IS A DESCRIPTION",
       "department": "CS",
       "number": 311,
-      "prereqs": [9]
+      "prereqs": [9],
+      "textbooks": ["Algorithm Design"]
     },
     "11":{
       "name": "CS Junior Year Writing",
+      "description": "THIS IS A DESCRIPTION",
       "department": "CS",
       "number": 305,
-      "prereqs": []
+      "prereqs": [1],
+      "textbooks": ["none"]
     }
 },
 

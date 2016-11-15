@@ -1,9 +1,18 @@
 import React from 'react';
+import {Link} from 'react-router';
 
 export default class CourseHistory extends React.Component {
+
+
+
   render() {
     var placeCols = [];
-    for (var i = 0; i < 9; i++) {
+    placeCols.push(
+      <td>
+        <Link to={"/course/1"}>CS 326</Link>
+      </td>
+    );
+    for (var i = 1; i < 9; i++) {
       placeCols.push(
         <td>
           Placeholder

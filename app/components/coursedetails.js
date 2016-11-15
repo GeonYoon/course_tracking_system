@@ -1,8 +1,20 @@
 import React from 'react';
+import {getCourseData} from '../server'
 
 
 export default class CourseDetails extends React.Component{
+
+  constructor(props){
+    super(props);
+    this.state = props
+  }
+
+
   render(){
+
+  var data = getCourseData(this.props.params.course);
+  var prereqs = data.prereqs.map(course =>{getCourseData(course).number})
+
     return(
       <div className = "container">
         <div className = "row">
@@ -12,7 +24,7 @@ export default class CourseDetails extends React.Component{
                 <div className = "media">
                   <div className = "media-body">
                     <h1>
-                      <strong>CS {this.props.params.course}:</strong> Web Programming
+                      <strong>{data.department + " " + data.number}:</strong> {data.name}
                     </h1>
                     <h4>
                       <strong>Status:</strong> Eligible
@@ -26,11 +38,11 @@ export default class CourseDetails extends React.Component{
               <hr />
               <div className = "panel-body">
                 <h3>Description</h3>
-                <p>The World Wide Web was proposed originally as a collection of static documents inter-connected by hyperlinks. Today, the web has grown into a rich platform, built on a variety of protocols, standards, and programming languages, that aims to replace many of the services traditionally provided by a desktop operating system. Topics will include: producing dynamic content using a server-based language, content serving databases and XML documents, session state management, multi-tier web-based architectures, web security, and core technologies including HTTP, HTML5, CSS, JavaScript, and SQL will be emphasized. This course will also study concepts and technologies including AJAX, social networking, mashups, JavaScript libraries (e.g., jQuery), and web security. This course is hands-on and project-based; students will construct a substantial dynamic web application based on the concepts, technologies, and techniques presented during lecture. This course satisfies the IE Requirement. You must be a junior or senior to take this course. 3 credits.</p>
+                <p>{data.description}</p>
                 <h3>Textbooks</h3>
-                <p>This course does not require any books. Because of the ever changing nature of the web we will instead rely upon currently material that is freely available on the web including software documentation, blog posts, tutorials, etc. Links to the reading will be providing on a weekly basis.</p>
+                <p>{data.textbooks}</p>
                 <h3>Prerequisits</h3>
-                <p>Must be a Junior or Senior</p>
+                <p>{prereqs.toString()}</p>
                 <br />
                 <hr />
                 <div className = "col-md-3">

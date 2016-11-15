@@ -4,6 +4,7 @@ import cytoscape from '../../build/js/cytoscape.js';
 import {getMajorData} from '../server.js';
 import {getUserData} from '../server.js';
 import {getCourseData} from '../server.js';
+import {browserHistory} from 'react-router';
 
 export default class GraphHome extends React.Component {
 
@@ -75,7 +76,9 @@ export default class GraphHome extends React.Component {
      name: 'breadthfirst'
    });
    this.cy.on('tap', 'node', function (evt) {
-     console.log(evt.cyTarget.id())
+     //console.log(this.id())
+     window.location.assign(("#/course/"+this.id()));
+     //browserHistory.push('/course/'+this.id());//This is broken, not sure how to fix.
    });
 
 

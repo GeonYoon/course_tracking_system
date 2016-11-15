@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import Navbar from './components/navbar';
 import {IndexRoute,Router, Route, browserHistory } from 'react-router';
 import SavePages from './components/savePage';
-import HomePage from './components/home';
 import GraphHome from './components/hometwo';
 import AboutPage from './components/about';
 import ProfilePage from './components/profile';
@@ -50,14 +49,6 @@ class Profile extends React.Component {
   }
 }
 
-class Course extends React.Component {
-  render(){
-    return (
-      <CourseDetails course={1}/>
-    )
-  }
-}
-
 
 class App extends React.Component {
   render() {
@@ -78,7 +69,7 @@ ReactDOM.render((
       <Route path="/savepage" component={SavePage} />
       <Route path="/coursehistory" component={CourseHistory} />
       <Route path="/profile" component={Profile} />
-      <Route path = "/course/:course" component={Course} />
+      <Route path = "/course/:course" component={CourseDetails} />
     </Route>
   </Router>
 ),document.getElementById('app'));
