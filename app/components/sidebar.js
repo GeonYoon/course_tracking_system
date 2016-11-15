@@ -15,6 +15,9 @@ export default class Sidebar extends React.Component{
                   selected_minor: "select a minor.."
     };
   }
+  makePDF(){
+    return "./file.pdf";
+  }
   saveGraph(){
     saveAGraph(this.props.user);
   }
@@ -70,17 +73,17 @@ export default class Sidebar extends React.Component{
             <button className="btn btn-default pull-right" type="button" onClick={this.addMajor.bind(this)}><span className="glyphicon glyphicon-plus"></span></button>
 
         </div>
-        <div className="form-group form-inline">
+        <div className="form-group form-inline select-minor">
           <label>Add a Minor:</label>
           <br />
-          <select className="form-control" onChange={this.updateSelectedMinor.bind(this)}>
+          <span><select className="form-control" onChange={this.updateSelectedMinor.bind(this)}>
             <option>select a minor..</option>
               {userInfo.minors.map((majornum)=>{
                   return(
                     <option>{getMinorData(majornum).title}</option>
                   )
                 })}
-          </select>
+          </select></span>
             <button className="btn btn-default pull-right" type="button" onClick={this.addMinor.bind(this)}><span className="glyphicon glyphicon-plus"></span></button>
         </div>
 
@@ -110,7 +113,7 @@ export default class Sidebar extends React.Component{
         <br />
         <button type="button" className="btn navbar-btn btn-default">
 
-          <a className="glyphicon glyphicon-save" href = "file.pdf" download> Download PDF</a>
+          <a className="glyphicon glyphicon-save" href = {this.makePDF()} download="file.pdf"> Download PDF</a>
         </button>
         <br />
       </div>
