@@ -3,7 +3,7 @@ import {getUserData} from '../server.js';
 import {getMajorData} from '../server.js';
 import {getMinorData} from '../server.js';
 import {saveAGraph} from '../server.js';
-
+import {Link} from 'react-router';
 
 
 export default class Sidebar extends React.Component{
@@ -26,6 +26,8 @@ export default class Sidebar extends React.Component{
     if (!already_added  && !(this.state.selected_major === "select a major..")){
       this.state.shown_majors.push(this.state.selected_major);
       this.setState({'shown_majors': this.state.shown_majors});
+      //console.log(this.state.selected_major);
+      this.props.onShow(this.state.selected_major);
     }
   }
   updateSelectedMajor(event){
@@ -67,6 +69,7 @@ export default class Sidebar extends React.Component{
               })}
           </select>
             <button className="btn btn-default pull-right" type="button" onClick={this.addMajor.bind(this)}><span className="glyphicon glyphicon-plus"></span></button>
+
         </div>
         <div className="form-group form-inline">
           <label>Add a Minor:</label>
@@ -110,6 +113,7 @@ export default class Sidebar extends React.Component{
 
           <a className="glyphicon glyphicon-save" href = "file.pdf" download> Download PDF</a>
         </button>
+        <br />
       </div>
 
       </div>
