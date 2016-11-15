@@ -15,7 +15,8 @@ var initialData = {
       "majors":[1,3],
       "minors":[2],
       "gradDate":"May 2018",
-      "email":"sone@umass.edu"
+      "email":"sone@umass.edu",
+      "classesTaken":[1,2,4,5,6]
     }
   },
   "feedback":{
@@ -123,7 +124,7 @@ var initialData = {
       "description": "THIS IS A DESCRIPTION",
       "department": "CS",
       "number": 305,
-      "prereqs": [1],
+      "prereqs": [],
       "textbooks": ["none"]
     }
 },

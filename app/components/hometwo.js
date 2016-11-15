@@ -5,9 +5,7 @@ import {getMajorData} from '../server.js';
 import {getUserData} from '../server.js';
 import {getCourseData} from '../server.js';
 import {browserHistory} from 'react-router';
-
 export default class GraphHome extends React.Component {
-
   constructor(props){
     super(props);
     this.renderCytoscapeElement = this.renderCytoscapeElement.bind(this);
@@ -40,6 +38,11 @@ export default class GraphHome extends React.Component {
            'target-arrow-color': 'black',
            'curve-style': 'bezier'
          }
+       }, {
+         selector: 'node[take = "notTaken"]',
+         style: {
+           'background-color': '#aaa'
+         }
        }
      ],
      layout: {
@@ -50,8 +53,13 @@ export default class GraphHome extends React.Component {
    var userInfo = getUserData(this.props.user);
    userInfo.majors.map((maj)=>{
        getMajorData(maj).courses.map((course)=>{
+         var taken = (userInfo.classesTaken.indexOf(course) > -1)
+         var takentext = "notTaken"
+         if(taken){
+           takentext = "isTaken"
+         }
          this.cy.add({
-           data: {id: course, info: getCourseData(course).department + getCourseData(course).number}
+           data: {id: course, info: getCourseData(course).department + getCourseData(course).number, take: takentext}
          });
        })
        getMajorData(maj).courses.map((course)=>{
@@ -81,11 +89,14 @@ export default class GraphHome extends React.Component {
      //browserHistory.push('/course/'+this.id());//This is broken, not sure how to fix.
    });
 
-
+   //this.cy.png()
  }
  componentDidMount(){
        this.renderCytoscapeElement();
    }
+  //  saveAsPNG(){
+  //    this.cy.png();
+  //  }
 
   render() {
     return (

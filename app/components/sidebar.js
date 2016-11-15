@@ -79,7 +79,7 @@ export default class Sidebar extends React.Component{
             <button className="btn btn-default pull-right" type="button" onClick={this.addMinor.bind(this)}><span className="glyphicon glyphicon-plus"></span></button>
         </div>
 
-      
+
       <hr />
 
       <div className="settings-current">
