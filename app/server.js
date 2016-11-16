@@ -20,15 +20,15 @@ export function saveAGraph(user){//will add more info like courses and stuff
     "time": (new Date).getTime(),
     "image":"main_mock_1.png"
   };
-  console.log(readDocument('savePage', readDocument('users',user).savedGraphs)['pages']);
   var newNew = readDocument('savePage', readDocument('users',user).savedGraphs);
   newNew['pages'].push(newSaved);
   writeDocument('savePage', newNew);
-  console.log(newNew._id);
-  console.log(readDocument('savePage', readDocument('users',user).savedGraphs)['pages']);
+  alert("Graph saved, check 'Save Pages' to view your saved graph!");
 }
 
-
+export function unixTimeToString(time) {
+  return new Date(time).toLocaleString();
+}
 
 /**
  * Emulates how a REST call is *asynchronous* -- it calls your function back
@@ -39,7 +39,24 @@ function emulateServerReturn(data, cb) {
     cb(data);
   }, 4);
 }
-
+function getCourseItemSync(courseId){
+  var courseItem = readDocument('courses', courseId);
+  courseItem.prereqs = courseItem.prereqs.map((id) => readDocument('courses', id));
+  return courseItem;
+}
+function getCourseData2(course, cb){
+  var courseData = getCourseItemSync(course)
+  emulateServerReturn(courseData, cb)
+}
+function getMajorItemSync(majorId){
+  var majorItem = readDocument('majors', majorId);
+  majorItem.courses = majorItem.courses.map((id) => readDocument('courses', id));
+  return majorItem;
+}
+function getMajorData2(major, cb){
+  var majorData = getMajorItemSync(major)
+  emulateServerReturn(majorData, cb)
+}
 /**
 * Given a feed item ID, returns a FeedItem object with references resolved.
 * Internal to the server, since it's synchronous.
@@ -52,6 +69,11 @@ function getUserItemSync(userId) {
   //console.log('yo')
   feedItem.majors = feedItem.majors.map((id) => readDocument('majors', id));
   feedItem.minors = feedItem.minors.map((id) => readDocument('majors', id));
+  // feedItem.majors = feedItem.majors.map((maj) =>{
+  //   maj.courses.map((courseNum) =>{
+  //     readDocument('')
+  //   })
+  // })
   // Assuming a StatusUpdate. If we had other types of
   // FeedItems in the DB, we would
   // need to check the type and have logic for each type.

@@ -1,28 +1,44 @@
 import React from 'react';
 import {Link} from 'react-router';
-import {getUserData,getMajorData,getMinorData,getPassword,setPassword} from '../server';
+import {getUserData,getMajorData,getMinorData,getPassword,setPassword,emulateServerReturn} from '../server';
 export default class Profile extends React.Component{
+  constructor(props){
+    super(props);
+    this.state = {users: 1};
+  }
+  getData(user){
+    getUserData(user, (info) => {
+      this.setState(info);
+    });
+  }
+  componentDidMount(){
+    this.getData(this.state.users);
+  }
   render(){
-    var userInfo = getUserData(1);
     var strMaj = "";
     var strMin = "";
-    for(var count = 0; count<userInfo.majors.length;count++){
-      var x = getMajorData(userInfo.majors[count]);
-      if(count===userInfo.majors.length-1){
+    console.log(this.state.majors);
+
+if(typeof this.state.majors != 'undefined'){
+  console.log("loop");
+    for(var count = 0; count<this.state.majors.length;count++){
+      var x = getMajorData(this.state.majors[count]);
+      if(count===this.state.majors.length-1){
         strMaj +=x.title;
       }else{
       strMaj+= (x.title + ", ");
       }
     }
-    for(var ctr = 0; ctr<userInfo.minors.length;ctr++){
-      var y = getMinorData(userInfo.minors[ctr]);
-      if(ctr===userInfo.minors.length-1){
+    for(var ctr = 0; ctr<this.state.minors.length;ctr++){
+      var y = getMinorData(this.state.minors[ctr]);
+      if(ctr===this.state.minors.length-1){
         strMin +=y.title;
       }else{
         strMin+= (y.title + ", ");
       }
     }
-
+}
+console.log("Success?");
     // var e = document.getElementById('pwrd-btn');
     // e.onclick = function(){
     //   var pw1 = document.getElementById('old-pwrd').value;
@@ -40,7 +56,7 @@ export default class Profile extends React.Component{
       <div className="container">
         <div className="row">
           <div className="col-xs-4">
-            <img className="pic" src="../img/profile.jpeg" alt="profile image" />
+            <img className="pic" src="../img/profile1.jpeg" alt="profile image" />
           </div>
           <div className="col-xs-2 main-bdy">
             <span className="category">Full Name: </span>
@@ -57,18 +73,18 @@ export default class Profile extends React.Component{
             <p></p>
             <hr />
           </div>
-          <div className="col-xs-3 main-bdy2">
-            <span className="data">{userInfo.fullName}</span>
+          <div className="col-xs-4 main-bdy2">
+            <span className="data">{this.state.fullName}</span>
             <p></p>
-            <span className="data">{userInfo.sId}</span>
+            <span className="data">{this.state.sId}</span>
             <p></p>
             <span className="data">{strMaj}</span>
             <p></p>
             <span className="data">{strMin}</span>
             <p></p>
-            <span className="data">{userInfo.gradDate}</span>
+            <span className="data">{this.state.gradDate}</span>
             <p></p>
-            <span className="data">{userInfo.email}</span>
+            <span className="data">{this.state.email}</span>
             <p></p>
             <hr />
           </div>
