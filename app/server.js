@@ -41,7 +41,7 @@ function emulateServerReturn(data, cb) {
 }
 function getCourseItemSync(courseId){
   var courseItem = readDocument('courses', courseId);
-  courseItem.prereqs = courseItem.prereqs.map((id) => readDocument('courses', id));
+  courseItem.prereqs = courseItem.prereqs.map((id) => getCourseItemSync(id));
   return courseItem;
 }
 function getCourseData2(course, cb){
@@ -50,7 +50,7 @@ function getCourseData2(course, cb){
 }
 function getMajorItemSync(majorId){
   var majorItem = readDocument('majors', majorId);
-  majorItem.courses = majorItem.courses.map((id) => readDocument('courses', id));
+  majorItem.courses = majorItem.courses.map((id) => getCourseItemSync(id));
   return majorItem;
 }
 function getMajorData2(major, cb){
@@ -67,8 +67,8 @@ function getUserItemSync(userId) {
   // feedItem.savedGraphs =
   // feedItem.savedGraphs.map((id) => readDocument('savePage', id));
   //console.log('yo')
-  feedItem.majors = feedItem.majors.map((id) => readDocument('majors', id));
-  feedItem.minors = feedItem.minors.map((id) => readDocument('majors', id));
+  feedItem.majors = feedItem.majors.map((id) => getMajorItemSync(id));
+  feedItem.minors = feedItem.minors.map((id) => getMajorItemSync(id));
   // feedItem.majors = feedItem.majors.map((maj) =>{
   //   maj.courses.map((courseNum) =>{
   //     readDocument('')
