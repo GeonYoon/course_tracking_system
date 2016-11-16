@@ -20,12 +20,10 @@ export function saveAGraph(user){//will add more info like courses and stuff
     "time": (new Date).getTime(),
     "image":"main_mock_1.png"
   };
-  console.log(readDocument('savePage', readDocument('users',user).savedGraphs)['pages']);
   var newNew = readDocument('savePage', readDocument('users',user).savedGraphs);
   newNew['pages'].push(newSaved);
   writeDocument('savePage', newNew);
-  console.log(newNew._id);
-  console.log(readDocument('savePage', readDocument('users',user).savedGraphs)['pages']);
+
 }
 
 

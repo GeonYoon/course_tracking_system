@@ -20,7 +20,7 @@ export default class AboutPage extends React.Component{
     this.refresh();
   }
   render(){
-    // var userInfo = getUserData(this.props.user)
+    var userInfo = getUserData(this.props.user)
     return(
       <div className="container">
         <div className="row">
