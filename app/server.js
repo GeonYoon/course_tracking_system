@@ -14,13 +14,18 @@ export function postFeedback(user, contents){
   //emulateServerReturn(newFeedback);
 }
 
-export function saveAGraph(user, title){//will add more info like courses and stuff
+export function saveAGraph(user){//will add more info like courses and stuff
   var newSaved = {
-    "name": title,
-    "time": (new Date).getTime()
+    "name": "default",
+    "time": (new Date).getTime(),
+    "image":"main_mock_1.png"
   };
-  var newNew = readDocument('savePage', readDocument('users',user).savedGraphs)['pages'].push(newSaved);
+  console.log(readDocument('savePage', readDocument('users',user).savedGraphs)['pages']);
+  var newNew = readDocument('savePage', readDocument('users',user).savedGraphs);
+  newNew['pages'].push(newSaved);
   writeDocument('savePage', newNew);
+  console.log(newNew._id);
+  console.log(readDocument('savePage', readDocument('users',user).savedGraphs)['pages']);
 }
 
 

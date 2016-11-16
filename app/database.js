@@ -153,6 +153,7 @@ var initialData = {
 
 "savePage": {
   "1": {
+    "_id": 1,
     "pages": [
         {
           "name": "first draft",
