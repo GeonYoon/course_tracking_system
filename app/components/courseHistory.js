@@ -33,10 +33,10 @@ export default class CourseHistory extends React.Component {
 
     return (
       <div className="container">
-        <div className="col-md-12 main-app-settings">
+        <div className="col-md-12 classTable">
 
           <div className="table-responsive">
-            <table className="table table-bordered">
+            <table className="table table-bordered ">
               <thead className="thead">
                 <tr>
                   <td colSpan="9">
