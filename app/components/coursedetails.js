@@ -1,6 +1,7 @@
 import React from 'react';
 import {getCourseData} from '../server'
 import {getUserData} from '../server'
+import {Link} from 'react-router'
 
 
 export default class CourseDetails extends React.Component{
@@ -14,6 +15,7 @@ export default class CourseDetails extends React.Component{
   render(){
 
   var data = getCourseData(this.props.params.course);
+  var userData = getUserData(1);
   var prereqs = data.prereqs.map(course =>{
     var info = getCourseData(course);
     return (info.department + " " + info.number + ": " + info.name);
@@ -23,9 +25,15 @@ export default class CourseDetails extends React.Component{
     prereqs = "None."
   }
 
-  var takentext = "Ineligible"
+  var takentext = "Eligible"
 
-  getUserData(1).classesTaken.map(course =>{
+  data.prereqs.map(course => {
+    if(userData.classesTaken.indexOf(course) == -1){
+      takentext = "Ineligible: must take " + prereqs[0];
+    }
+  })
+
+  userData.classesTaken.map(course =>{
     if(course == this.props.params.course){
       takentext = "Taken"
     }
@@ -43,7 +51,7 @@ export default class CourseDetails extends React.Component{
                       <strong>{data.department + " " + data.number}:</strong> {data.name}
                     </h1>
                     <h4>
-                      <strong>Status:</strong> {takentext}
+                      <strong>Status: </strong>{takentext}
                     </h4>
                   </div>
                   <div className = "media-right media-middle">
@@ -66,22 +74,28 @@ export default class CourseDetails extends React.Component{
                   <p>Here are some other classes you might be interested in taking.</p>
                 </div>
                 <div className = "col-md-3 suggested">
+                  <Link to={"/course/1"}>
                   <button type = "button" className = "btn btn-default">
                     <img className = "center-block" src = "img/CS326.png" alt="CS326" />
                     Web Programming
                   </button>
+                </Link>
                 </div>
                 <div className = "col-md-3 suggested">
+                  <Link to={"/course/1"}>
                   <button type = "button" className = "btn btn-default">
                     <img className = "center-block" src = "img/CS326.png" alt="CS326" />
                     Web Programming
                   </button>
+                  </Link>
                 </div>
                 <div className = "col-md-3 suggested">
+                  <Link to={"/course/1"}>
                   <button type = "button" className = "btn btn-default">
                     <img className = "center-block" src = "img/CS326.png" alt="CS326" />
                     Web Programming
                   </button>
+                  </Link>
                 </div>
               </div>
             </div>

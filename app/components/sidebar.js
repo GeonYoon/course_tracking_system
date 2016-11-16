@@ -3,7 +3,7 @@ import {getUserData} from '../server.js';
 import {getMajorData} from '../server.js';
 import {getMinorData} from '../server.js';
 import {saveAGraph} from '../server.js';
-
+import {Link} from 'react-router';
 
 
 export default class Sidebar extends React.Component{
@@ -14,6 +14,9 @@ export default class Sidebar extends React.Component{
                   selected_major: "select a major..",
                   selected_minor: "select a minor.."
     };
+  }
+  makePDF(){
+    return "./file.pdf";
   }
   saveGraph(){
     saveAGraph(this.props.user);
@@ -26,6 +29,8 @@ export default class Sidebar extends React.Component{
     if (!already_added  && !(this.state.selected_major === "select a major..")){
       this.state.shown_majors.push(this.state.selected_major);
       this.setState({'shown_majors': this.state.shown_majors});
+      //console.log(this.state.selected_major);
+      this.props.onShow(this.state.selected_major);
     }
   }
   updateSelectedMajor(event){
@@ -49,10 +54,9 @@ export default class Sidebar extends React.Component{
     return(
       <div className="main-app-settings main-app-border">
 
-        <button type="button" className="btn navbar-btn btn-default pull-right">
-          <span className="glyphicon glyphicon-arrow-left"> Settings Panel</span>
-        </button>
-        <br /><br />
+
+          <p id="settings-title"> Graph Settings </p>
+
         <hr />
 
         <div className="form-group form-inline">
@@ -67,18 +71,19 @@ export default class Sidebar extends React.Component{
               })}
           </select>
             <button className="btn btn-default pull-right" type="button" onClick={this.addMajor.bind(this)}><span className="glyphicon glyphicon-plus"></span></button>
+
         </div>
-        <div className="form-group form-inline">
+        <div className="form-group form-inline select-minor">
           <label>Add a Minor:</label>
           <br />
-          <select className="form-control" onChange={this.updateSelectedMinor.bind(this)}>
+          <span><select className="form-control" onChange={this.updateSelectedMinor.bind(this)}>
             <option>select a minor..</option>
               {userInfo.minors.map((majornum)=>{
                   return(
                     <option>{getMinorData(majornum).title}</option>
                   )
                 })}
-          </select>
+          </select></span>
             <button className="btn btn-default pull-right" type="button" onClick={this.addMinor.bind(this)}><span className="glyphicon glyphicon-plus"></span></button>
         </div>
 
@@ -103,13 +108,14 @@ export default class Sidebar extends React.Component{
       <div className="btn-group" role="group">
 
         <button type="button" className="btn navbar-btn btn-default">
-          <span className="glyphicon glyphicon-floppy-disk"> Save Progress</span>
+          <span className="glyphicon glyphicon-floppy-disk" onClick={this.saveGraph.bind(this)}> Save Progress</span>
         </button>
         <br />
         <button type="button" className="btn navbar-btn btn-default">
 
-          <a className="glyphicon glyphicon-save" href = "file.pdf" download> Download PDF</a>
+          <a className="glyphicon glyphicon-save" href = {this.makePDF()} download="file.pdf"> Download PDF</a>
         </button>
+        <br />
       </div>
 
       </div>

@@ -26,13 +26,14 @@ var initialData = {
   },
   "feedback":{
     "1":{
+      "user": 1,
       "content": "first feedback"
     }
   },
   "majors":{
     "1":{
       "title": "Computer Science",
-      "courses":[1,2,3,4,5,6,7,8,9,10,11]
+      "courses":[1,2,3,4,5,6,7,8,9,10,11,13]
     },
     "2":{
       "title": "Math",
@@ -40,7 +41,7 @@ var initialData = {
     },
     "3":{
       "title": "Philosophy",
-      "courses":[]
+      "courses":[12]
     }
   },
   "courses":{
@@ -131,11 +132,28 @@ var initialData = {
       "number": 305,
       "prereqs": [],
       "textbooks": ["none"]
+    },
+    "12":{
+      "name": "Medical Ethics",
+      "description": "THIS IS A DESCRIPTION",
+      "department": "PHIL",
+      "number": 164,
+      "prereqs": [],
+      "textbooks": ["none"]
+    },
+    "13":{
+      "name": "Artificial Intelligence",
+      "description": "THIS IS A DESCRIPTION",
+      "department": "CS",
+      "number": 383,
+      "prereqs": [2,7],
+      "textbooks": ["none"]
     }
 },
 
 "savePage": {
   "1": {
+    "_id": 1,
     "pages": [
         {
           "name": "first draft",

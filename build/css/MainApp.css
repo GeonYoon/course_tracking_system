@@ -5,11 +5,17 @@ body {
 
 .main-app-settings{
   background-color: #881c1c !important;
-
+  color: #FFFFFF !important;
 }
+
 .main-app-settings a{
   color: #FFFFFF !important;
 }
+
+#settings-title {
+    text-align: center;
+}
+
 
 .main-app-border{
   padding: 10px;

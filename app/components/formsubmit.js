@@ -17,7 +17,7 @@ export default class FormSub extends React.Component{
     e.preventDefault();
     var statusUpdateText = this.state.value.trim();
     if(statusUpdateText !== ""){
-      postFeedback(1,statusUpdateText);
+      postFeedback(this.props.user,statusUpdateText);
       this.setState({value: ""});
     }
   }
