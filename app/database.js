@@ -46,6 +46,7 @@ var initialData = {
   },
   "courses":{
     "1":{
+      "id": 1,
       "name": "Web Programming",
       "description": "THIS IS A DESCRIPTION",
       "department": "CS",
@@ -54,6 +55,7 @@ var initialData = {
       "textbooks": ["Web Programming for Nerds"]
     },
     "2":{
+      "id": 2,
       "name": "Programming Methodology",
       "description": "THIS IS A DESCRIPTION",
       "department": "CS",
@@ -62,6 +64,7 @@ var initialData = {
       "textbooks": ["Scala 4 Kidz"]
     },
     "3":{
+      "id": 3,
       "name": "Calculus II",
       "description": "THIS IS A DESCRIPTION",
       "department": "MATH",
@@ -70,6 +73,7 @@ var initialData = {
       "textbooks": ["INTEGRATE THIS"]
     },
     "4":{
+      "id": 4,
       "name": "Calculus I",
       "description": "THIS IS A DESCRIPTION",
       "department": "MATH",
@@ -78,6 +82,7 @@ var initialData = {
       "textbooks": ["DERIVE THIS"]
     },
     "5":{
+      "id": 5,
       "name": "Programming with Data Structures",
       "description": "THIS IS A DESCRIPTION",
       "department": "CS",
@@ -86,6 +91,7 @@ var initialData = {
       "textbooks": ["How do i linked list?"]
     },
     "6":{
+      "id": 6,
       "name": "Introduction to Problem Solving",
       "description": "THIS IS A DESCRIPTION",
       "department": "CS",
@@ -94,6 +100,7 @@ var initialData = {
       "textbooks": ["Gordon 'G Money' Anderson: A tour of Umass CS"]
     },
     "7":{
+      "id": 7,
       "name": "Reasoning Under Uncertainty",
       "description": "THIS IS A DESCRIPTION",
       "department": "CS",
@@ -102,6 +109,7 @@ var initialData = {
       "textbooks": ["Stats with Computers"]
     },
     "8":{
+      "id": 8,
       "name": "Computer Systems Principles",
       "description": "THIS IS A DESCRIPTION",
       "department": "CS",
@@ -110,6 +118,7 @@ var initialData = {
       "textbooks": ["C Compilers"]
     },
     "9":{
+      "id": 9,
       "name": "Introduction to Computation",
       "description": "THIS IS A DESCRIPTION",
       "department": "CS",
@@ -118,6 +127,7 @@ var initialData = {
       "textbooks": ["Computers are whack, yo"]
     },
     "10":{
+      "id": 10,
       "name": "Algorithms",
       "description": "THIS IS A DESCRIPTION",
       "department": "CS",
@@ -126,6 +136,7 @@ var initialData = {
       "textbooks": ["Algorithm Design"]
     },
     "11":{
+      "id": 11,
       "name": "CS Junior Year Writing",
       "description": "THIS IS A DESCRIPTION",
       "department": "CS",
@@ -134,6 +145,7 @@ var initialData = {
       "textbooks": ["none"]
     },
     "12":{
+      "id": 12,
       "name": "Medical Ethics",
       "description": "THIS IS A DESCRIPTION",
       "department": "PHIL",
@@ -142,6 +154,7 @@ var initialData = {
       "textbooks": ["none"]
     },
     "13":{
+      "id": 13,
       "name": "Artificial Intelligence",
       "description": "THIS IS A DESCRIPTION",
       "department": "CS",
