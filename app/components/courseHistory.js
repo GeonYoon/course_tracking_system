@@ -1,32 +1,36 @@
 import React from 'react';
 import {Link} from 'react-router';
+import {getUserData, getCourseData} from '../server'
 
 export default class CourseHistory extends React.Component {
 
 
 
   render() {
-    var placeCols = [];
-    placeCols.push(
-      <td>
-        <Link to={"/course/1"}>CS 326</Link>
-      </td>
-    );
-    for (var i = 1; i < 9; i++) {
-      placeCols.push(
-        <td>
-          Placeholder
-        </td>
-      );
-    }
+
+    var history = getUserData(1).classesTaken;
+    var classes = history.map(course=>getCourseData(course));
+
+
+
     var rows = [];
-    for (var j = 9; j < 20; j++) {
+    classes.map(course=>{
       rows.push(
-        <tr key={j}>
-          {placeCols}
+        <tr key = {course.id}>
+          <td>
+            <Link to={"/course/"+course.id}>{course.department + " " +course.number}</Link>
+          </td>
+          <td>
+            {course.name}
+          </td>
+          <td>
+            {course.description}
+          </td>
         </tr>
       );
-    }
+    })
+
+
     return (
       <div className="container">
         <div className="col-md-12 main-app-settings">
@@ -60,28 +64,10 @@ export default class CourseHistory extends React.Component {
                     Course
                   </th>
                   <th>
+                    Name
+                  </th>
+                  <th>
                     Description
-                  </th>
-                  <th>
-                    Term
-                  </th>
-                  <th>
-                    Units
-                  </th>
-                  <th>
-                    Grade
-                  </th>
-                  <th>
-                    Grade Points
-                  </th>
-                  <th>
-                    Code
-                  </th>
-                  <th>
-                    Degree Requirement
-                  </th>
-                  <th>
-                    Status
                   </th>
                 </tr>
                  {rows}
