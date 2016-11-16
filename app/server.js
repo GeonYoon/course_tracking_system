@@ -39,7 +39,24 @@ function emulateServerReturn(data, cb) {
     cb(data);
   }, 4);
 }
-
+function getCourseItemSync(courseId){
+  var courseItem = readDocument('courses', courseId);
+  courseItem.prereqs = courseItem.prereqs.map((id) => readDocument('courses', id));
+  return courseItem;
+}
+function getCourseData2(course, cb){
+  var courseData = getCourseItemSync(course)
+  emulateServerReturn(courseData, cb)
+}
+function getMajorItemSync(majorId){
+  var majorItem = readDocument('majors', majorId);
+  majorItem.courses = majorItem.courses.map((id) => readDocument('courses', id));
+  return majorItem;
+}
+function getMajorData2(major, cb){
+  var majorData = getMajorItemSync(major)
+  emulateServerReturn(majorData, cb)
+}
 /**
 * Given a feed item ID, returns a FeedItem object with references resolved.
 * Internal to the server, since it's synchronous.
