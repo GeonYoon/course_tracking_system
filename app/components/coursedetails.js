@@ -13,14 +13,6 @@ export default class CourseDetails extends React.Component{
     this.state = props
   }
 
-  takeNextSemester(){
-    nextSem(this.props.route.user, this.props.params.course)
-  }
-
-  takenAlready(){
-    haveTaken(this.props.route.user, this.props.params.course)
-  }
-
   render(){
 
   var data = getCourseData(this.props.params.course);
@@ -62,9 +54,6 @@ export default class CourseDetails extends React.Component{
                     <h4>
                       <strong>Status: </strong>{takentext}
                     </h4>
-                    <button type = "button" className = "btn btn-default" onClick={this.takenAlready()}>
-                      I took this class!
-                    </button>
 
                   </div>
                   <div className = "media-right media-middle">
