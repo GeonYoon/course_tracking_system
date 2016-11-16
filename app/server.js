@@ -14,6 +14,17 @@ export function postFeedback(user, contents){
   //emulateServerReturn(newFeedback);
 }
 
+export function nextSem(user, courseId){
+  var newNew = readDocument('users', user);
+  newNew['nextSemester'].push(courseId);
+  writeDocument('users', newNew)
+}
+export function haveTaken(user, courseId){
+  var newNew1 = readDocument('users', user);
+  newNew1['classesTaken'].push(courseId);
+    writeDocument('users', newNew1)
+}
+
 export function saveAGraph(user){//will add more info like courses and stuff
   var newSaved = {
     "name": "default",
