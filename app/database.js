@@ -157,32 +157,32 @@ var initialData = {
     "pages": [
         {
           "name": "first draft",
-          "time": "03:11pm . 09/15/2014",
+          "time": 1479258637215,
           "image": "main_mock_1.png"
         },
         {
           "name": "second draft",
-          "time": "03:11pm . 10/25/2015",
+          "time": 1479258638865,
           "image": "main_mock_1.png"
         },
         {
           "name": "third draft",
-          "time": "03:11pm . 09/15/2016",
+          "time": 1479258639666,
           "image": "main_mock_1.png"
         },
         {
           "name": "fourth draft",
-          "time": "03:11pm . 11/09/2016",
+          "time": 1479258640143,
           "image": "main_mock_1.png"
         },
         {
           "name": "fifth draft",
-          "time": "03:11pm . 09/20/2016",
+          "time": 1479258640645,
           "image": "main_mock_1.png"
         },
         {
           "name": "sixth draft",
-          "time": "03:11pm . 09/15/2014",
+          "time": 1479258641155,
           "image": "main_mock_1.png"
         }
       ]

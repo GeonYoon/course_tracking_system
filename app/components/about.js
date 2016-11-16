@@ -9,7 +9,7 @@ import {Link} from 'react-router';
 export default class AboutPage extends React.Component{
   constructor(props){
     super(props);
-    this.state = {
+    this.state = { //THIS IS JUST A DUMMY VARIABLE, IT GETS OVERWRITTEN BY THE STATE
       "_id":1,
       "fullName": "WRONG",
       "classesTaken":[1],
@@ -30,7 +30,7 @@ export default class AboutPage extends React.Component{
     this.refresh();
   }
   render(){
-    var userInfo = getUserData(this.props.user)
+    // var userInfo = getUserData(this.props.user)
     return(
       <div className="container">
         <div className="row">
