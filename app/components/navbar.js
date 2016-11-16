@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router';
-
+import {resetDatabase} from '../database';
 
 export default class Navbar extends React.Component{
   render(){
@@ -32,6 +32,13 @@ export default class Navbar extends React.Component{
             <div className="nav navbar-nav navbar-right">
               <div className="btn-toolbar pull-right" role="toolbar">
                 <div className="btn-group" role="group">
+
+                <button className="btn btn-default navbar-btn reset-btn" type="button" onClick={() => {
+                  resetDatabase();
+                  window.alert("Database reset! Refreshing the page now...");
+                  document.location.reload(false);
+                }}>Reset Mock DB</button>
+
                 <Link to={"/Profile/"}>
                   <button type="button" className="btn navbar-btn btn-default">
                     <span className="glyphicon glyphicon-user"></span> Sample User

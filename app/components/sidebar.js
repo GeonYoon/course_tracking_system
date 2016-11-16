@@ -62,7 +62,7 @@ export default class Sidebar extends React.Component{
         <div className="form-group form-inline">
           <label>Add a Major:</label>
           <br />
-          <select className="form-control" title="Choose one of the following..." onChange={this.updateSelectedMajor.bind(this)}>
+          <select className="form-control side-major" title="Choose one of the following..." onChange={this.updateSelectedMajor.bind(this)}>
             <option>select a major..</option>
             {userInfo.majors.map((majornum)=>{
                 return(
@@ -76,7 +76,7 @@ export default class Sidebar extends React.Component{
         <div className="form-group form-inline select-minor">
           <label>Add a Minor:</label>
           <br />
-          <span><select className="form-control" onChange={this.updateSelectedMinor.bind(this)}>
+          <span><select className="form-control side-minor" onChange={this.updateSelectedMinor.bind(this)}>
             <option>select a minor..</option>
               {userInfo.minors.map((majornum)=>{
                   return(
@@ -84,7 +84,7 @@ export default class Sidebar extends React.Component{
                   )
                 })}
           </select></span>
-            <button className="btn btn-default pull-right" type="button" onClick={this.addMinor.bind(this)}><span className="glyphicon glyphicon-plus"></span></button>
+            <button className="btn btn-default pull-right side-minor-btn" type="button" onClick={this.addMinor.bind(this)}><span className="glyphicon glyphicon-plus"></span></button>
         </div>
 
 
