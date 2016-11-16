@@ -1,44 +1,30 @@
 import React from 'react';
 import {Link} from 'react-router';
-import {getUserData,getMajorData,getMinorData,getPassword,setPassword,emulateServerReturn} from '../server';
+import {getUserData2,getPassword,setPassword,emulateServerReturn} from '../server';
 export default class Profile extends React.Component{
   constructor(props){
     super(props);
-    this.state = {users: 1};
+    this.state = { //THIS IS JUST A DUMMY VARIABLE, IT GETS OVERWRITTEN BY THE STATE
+      "_id":1,
+      "fullName": "WRONG",
+      "classesTaken":[1],
+      "sId":11111111,
+      "savedGraphs":1,
+      "majors":[1],
+      "minors":[1],
+      "gradDate":"WRONG",
+      "email":"WRONG"
+    }
   }
-  getData(user){
-    getUserData(user, (info) => {
+  refresh(){
+    getUserData2(this.props.user, (info) => {
       this.setState(info);
     });
   }
   componentDidMount(){
-    this.getData(this.state.users);
+    this.refresh();
   }
   render(){
-    var strMaj = "";
-    var strMin = "";
-    console.log(this.state.majors);
-
-if(typeof this.state.majors != 'undefined'){
-  console.log("loop");
-    for(var count = 0; count<this.state.majors.length;count++){
-      var x = getMajorData(this.state.majors[count]);
-      if(count===this.state.majors.length-1){
-        strMaj +=x.title;
-      }else{
-      strMaj+= (x.title + ", ");
-      }
-    }
-    for(var ctr = 0; ctr<this.state.minors.length;ctr++){
-      var y = getMinorData(this.state.minors[ctr]);
-      if(ctr===this.state.minors.length-1){
-        strMin +=y.title;
-      }else{
-        strMin+= (y.title + ", ");
-      }
-    }
-}
-console.log("Success?");
     // var e = document.getElementById('pwrd-btn');
     // e.onclick = function(){
     //   var pw1 = document.getElementById('old-pwrd').value;
@@ -73,14 +59,26 @@ console.log("Success?");
             <p></p>
             <hr />
           </div>
-          <div className="col-xs-4 main-bdy2">
+          <div className="col-xs-5 main-bdy2">
             <span className="data">{this.state.fullName}</span>
             <p></p>
             <span className="data">{this.state.sId}</span>
             <p></p>
-            <span className="data">{strMaj}</span>
+            <span className="data">
+              {this.state.majors.map((majornum)=>{
+                return(
+                <span>{majornum.title}, </span>
+                )
+              })}
+            </span>
             <p></p>
-            <span className="data">{strMin}</span>
+            <span className="data">
+              {this.state.minors.map((majornum)=>{
+                return(
+                <span>{majornum.title}, </span>
+                )
+              })}
+            </span>
             <p></p>
             <span className="data">{this.state.gradDate}</span>
             <p></p>

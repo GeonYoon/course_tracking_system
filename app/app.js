@@ -53,7 +53,7 @@ class CourseHistory extends React.Component {
 class Profile extends React.Component {
   render() {
     return (
-      <ProfilePage />
+      <ProfilePage user={1}/>
     );
   }
 }
