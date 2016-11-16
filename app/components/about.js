@@ -9,7 +9,17 @@ import {Link} from 'react-router';
 export default class AboutPage extends React.Component{
   constructor(props){
     super(props);
-    this.state = {}
+    this.state = {
+      "_id":1,
+      "fullName": "WRONG",
+      "classesTaken":[1],
+      "sId":11111111,
+      "savedGraphs":1,
+      "majors":[1],
+      "minors":[1],
+      "gradDate":"WRONG",
+      "email":"WRONG"
+    }
   }
   refresh(){
     getUserData2(this.props.user, (info) => {
@@ -56,7 +66,11 @@ export default class AboutPage extends React.Component{
             <h5 className="about-subtitle">Name</h5>
             <p className="about-subtext">{this.state.fullName}</p>
             <h5 className="about-subtitle">Majors</h5>
-            <p className="about-subtext"> {this.state.majors}</p>
+              {this.state.majors.map((majornum)=>{
+                  return(
+                    <p className="about-subtext">{majornum.title}</p>
+                  )
+                })}
                   <h2 className="about-title">About</h2>
                   <p className="about-subtext">This is a web app designed by six CS326 students here at UMass in order to help you plan your future! You can easily visualize what classes you still need to take and how far away from a minor you might be. You can also achieve a nifty sense of accomplishment when you complete a class and slowly move closer to those glorious upper-level electives like Web Programming. Good luck!</p>
                   <br />

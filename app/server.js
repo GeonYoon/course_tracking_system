@@ -50,6 +50,11 @@ function getUserItemSync(userId) {
   //console.log('yo')
   feedItem.majors = feedItem.majors.map((id) => readDocument('majors', id));
   feedItem.minors = feedItem.minors.map((id) => readDocument('majors', id));
+  // feedItem.majors = feedItem.majors.map((maj) =>{
+  //   maj.courses.map((courseNum) =>{
+  //     readDocument('')
+  //   })
+  // })
   // Assuming a StatusUpdate. If we had other types of
   // FeedItems in the DB, we would
   // need to check the type and have logic for each type.
