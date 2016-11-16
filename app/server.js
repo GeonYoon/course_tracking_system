@@ -26,7 +26,9 @@ export function saveAGraph(user){//will add more info like courses and stuff
   alert("Graph saved, check 'Save Pages' to view your saved graph!");
 }
 
-
+export function unixTimeToString(time) {
+  return new Date(time).toLocaleString();
+}
 
 /**
  * Emulates how a REST call is *asynchronous* -- it calls your function back
