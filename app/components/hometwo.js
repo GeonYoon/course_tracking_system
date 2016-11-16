@@ -5,9 +5,22 @@ import {getMajorData} from '../server.js';
 import {getUserData} from '../server.js';
 import {getCourseData} from '../server.js';
 import {Link} from 'react-router';
+import {getUserData2} from '../server.js';
+
 export default class GraphHome extends React.Component {
   constructor(props){
     super(props);
+    this.state = { //THIS IS JUST A DUMMY VARIABLE, IT GETS OVERWRITTEN BY THE STATE
+      "_id":1,
+      "fullName": "WRONG",
+      "classesTaken":[1],
+      "sId":11111111,
+      "savedGraphs":1,
+      "majors":[1],
+      "minors":[1],
+      "gradDate":"WRONG",
+      "email":"WRONG"
+    }
     this.renderCytoscapeElement = this.renderCytoscapeElement.bind(this);
 }
  renderCytoscapeElement(){
@@ -51,19 +64,19 @@ export default class GraphHome extends React.Component {
      }
    });
    var userInfo = getUserData(this.props.user);
-   userInfo.majors.map((maj)=>{
-       getMajorData(maj).courses.map((course)=>{
-         var taken = (userInfo.classesTaken.indexOf(course) > -1)
+   this.state.majors.map((maj)=>{
+       maj.courses.map((course)=>{
+         var taken = (this.state.classesTaken.indexOf(course) > -1)
          var takentext = "notTaken"
          if(taken){
            takentext = "isTaken"
          }
          this.cy.add({
-           data: {id: course, info: getCourseData(course).department + getCourseData(course).number, take: takentext}
+           data: {id: course, info: course.department + course.number, take: takentext}
          });
        })
-       getMajorData(maj).courses.map((course)=>{
-         getCourseData(course).prereqs.map((prereq)=>{
+       maj.courses.map((course)=>{
+         course.prereqs.map((prereq)=>{
            this.cy.add({
              data: {id: prereq+''+course, source: prereq, target: course}
            });
@@ -99,6 +112,7 @@ this.cy.on('mouseout', 'node', function(event) {
    //this.cy.png()
  }
  componentDidMount(){
+      getUserData2(this.props.user, (info)=>this.setState(info))
        this.renderCytoscapeElement();
    }
   //  saveAsPNG(){

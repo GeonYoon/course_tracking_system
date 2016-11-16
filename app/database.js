@@ -16,8 +16,8 @@ var initialData = {
       "majors":[1,3],
       "minors":[2],
       "gradDate":"May 2018",
-      "email":"sone@umass.edu"
-
+      "email":"sone@umass.edu",
+      "nextSemester":[]
     }
   },
   "accountData":{
