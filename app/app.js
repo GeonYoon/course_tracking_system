@@ -58,6 +58,14 @@ class Profile extends React.Component {
   }
 }
 
+class CourseDetailsFirst extends React.Component {
+  render() {
+    return (
+      <CourseDetails />
+    );
+  }
+}
+
 
 class App extends React.Component {
   render() {
@@ -79,7 +87,7 @@ ReactDOM.render((
       <Route path="/coursehistory" component={CourseHistory} />
       <Route path="/profile" component={Profile} />
       <Route path="/textgraph" component={Home} />
-      <Route path = "/course/:course" component={CourseDetails} />
+      <Route path = "/course/:course" component={CourseDetails} user={1}/>
     </Route>
   </Router>
 ),document.getElementById('app'));

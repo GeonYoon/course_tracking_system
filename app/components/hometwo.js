@@ -48,6 +48,11 @@ export default class GraphHome extends React.Component {
          style: {
            'background-color': '#aaa'
          }
+       }, {
+         selector: 'node[take = "isTaken"]',
+         style: {
+           'background-color': '#881c1c'
+         }
        }
      ],
      layout: {
@@ -55,11 +60,11 @@ export default class GraphHome extends React.Component {
        directed: true
      }
    });
-   this.refresh();
-   var userInfo = getUserData(this.props.user);
-   userInfo.majors.map((maj)=>{
+   //this.refresh();
+   this.userInfo = getUserData(this.props.user);
+   this.userInfo.majors.map((maj)=>{
        getMajorData(maj).courses.map((course)=>{
-         var taken = (userInfo.classesTaken.indexOf(course) > -1)
+         var taken = (this.userInfo.classesTaken.indexOf(course) > -1)
          var takentext = "notTaken"
          if(taken){
            takentext = "isTaken"
@@ -108,6 +113,7 @@ this.cy.on('mouseout', 'node', function(event) {
    getUserData2(this.props.user, (info) => {
      this.setState(info);
    });
+   this.userInfo = getUserData(this.props.user);
  }
  componentWillMount(){
    this.refresh();

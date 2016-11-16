@@ -2,6 +2,8 @@ import React from 'react';
 import {getCourseData} from '../server'
 import {getUserData} from '../server'
 import {Link} from 'react-router'
+import {haveTaken} from '../server'
+import {nextSem} from '../server'
 
 
 export default class CourseDetails extends React.Component{
@@ -11,11 +13,18 @@ export default class CourseDetails extends React.Component{
     this.state = props
   }
 
+  takeNextSemester(){
+    nextSem(this.props.route.user, this.props.params.course)
+  }
+
+  takenAlready(){
+    haveTaken(this.props.route.user, this.props.params.course)
+  }
 
   render(){
 
   var data = getCourseData(this.props.params.course);
-  var userData = getUserData(1);
+  var userData = getUserData(this.props.route.user);
   var prereqs = data.prereqs.map(course =>{
     var info = getCourseData(course);
     return (info.department + " " + info.number + ": " + info.name);
@@ -53,6 +62,10 @@ export default class CourseDetails extends React.Component{
                     <h4>
                       <strong>Status: </strong>{takentext}
                     </h4>
+                    <button type = "button" className = "btn btn-default" onClick={this.takenAlready()}>
+                      I took this class!
+                    </button>
+
                   </div>
                   <div className = "media-right media-middle">
                     <img className = "media-object" src = "img/CS326.png" alt="CS326" />
