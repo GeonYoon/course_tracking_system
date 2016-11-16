@@ -23,7 +23,7 @@ export function saveAGraph(user){//will add more info like courses and stuff
   var newNew = readDocument('savePage', readDocument('users',user).savedGraphs);
   newNew['pages'].push(newSaved);
   writeDocument('savePage', newNew);
-
+  alert("Graph saved, check 'Save Pages' to view your saved graph!");
 }
 
 
