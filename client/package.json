@@ -4,10 +4,10 @@
   "description": "Build support for the client-side of CS326 projects.",
   "author": "John Vilk <jvilk@cs.umass.edu>",
   "license": "MIT",
-  "scripts": {
-    "build": "webpack",
-    "serve": "webpack-dev-server --content-base build"
-  },
+"scripts": {
+"serve": "webpack-dev-server --content-base build",
+"watch": "webpack --watch"
+},
   "devDependencies": {
     "babel": "^6.3.26",
     "babel-core": "^6.4.0",
