@@ -68,6 +68,18 @@ function getMajorData2(major, cb){
   var majorData = getMajorItemSync(major)
   emulateServerReturn(majorData, cb)
 }
+export function addShownMajor(user, major, cb){
+  var userItem = readDocument('users', user);
+  userItem.shown_majors.push(major);
+  writeDocument('users', userItem);
+  emulateServerReturn(getUserItemSync(user), cb);
+}
+export function addShownMinor(user, minor, cb){
+  var userItem = readDocument('users', user);
+  userItem.shown_minors.push(minor);
+  writeDocument('users', userItem);
+  emulateServerReturn(getUserItemSync(user), cb);
+}
 /**
 * Given a feed item ID, returns a FeedItem object with references resolved.
 * Internal to the server, since it's synchronous.
@@ -82,6 +94,8 @@ function getUserItemSync(userId) {
   feedItem.minors = feedItem.minors.map((id) => getMajorItemSync(id));
   feedItem.classesTaken = feedItem.classesTaken.map((id) => getCourseItemSync(id));
   feedItem.nextSemester = feedItem.nextSemester.map((id) => getCourseItemSync(id));
+  feedItem.shown_minors = feedItem.shown_minors.map((id) => getMajorItemSync(id));
+  feedItem.shown_majors = feedItem.shown_majors.map((id) => getMajorItemSync(id));
 
   // feedItem.majors = feedItem.majors.map((maj) =>{
   //   maj.courses.map((courseNum) =>{

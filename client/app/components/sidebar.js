@@ -1,9 +1,11 @@
 import React from 'react';
 import {getUserData} from '../server.js';
-import {getMajorData} from '../server.js';
-import {getMinorData} from '../server.js';
+import {addShownMinor} from '../server.js';
+import {addShownMajor} from '../server.js';
 import {saveAGraph} from '../server.js';
 import {Link} from 'react-router';
+import {getUserData2} from '../server.js';
+
 
 //IMPORTANT NOTES/TODO ABOUT THIS CLASS:
 //in order to load from server correctly, the state in this class must be the current user
@@ -21,13 +23,30 @@ import {Link} from 'react-router';
 //6. in the main app, load from these new arrays
 //7. check to see if main app re-renders when the sidebar's state is changed
 
+//maybe "selected_major" and "selected_minor" can just be class variables?
+//tbh not too sure how well that would work in javascript
+
+
+var selected_major = "select a major..";
+var selected_minor = "select a minor..";
+
 export default class Sidebar extends React.Component{
+
   constructor(props) {
     super(props);
-    this.state = {shown_majors: [],
-                  shown_minors: [],
-                  selected_major: "select a major..",
-                  selected_minor: "select a minor.."
+    this.state = {
+      "_id":1,
+      "fullName": "null student",
+      "classesTaken":[],
+      "sId":12345678,
+      "savedGraphs":1,
+      "majors":[1,2,3],
+      "minors":[1,2,3],
+      "gradDate":"May 2018",
+      "email":"sone@umass.edu",
+      "nextSemester":[],
+      "shown_majors":[],
+      "shown_minors":[]
     };
   }
   makePDF(){
@@ -38,33 +57,43 @@ export default class Sidebar extends React.Component{
   }
   addMajor(){
     var already_added = false;
-      if (this.state.shown_majors.indexOf(this.state.selected_major) > -1){
+      if (this.state.shown_majors.indexOf(selected_major) > -1){
         already_added = true;
       }
-    if (!already_added  && !(this.state.selected_major === "select a major..")){
-      this.state.shown_majors.push(this.state.selected_major);
-      this.setState({'shown_majors': this.state.shown_majors});
-      console.log(this.state.selected_major);
+    if (!already_added  && !(selected_major === "select a major..")){
+      this.state.shown_majors.push(selected_major);
+      addShownMajor(this.props.user, selected_major, () => {
+      this.refresh();
+      });
     }
   }
   updateSelectedMajor(event){
-    this.setState({'selected_major': event.target.value});
+    selected_major = event.target.value;
   }
   addMinor(){
     var already_added = false;
-      if (this.state.shown_minors.indexOf(this.state.selected_minor) > -1){
+      if (this.state.shown_minors.indexOf(selected_minor) > -1){
         already_added = true;
       }
-    if (!already_added  && !(this.state.selected_minor === "select a minor..")){
-      this.state.shown_minors.push(this.state.selected_minor);
-      this.setState({'selected_minors': this.state.shown_minors});
+    if (!already_added  && !(selected_minor === "select a minor..")){
+      this.state.shown_minors.push(selected_minor);
+      //can't just add selected minor, need to add the object
+      addShownMinor(this.props.user, selected_minor, () => {
+      this.refresh();
+      });
     }
   }
   updateSelectedMinor(event){
-    this.setState({'selected_minor': event.target.value});
+    selected_minor = event.target.value;
+  }
+  refresh(){
+    getUserData2(this.props.user, (info)=>this.setState(info));
+  }
+  componentWillMount(){
+    this.refresh();
   }
   render(){
-    var userInfo = getUserData(this.props.user);
+    // var userInfo = getUserData(this.props.user);
     return(
       <div className="main-app-settings main-app-border">
 
@@ -78,9 +107,9 @@ export default class Sidebar extends React.Component{
           <br />
           <select className="form-control side-major" title="Choose one of the following..." onChange={this.updateSelectedMajor.bind(this)}>
             <option>select a major..</option>
-            {userInfo.majors.map((majornum)=>{
+            {this.state.majors.map((majornum)=>{
                 return(
-                  <option>{getMajorData(majornum).title}</option>
+                  <option>{majornum.title}</option>
                 )
               })}
           </select>
@@ -92,9 +121,9 @@ export default class Sidebar extends React.Component{
           <br />
           <span><select className="form-control side-minor" onChange={this.updateSelectedMinor.bind(this)}>
             <option>select a minor..</option>
-              {userInfo.minors.map((majornum)=>{
+              {this.state.minors.map((majornum)=>{
                   return(
-                    <option>{getMinorData(majornum).title}</option>
+                    <option>{majornum.title}</option>
                   )
                 })}
           </select></span>
@@ -108,12 +137,12 @@ export default class Sidebar extends React.Component{
         Currently Showing: <br />
       {this.state.shown_majors.map((major)=>{
             return(
-              <p>{major} Major</p>
+              <p>{major.title} Major</p>
             )
           })}
           {this.state.shown_minors.map((minor)=>{
                 return(
-                  <p>{minor} Minor</p>
+                  <p>{minor.title} Minor</p>
                 )
               })}
       </div>

@@ -17,7 +17,9 @@ export default class GraphHome extends React.Component {
       "minors":[],
       "gradDate":"May 2018",
       "email":"sone@umass.edu",
-      "nextSemester":[]
+      "nextSemester":[],
+      "shown_majors":[],
+      "shown_minors":[]
     }
     this.renderCytoscapeElement = this.renderCytoscapeElement.bind(this);
 }
@@ -77,7 +79,7 @@ export default class GraphHome extends React.Component {
    //getUserData2(this.props.user, (info)=>this.setState(info))
 
    //this.userInfo = this.state;
-   this.state.majors.map((maj)=>{
+   this.state.shown_majors.map((maj)=>{
        maj.courses.map((course)=>{
          var taken = false;
           this.state.classesTaken.map((clss)=>{
