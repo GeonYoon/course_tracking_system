@@ -80,6 +80,26 @@ export function addShownMinor(user, minor, cb){
   writeDocument('users', userItem);
   emulateServerReturn(getUserItemSync(user), cb);
 }
+export function subtractShownMajor(user, major, cb){
+  var majItem = readDocument('users', user);
+  var courseIndex = majItem.shown_majors.indexOf(major);
+  if(courseIndex !== -1){
+    majItem.shown_majors.splice(courseIndex, 1);
+    writeDocument('users', majItem);
+  }
+  emulateServerReturn(majItem.shown_majors.map((majId) => readDocument('majors', majId)), cb);
+
+}
+export function subtractShownMinor(user, major, cb){
+  var majItem = readDocument('users', user);
+  var courseIndex = majItem.shown_minors.indexOf(major);
+  if(courseIndex !== -1){
+    majItem.shown_minors.splice(courseIndex, 1);
+    writeDocument('users', majItem);
+  }
+  emulateServerReturn(majItem.shown_minors.map((majId) => readDocument('majors', majId)), cb);
+
+}
 /**
 * Given a feed item ID, returns a FeedItem object with references resolved.
 * Internal to the server, since it's synchronous.

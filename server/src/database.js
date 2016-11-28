@@ -30,7 +30,7 @@ var initialData = {
     "1":{
       "_id": 1,
       "title": "Computer Science",
-      "courses":[1,2,3,4,5,6,7,8,9,10,11,13]
+      "courses":[1,2,5,6,7,8,9,10,11,13]
     },
     "2":{
       "_id": 2,

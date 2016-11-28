@@ -79,6 +79,8 @@ export default class GraphHome extends React.Component {
    //getUserData2(this.props.user, (info)=>this.setState(info))
 
    //this.userInfo = this.state;
+
+   //ALL COURSES FROM THE MAJORS:
    this.state.shown_majors.map((maj)=>{
        maj.courses.map((course)=>{
          var taken = false;
@@ -114,6 +116,49 @@ export default class GraphHome extends React.Component {
        }
      )
    });
+   //small bug note:
+   //overlapping classes across majors causes the prereq links to disappear
+
+   //ALL COURSES FROM THE MINORS:
+   this.state.shown_minors.map((maj)=>{
+       maj.courses.map((course)=>{
+         var taken = false;
+          this.state.classesTaken.map((clss)=>{
+            if(clss.id == course.id){
+              taken = true;
+            }
+          });
+         var nextTerm = false;
+         this.state.nextSemester.map((clss)=>{
+           if(clss.id == course.id){
+             nextTerm = true;
+           }
+         });
+         var takentext = "notTaken";
+         if(taken){
+          //  console.log(course);
+           takentext = "isTaken";
+         }
+         if(nextTerm){
+           takentext = "nextSemester";
+         }
+         this.cy.add({
+           data: {id: course.id, info: course.department + course.number, take: takentext}
+         });
+       })
+        maj.courses.map((course)=>{
+         course.prereqs.map((prereq)=>{
+           this.cy.add({
+             data: {id: prereq.id+''+course.id, source: prereq.id, target: course.id}
+           });
+         })
+       }
+     )
+   });
+
+
+
+
   //  this.cy.add({
   //    data: {id: 'z', info: 'testAdd'}
   //  });
