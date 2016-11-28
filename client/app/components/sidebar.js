@@ -1,9 +1,7 @@
 import React from 'react';
-import {getUserData} from '../server.js';
 import {addShownMinor} from '../server.js';
 import {addShownMajor} from '../server.js';
 import {saveAGraph} from '../server.js';
-import {Link} from 'react-router';
 import {getUserData2} from '../server.js';
 
 
@@ -27,8 +25,14 @@ import {getUserData2} from '../server.js';
 //tbh not too sure how well that would work in javascript
 
 
-var selected_major = "select a major..";
-var selected_minor = "select a minor..";
+//still to do:
+//main app needs to be refreshed on changes
+//main app needs to load minors (maybe in special way?)
+
+
+var selmajnum = 0;
+var selminnum = 0;
+
 
 export default class Sidebar extends React.Component{
 
@@ -57,34 +61,36 @@ export default class Sidebar extends React.Component{
   }
   addMajor(){
     var already_added = false;
-      if (this.state.shown_majors.indexOf(selected_major) > -1){
-        already_added = true;
-      }
-    if (!already_added  && !(selected_major === "select a major..")){
-      this.state.shown_majors.push(selected_major);
-      addShownMajor(this.props.user, selected_major, () => {
+      this.state.shown_majors.map((courses)=>{
+        if(courses._id == selmajnum){
+          already_added = true;
+        }
+      });
+    if (!already_added  && !(selmajnum === 0)){
+      addShownMajor(this.props.user, selmajnum, () => {
       this.refresh();
       });
     }
   }
   updateSelectedMajor(event){
-    selected_major = event.target.value;
+    selmajnum = event.target.value;
   }
   addMinor(){
     var already_added = false;
-      if (this.state.shown_minors.indexOf(selected_minor) > -1){
+    this.state.shown_minors.map((courses)=>{
+      if(courses._id == selminnum){
         already_added = true;
       }
-    if (!already_added  && !(selected_minor === "select a minor..")){
-      this.state.shown_minors.push(selected_minor);
+    });
+    if (!already_added  && !(selminnum === 0)){
       //can't just add selected minor, need to add the object
-      addShownMinor(this.props.user, selected_minor, () => {
+      addShownMinor(this.props.user, selminnum, () => {
       this.refresh();
       });
     }
   }
   updateSelectedMinor(event){
-    selected_minor = event.target.value;
+    selminnum = event.target.value;
   }
   refresh(){
     getUserData2(this.props.user, (info)=>this.setState(info));
@@ -106,10 +112,10 @@ export default class Sidebar extends React.Component{
           <label>Add a Major:</label>
           <br />
           <select className="form-control side-major" title="Choose one of the following..." onChange={this.updateSelectedMajor.bind(this)}>
-            <option>select a major..</option>
+            <option value={0}>select a major..</option>
             {this.state.majors.map((majornum)=>{
                 return(
-                  <option>{majornum.title}</option>
+                  <option value={majornum._id}>{majornum.title}</option>
                 )
               })}
           </select>
@@ -120,10 +126,10 @@ export default class Sidebar extends React.Component{
           <label>Add a Minor:</label>
           <br />
           <span><select className="form-control side-minor" onChange={this.updateSelectedMinor.bind(this)}>
-            <option>select a minor..</option>
+            <option value={0}>select a minor..</option>
               {this.state.minors.map((majornum)=>{
                   return(
-                    <option>{majornum.title}</option>
+                    <option value={majornum._id}>{majornum.title}</option>
                   )
                 })}
           </select></span>
