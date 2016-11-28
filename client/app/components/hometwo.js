@@ -15,7 +15,7 @@ export default class GraphHome extends React.Component {
       "classesTaken":[],
       "sId":12345678,
       "savedGraphs":1,
-      "majors":[1,2],
+      "majors":[],
       "minors":[],
       "gradDate":"May 2018",
       "email":"sone@umass.edu",
@@ -81,8 +81,18 @@ export default class GraphHome extends React.Component {
    //this.userInfo = this.state;
    this.state.majors.map((maj)=>{
        maj.courses.map((course)=>{
-         var taken = (this.state.classesTaken.indexOf(course.id) > -1);
-         var nextTerm = (this.state.nextSemester.indexOf(course.id) > -1);
+         var taken = false;
+          this.state.classesTaken.map((clss)=>{
+            if(clss.id == course.id){
+              taken = true;
+            }
+          });
+         var nextTerm = false;
+         this.state.nextSemester.map((clss)=>{
+           if(clss.id == course.id){
+             nextTerm = true;
+           }
+         });
          var takentext = "notTaken";
          if(taken){
           //  console.log(course);

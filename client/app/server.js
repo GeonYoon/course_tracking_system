@@ -80,6 +80,9 @@ function getUserItemSync(userId) {
   //console.log('yo')
   feedItem.majors = feedItem.majors.map((id) => getMajorItemSync(id));
   feedItem.minors = feedItem.minors.map((id) => getMajorItemSync(id));
+  feedItem.classesTaken = feedItem.classesTaken.map((id) => getCourseItemSync(id));
+  feedItem.nextSemester = feedItem.nextSemester.map((id) => getCourseItemSync(id));
+
   // feedItem.majors = feedItem.majors.map((maj) =>{
   //   maj.courses.map((courseNum) =>{
   //     readDocument('')
