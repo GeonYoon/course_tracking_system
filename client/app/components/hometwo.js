@@ -141,7 +141,7 @@ this.cy.on('mouseout', 'node', function(event) {
 });
    //this.cy.png()
  }
- refresh(){
+ ref(){
    getUserData2(this.props.user, (info) => {
      this.setState(info);
    });
@@ -154,12 +154,10 @@ this.cy.on('mouseout', 'node', function(event) {
  //   });
  // }
  componentWillMount(){
-   this.refresh();
+   this.ref();
   // this.renderCytoscapeElement();
  }
- componentWillUnmount(){
-  this.cy.destroy();
-}
+
  componentDidUpdate(){
     //this.refresh();
     this.renderCytoscapeElement();
@@ -179,7 +177,7 @@ this.cy.on('mouseout', 'node', function(event) {
         <div className="container">
           <div className="row">
             <div className="col-md-3" id="side-bar">
-              <Sidebar user={this.props.user} ref={this.refresh()} cyto={this.cy} />
+              <Sidebar user={this.props.user} refr={this.ref.bind(this)} cyto={this.cy} />
             </div>
             <div className="col-md-9 main-app-canvas">
               <Link to={"/textgraph"}>
