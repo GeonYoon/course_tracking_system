@@ -13,6 +13,14 @@ export default class CourseDetails extends React.Component{
     this.state = props
   }
 
+  takeNextSemester(){
+   nextSem(this.props.route.user, parseInt(this.props.params.course))
+ }
+
+ takenAlready(){
+   haveTaken(this.props.route.user, parseInt(this.props.params.course))
+ }
+
   render(){
 
   var data = getCourseData(this.props.params.course);
@@ -39,6 +47,11 @@ export default class CourseDetails extends React.Component{
       takentext = "Taken"
     }
   });
+  userData.nextSemester.map(course =>{
+    if(course == this.props.params.course){
+      takentext = "Next Semester"
+    }
+  });
 
     return(
       <div className = "container">
@@ -54,6 +67,13 @@ export default class CourseDetails extends React.Component{
                     <h4>
                       <strong>Status: </strong>{takentext}
                     </h4>
+                    <button type = "button" className = "btn btn-default" onClick={this.takeNextSemester.bind(this)}>
+                      I'll take this next semester!
+                    </button>
+
+                    <button type = "button" className = "btn btn-default" onClick={this.takenAlready.bind(this)}>
+                      I took this class!
+                    </button>
 
                   </div>
                   <div className = "media-right media-middle">
@@ -67,7 +87,7 @@ export default class CourseDetails extends React.Component{
                 <p>{data.description}</p>
                 <h3>Textbooks</h3>
                 <p>{data.textbooks}</p>
-                <h3>Prerequisits</h3>
+                <h3>Prerequisites</h3>
                 <p>{prereqs.toString()}</p>
                 <br />
                 <hr />

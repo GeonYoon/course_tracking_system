@@ -2,7 +2,6 @@ import React from 'react';
 import Sidebar from './sidebar';
 import cytoscape from '../../build/js/cytoscape.js';
 import {getMajorData} from '../server.js';
-import {getUserData} from '../server.js';
 import {getCourseData} from '../server.js';
 import {Link} from 'react-router';
 import {getUserData2} from '../server.js';
@@ -11,13 +10,22 @@ export default class GraphHome extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-
+      "_id":1,
+      "fullName": "Student One",
+      "classesTaken":[],
+      "sId":12345678,
+      "savedGraphs":1,
+      "majors":[1,2],
+      "minors":[],
+      "gradDate":"May 2018",
+      "email":"sone@umass.edu",
+      "nextSemester":[]
     }
     this.renderCytoscapeElement = this.renderCytoscapeElement.bind(this);
 }
  renderCytoscapeElement(){
    //console.log('* Cytoscape.js is rendering the graph..');
-
+   //this.refresh();
    this.cy = cytoscape({
      container: document.getElementById('cy'),
      elements: [],
@@ -53,6 +61,12 @@ export default class GraphHome extends React.Component {
          style: {
            'background-color': '#881c1c'
          }
+       }, {
+         selector: 'node[take = "nextSemester"]',
+         style: {
+           'background-color': '#ADD8E6',
+           'color': '#000000'
+         }
        }
      ],
      layout: {
@@ -61,22 +75,30 @@ export default class GraphHome extends React.Component {
      }
    });
    //this.refresh();
-   this.userInfo = getUserData(this.props.user);
-   this.userInfo.majors.map((maj)=>{
-       getMajorData(maj).courses.map((course)=>{
-         var taken = (this.userInfo.classesTaken.indexOf(course) > -1)
-         var takentext = "notTaken"
+   //this.userInfo = getUserData(this.props.user);
+   //getUserData2(this.props.user, (info)=>this.setState(info))
+
+   //this.userInfo = this.state;
+   this.state.majors.map((maj)=>{
+       maj.courses.map((course)=>{
+         var taken = (this.state.classesTaken.indexOf(course.id) > -1);
+         var nextTerm = (this.state.nextSemester.indexOf(course.id) > -1);
+         var takentext = "notTaken";
          if(taken){
-           takentext = "isTaken"
+          //  console.log(course);
+           takentext = "isTaken";
+         }
+         if(nextTerm){
+           takentext = "nextSemester";
          }
          this.cy.add({
-           data: {id: course, info: getCourseData(course).department + getCourseData(course).number, take: takentext}
+           data: {id: course.id, info: course.department + course.number, take: takentext}
          });
        })
-        getMajorData(maj).courses.map((course)=>{
-         getCourseData(course).prereqs.map((prereq)=>{
+        maj.courses.map((course)=>{
+         course.prereqs.map((prereq)=>{
            this.cy.add({
-             data: {id: prereq+''+course, source: prereq, target: course}
+             data: {id: prereq.id+''+course.id, source: prereq.id, target: course.id}
            });
          })
        }
@@ -113,12 +135,23 @@ this.cy.on('mouseout', 'node', function(event) {
    getUserData2(this.props.user, (info) => {
      this.setState(info);
    });
-   this.userInfo = getUserData(this.props.user);
+   //this.userInfo = getUserData(this.props.user);
+  //  this.renderCytoscapeElement();
  }
+ // componentWillReceiveProps(nextProps){
+ //   getUserData2(this.props.user, (info) => {
+ //     this.setState(info);
+ //   });
+ // }
  componentWillMount(){
    this.refresh();
+  // this.renderCytoscapeElement();
  }
- componentDidMount(){
+ componentWillUnmount(){
+  this.cy.destroy();
+}
+ componentDidUpdate(){
+    //this.refresh();
     this.renderCytoscapeElement();
 }
   //  saveAsPNG(){
@@ -126,7 +159,8 @@ this.cy.on('mouseout', 'node', function(event) {
   //  }
 
   render() {
-    getUserData2(this.props.user, (info)=>this.setState(info))
+    //getUserData2(this.props.user, (info)=>this.setState(info))
+    //this.refresh();
     return (
       <div>
         <div className="container">

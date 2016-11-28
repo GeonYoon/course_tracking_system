@@ -9,7 +9,7 @@ export function postFeedback(user, contents){
   };
   newFeedback = addDocument('feedback', newFeedback);
 
-  writeDocument('feedback', newFeedback);
+  addDocument('feedback', newFeedback);
 
   //emulateServerReturn(newFeedback);
 }
