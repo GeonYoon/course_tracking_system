@@ -5,6 +5,21 @@ import {getMinorData} from '../server.js';
 import {saveAGraph} from '../server.js';
 import {Link} from 'react-router';
 
+//IMPORTANT NOTES/TODO ABOUT THIS CLASS:
+//in order to load from server correctly, the state in this class must be the current user
+//we can load the student information from database the same way we do in main app,
+//then have "shown majors" and "shown minors" arrays in the user info in database
+//this way we can remember the majors for the user, load from server correctly, and hopefully then
+//we can have the main app also load from "shown majors" and "shown minors" so that
+//the sidebar and main graph interact better with each other.
+
+//1. add the shown majors/minors arrays to the user objects in database
+//2. write a server function to add to these arrays
+//3. modify getUserDataSync so that it maps the numbers in the new arrays to the actual courses
+//4. change this class to load from getUserData2 and set the state to that
+//5. make it work as before with the new state
+//6. in the main app, load from these new arrays
+//7. check to see if main app re-renders when the sidebar's state is changed
 
 export default class Sidebar extends React.Component{
   constructor(props) {
@@ -29,8 +44,7 @@ export default class Sidebar extends React.Component{
     if (!already_added  && !(this.state.selected_major === "select a major..")){
       this.state.shown_majors.push(this.state.selected_major);
       this.setState({'shown_majors': this.state.shown_majors});
-      //console.log(this.state.selected_major);
-      this.props.onShow(this.state.selected_major);
+      console.log(this.state.selected_major);
     }
   }
   updateSelectedMajor(event){

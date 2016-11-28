@@ -1,8 +1,6 @@
 import React from 'react';
 import Sidebar from './sidebar';
 import cytoscape from '../../build/js/cytoscape.js';
-import {getMajorData} from '../server.js';
-import {getCourseData} from '../server.js';
 import {Link} from 'react-router';
 import {getUserData2} from '../server.js';
 
@@ -164,6 +162,9 @@ this.cy.on('mouseout', 'node', function(event) {
     //this.refresh();
     this.renderCytoscapeElement();
 }
+// addMajor2(maj){
+//   console.log(maj);
+// }
   //  saveAsPNG(){
   //    this.cy.png();
   //  }
@@ -176,7 +177,7 @@ this.cy.on('mouseout', 'node', function(event) {
         <div className="container">
           <div className="row">
             <div className="col-md-3" id="side-bar">
-              <Sidebar user={this.props.user} cyto={this.cy}/>
+              <Sidebar user={this.props.user} cyto={this.cy} />
             </div>
             <div className="col-md-9 main-app-canvas">
               <Link to={"/textgraph"}>
