@@ -69,6 +69,7 @@ export default class Sidebar extends React.Component{
     if (!already_added  && !(selmajnum === 0)){
       addShownMajor(this.props.user, selmajnum, () => {
       this.refresh();
+      this.props.ref();
       });
     }
   }
@@ -86,6 +87,7 @@ export default class Sidebar extends React.Component{
       //can't just add selected minor, need to add the object
       addShownMinor(this.props.user, selminnum, () => {
       this.refresh();
+      this.props.ref();
       });
     }
   }

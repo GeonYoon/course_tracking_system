@@ -179,7 +179,7 @@ this.cy.on('mouseout', 'node', function(event) {
         <div className="container">
           <div className="row">
             <div className="col-md-3" id="side-bar">
-              <Sidebar user={this.props.user} cyto={this.cy} />
+              <Sidebar user={this.props.user} ref={this.refresh()} cyto={this.cy} />
             </div>
             <div className="col-md-9 main-app-canvas">
               <Link to={"/textgraph"}>
