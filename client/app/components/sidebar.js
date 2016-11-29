@@ -146,17 +146,20 @@ export default class Sidebar extends React.Component{
       {this.state.shown_majors.map((major)=>{
             return(
               <div>
-              <p>{major.title} Major</p>
-              </div>
+              <p className="pull-left">{major.title} Major</p><button className="btn-xs btn-default pull-right" type="button" onClick={this.subtractMajor.bind(this, major._id)}><span className="glyphicon glyphicon-minus"></span></button>
+              <br />
+            </div>
           )
           })}
           {this.state.shown_minors.map((minor)=>{
                 return(
                   <div>
-                  <p>{minor.title} Minor</p>
-                  </div>
+                  <p className="pull-left">{minor.title} Minor</p><button className="btn-xs btn-default pull-right" type="button" onClick={this.subtractMinor.bind(this, minor._id)}><span className="glyphicon glyphicon-minus"></span></button>
+                  <br />
+                </div>
                 )
               })}
+              <br />
       </div>
       <hr />
 

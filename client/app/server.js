@@ -82,7 +82,7 @@ export function addShownMinor(user, minor, cb){
 }
 export function subtractShownMajor(user, major, cb){
   var majItem = readDocument('users', user);
-  var courseIndex = majItem.shown_majors.indexOf(major);
+  var courseIndex = majItem.shown_majors.indexOf(""+major);
   if(courseIndex !== -1){
     majItem.shown_majors.splice(courseIndex, 1);
     writeDocument('users', majItem);
@@ -92,14 +92,35 @@ export function subtractShownMajor(user, major, cb){
 }
 export function subtractShownMinor(user, major, cb){
   var majItem = readDocument('users', user);
-  var courseIndex = majItem.shown_minors.indexOf(major);
-  if(courseIndex !== -1){
+  var courseIndex = majItem.shown_minors.indexOf(""+major);
+  if(courseIndex !== -1){//this if statement is not happening
     majItem.shown_minors.splice(courseIndex, 1);
     writeDocument('users', majItem);
   }
   emulateServerReturn(majItem.shown_minors.map((majId) => readDocument('majors', majId)), cb);
 
 }
+
+
+// export function deleteFeedItem(feedItemId, cb) {
+//   // Assumption: The current user authored this feed item.
+//   deleteDocument('feedItems', feedItemId);
+//   // Remove references to this feed item from all other feeds.
+//   var feeds = getCollection('feeds');
+//   var feedIds = Object.keys(feeds);
+//   feedIds.forEach((feedId) => {
+//     var feed = feeds[feedId];
+//     var itemIdx = feed.contents.indexOf(feedItemId);
+//     if (itemIdx !== -1) {
+//       // Splice out of array.
+//       feed.contents.splice(itemIdx, 1);
+//       // Update feed.
+//       writeDocument('feeds', feed);
+//     }
+//   });
+
+
+
 /**
 * Given a feed item ID, returns a FeedItem object with references resolved.
 * Internal to the server, since it's synchronous.
