@@ -10,8 +10,7 @@ import {subtractShownMinor} from '../server.js';
 
 //to do:
 //main app load minors better
-//make "-" button functional (look at workshop, deleting status updates)
-//add all majors/minors to drop down list and highlight the ones the user is in
+//in user settings, let user add/subtract minors and majors
 //take picture of div
 //"add all" option in drop down for majors/minors
 //add a check to see if a user is eligible for a class and denote that in course details/the main graph
@@ -143,6 +142,7 @@ export default class Sidebar extends React.Component{
 
       <div className="settings-current">
         Currently Showing: <br />
+      <br />
       {this.state.shown_majors.map((major)=>{
             return(
               <div>
