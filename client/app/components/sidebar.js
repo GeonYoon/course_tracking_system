@@ -9,12 +9,17 @@ import {subtractShownMinor} from '../server.js';
 
 
 //to do:
-//main app load minors better
-//in user settings, let user add/subtract minors and majors
-//take picture of div
-//"add all" option in drop down for majors/minors
-//add a check to see if a user is eligible for a class and denote that in course details/the main graph
-//connect to real server
+//main app-stylize classes for minor
+//main app-stylize classes you can take
+//main app-load from server
+//about page-load from server
+//about page-send  feedback to server
+//course details-tell user if they've taken all prereqs for a class
+//course details-add a button to clear whether they're taking the class now/next semester
+//user settings-let user add/subtract minors and majors
+//figure out how to take picture of div
+//connect EVERYTHING to real server
+//add much more mock data
 
 var selmajnum = 0;
 var selminnum = 0;
