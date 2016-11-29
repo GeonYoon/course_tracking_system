@@ -9,6 +9,7 @@ import ProfilePage from './components/profile';
 import CourseHistoryPage from './components/courseHistory';
 import CourseDetails from './components/coursedetails';
 import HomePage from './components/home';
+import {ResetDatabase} from './database.js';
 
 class HomeTwo extends React.Component {
   render() {
@@ -71,7 +72,9 @@ class App extends React.Component {
   render() {
     return (
       <div><Navbar/>
-      {this.props.children}</div>
+      {this.props.children}
+      <ResetDatabase />
+    </div>
     )
   }
 }

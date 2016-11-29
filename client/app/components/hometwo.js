@@ -36,7 +36,7 @@ export default class GraphHome extends React.Component {
            'label': 'data(info)',
            'width': '100px',
            'height': '100px',
-           'font-size': '24px',
+           'font-size': '22px',
            'text-halign': 'center',
            'text-valign': 'center',
            'background-color': '#881c1c',
@@ -66,6 +66,12 @@ export default class GraphHome extends React.Component {
          style: {
            'background-color': '#ADD8E6',
            'color': '#000000'
+         }
+       }, {
+         selector: 'node[majmin = "maj"]',
+         style: {
+           'border-width': 4,
+      'border-color': 'black'
          }
        }
      ],
@@ -104,7 +110,7 @@ export default class GraphHome extends React.Component {
            takentext = "nextSemester";
          }
          this.cy.add({
-           data: {id: course.id, info: course.department + course.number, take: takentext}
+           data: {id: course.id, info: course.department + course.number, take: takentext, majmin: "maj"}
          });
        })
         maj.courses.map((course)=>{
@@ -143,7 +149,7 @@ export default class GraphHome extends React.Component {
            takentext = "nextSemester";
          }
          this.cy.add({
-           data: {id: course.id, info: course.department + course.number, take: takentext}
+           data: {id: course.id, info: course.department + course.number, take: takentext, majmin: "min"}
          });
        })
         maj.courses.map((course)=>{
