@@ -156,6 +156,7 @@ export default class Sidebar extends React.Component{
             </div>
           )
           })}
+          <br />
           {this.state.shown_minors.map((minor)=>{
                 return(
                   <div>
