@@ -1,15 +1,19 @@
 FUNCTIONS THAT NEED TO BE IMPLEMENTED:
-the two buttons in course details need to write to the real database (PUT, DELETE)
+getCourseData with emulateServerReturn (for course details page) - this is why in the main app, clicking on one of the courses
+  that is in the new database but not the old one causes an error. We need to switch course details to load data from new server.
+the two buttons in course details need to write to the real database (PUT, DELETE) - this is why clicking "I've taken this class" in
+  course details does not give a response in the main app - these buttons currently don't modify the new database
 the user should be able to add/take out majors/minors in their settings (PUT, DELETE)
 the user should be able to post feedback (POST)
 the user should be able to add/take out saved graphs(POST or PUT, DELETE)
 
 OTHER STUFF THAT NEEDS TO BE DONE:
-json schema matching
-delete old database
+json schema matching (copy from workshop)
+delete old database (easy once we're done with everything else)
 error handling
 written report
 
 OTHER FEATURES THAT SHOULD BE ADDED:
 take picture of graph on main screen
-classes that are in multiple majors not represented correctly in main app
+classes that are in multiple majors not represented correctly in main app - fix by keeping track of all nodes added to the main graph,
+  and only adding new ones if they haven't been added yet.
