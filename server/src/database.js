@@ -30,7 +30,7 @@ var initialData = {
     "1":{
       "_id": 1,
       "title": "Computer Science",
-      "courses":[1,2,5,6,7,8,9,10,11,13]
+      "courses":[1,2,5,6,7,8,9,10,11,13,14,15,16]
     },
     "2":{
       "_id": 2,
@@ -40,7 +40,7 @@ var initialData = {
     "3":{
       "_id": 3,
       "title": "Philosophy",
-      "courses":[12]
+      "courses":[12,17,18,19]
     }
   },
   "courses":{
@@ -159,6 +159,60 @@ var initialData = {
       "department": "CS",
       "number": 383,
       "prereqs": [2,7],
+      "textbooks": ["none"]
+    },
+    "14":{
+      "id": 14,
+      "name": "Software Engineering",
+      "description": "THIS IS A DESCRIPTION",
+      "department": "CS",
+      "number": 320,
+      "prereqs": [2],
+      "textbooks": ["none"]
+    },
+    "15":{
+      "id": 15,
+      "name": "Operating Systems",
+      "description": "THIS IS A DESCRIPTION",
+      "department": "CS",
+      "number": 377,
+      "prereqs": [8],
+      "textbooks": ["none"]
+    },
+    "16":{
+      "id": 16,
+      "name": "Compiler Techniques",
+      "description": "THIS IS A DESCRIPTION",
+      "department": "CS",
+      "number": 410,
+      "prereqs": [15, 9],
+      "textbooks": ["none"]
+    },
+    "17":{
+      "id": 17,
+      "name": "Intro to Philosophy",
+      "description": "THIS IS A DESCRIPTION",
+      "department": "PHIL",
+      "number": 100,
+      "prereqs": [],
+      "textbooks": ["none"]
+    },
+    "18":{
+      "id": 18,
+      "name": "Modal Logic",
+      "description": "THIS IS A DESCRIPTION",
+      "department": "PHIL",
+      "number": 511,
+      "prereqs": [19],
+      "textbooks": ["none"]
+    },
+    "19":{
+      "id": 19,
+      "name": "Intermediate Logic",
+      "description": "THIS IS A DESCRIPTION",
+      "department": "PHIL",
+      "number": 310,
+      "prereqs": [17],
       "textbooks": ["none"]
     }
 },

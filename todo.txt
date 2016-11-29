@@ -1,0 +1,15 @@
+FUNCTIONS THAT NEED TO BE IMPLEMENTED:
+the two buttons in course details need to write to the real database (PUT, DELETE)
+the user should be able to add/take out majors/minors in their settings (PUT, DELETE)
+the user should be able to post feedback (POST)
+the user should be able to add/take out saved graphs(POST or PUT, DELETE)
+
+OTHER STUFF THAT NEEDS TO BE DONE:
+json schema matching
+delete old database
+error handling
+written report
+
+OTHER FEATURES THAT SHOULD BE ADDED:
+take picture of graph on main screen
+classes that are in multiple majors not represented correctly in main app
