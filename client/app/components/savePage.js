@@ -6,9 +6,28 @@ export default class SavePages extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      search: ''
+      search: '',
+      temp: {
+        pages : [
+          {
+            "name": "",
+            "time": "",
+            "image": ""
+          }
+        ]
+      }
     };
-    this.temp = getPageData(this.props.user)
+
+  }
+
+  componentDidMount() {
+      this.refresh();
+    }
+
+  refresh() {
+     getPageData(this.props.user, (pageData) => {
+       this.setState({temp: pageData})
+     });
   }
 
   updateSearch(event) {
@@ -16,7 +35,7 @@ export default class SavePages extends React.Component {
   }
 
   render() {
-    let filteredDAta = this.temp.pages.filter(
+    let filteredDAta = this.state.temp.pages.filter(
       (page) => {
         return page.name.toLowerCase().indexOf(
           this.state.search.toLowerCase()) !== -1;

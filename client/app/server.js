@@ -276,8 +276,8 @@ export function getFeedbackData(){
 //   return password;
 // }
 
-export function getPageData(user){
-  var userData = readDocument('users', user);
-  var pageData = readDocument('savePage',userData.savedGraphs);
-  return pageData;
+export function getPageData(user, cb){
+  sendXHR('GET', '/user/1/page', undefined, (xhr) => {
+    cb(JSON.parse(xhr.responseText));
+  });
 }

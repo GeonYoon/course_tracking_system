@@ -232,6 +232,30 @@ app.use(function(err, req, res, next) {
 });
 
 
+// Get savePage data
+function getPageData(user){
+  var userData = readDocument('users', user);
+  var pageData = readDocument('savePage',userData.savedGraphs);
+  return pageData;
+}
+
+app.get('/user/:userid/page',function(req,res) {
+  var userid = req.params.userid;
+  var fromUser = getUserIdFromToken(req.get('Authorization'));
+
+  var useridNumber = parseInt(userid,10);
+  if(fromUser === useridNumber){
+    res.send(getPageData(userid));
+  }
+  else {
+    // 401: Unathorized request.
+    res.status(401).end();
+  }
+});
+
+
+
+
 
 
 // Starts the server on port 3000!
