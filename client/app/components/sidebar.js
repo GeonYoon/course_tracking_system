@@ -191,7 +191,7 @@ export default class Sidebar extends React.Component{
         <button type="button" className="btn navbar-btn btn-default">
 
 
-          <a id="exportP" className="glyphicon glyphicon-save" download="file.png"> Download PDF</a>
+          <a id="exportP" className="glyphicon glyphicon-save" download="file.png"> Download PNG</a>
 
         </button>
         <br />
