@@ -7,7 +7,6 @@ import {subtractShownMajor} from '../server.js';
 import {subtractShownMinor} from '../server.js';
 
 
-
 //to do:
 //main app-stylize classes for minor
 //main app-stylize classes you can take
@@ -43,6 +42,12 @@ export default class Sidebar extends React.Component{
       "shown_majors":[],
       "shown_minors":[]
     };
+
+  }
+  updatePNG(){
+    var img = this.props.genp();
+    console.log(img);
+    return img;
   }
   makePDF(){
     return "./file.pdf";
@@ -103,6 +108,14 @@ export default class Sidebar extends React.Component{
   }
   componentWillMount(){
     this.refresh();
+  }
+  componentDidMount(){
+    var func = this.props.genp;
+    var button = document.getElementById('exportP');
+    button.addEventListener('click', function () {
+    var dataURL = func();
+    button.href = dataURL;
+});
   }
   render(){
     // var userInfo = getUserData(this.props.user);
@@ -177,7 +190,9 @@ export default class Sidebar extends React.Component{
         <br />
         <button type="button" className="btn navbar-btn btn-default">
 
-          <a className="glyphicon glyphicon-save" href = {this.makePDF()} download="file.pdf"> Download PDF</a>
+
+          <a id="exportP" className="glyphicon glyphicon-save" download="file.png"> Download PDF</a>
+
         </button>
         <br />
       </div>

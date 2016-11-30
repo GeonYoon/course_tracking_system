@@ -224,6 +224,11 @@ this.cy.on('mouseout', 'node', function(event) {
     //  saveAGraph(this.props.user, this.cy.png());
      // once we get the server working for the png, we can save it right here
    }
+    generatePNG(){
+     var img = this.cy.png();
+     console.log("generatePNG");
+     return img;
+   }
 
   render() {
     //getUserData2(this.props.user, (info)=>this.setState(info))
@@ -233,7 +238,7 @@ this.cy.on('mouseout', 'node', function(event) {
         <div className="container">
           <div className="row">
             <div className="col-md-3" id="side-bar">
-              <Sidebar user={this.props.user} refr={this.ref.bind(this)} cyto={this.saveAsPNG.bind(this)} />
+              <Sidebar genp={this.generatePNG.bind(this)} user={this.props.user} refr={this.ref.bind(this)} cyto={this.saveAsPNG.bind(this)} />
             </div>
             <div className="col-md-9 main-app-canvas">
               <Link to={"/textgraph"}>
