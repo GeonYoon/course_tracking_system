@@ -3,6 +3,7 @@ import Sidebar from './sidebar';
 import cytoscape from '../../build/js/cytoscape.js';
 import {Link} from 'react-router';
 import {getUserData2} from '../server.js';
+import {saveAGraph} from '../server.js';
 
 export default class GraphHome extends React.Component {
   constructor(props){
@@ -217,7 +218,11 @@ this.cy.on('mouseout', 'node', function(event) {
 //   console.log(maj);
 // }
    saveAsPNG(){
+    //  var element = new Image();
+    //  element.src = this.cy.png()
      console.log(this.cy.png());
+    //  saveAGraph(this.props.user, this.cy.png());
+     // once we get the server working for the png, we can save it right here
    }
 
   render() {

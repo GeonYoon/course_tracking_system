@@ -86,11 +86,11 @@ export function haveTaken(user, courseId){
     writeDocument('users', newNew1)
 }
 
-export function saveAGraph(user){//will add more info like courses and stuff
+export function saveAGraph(user, newIMG){//will add more info like courses and stuff
   var newSaved = {
     "name": "default",
     "time": (new Date).getTime(),
-    "image":"main_mock_1.png"
+    "image": newIMG
   };
   var newNew = readDocument('savePage', readDocument('users',user).savedGraphs);
   newNew['pages'].push(newSaved);
@@ -242,14 +242,10 @@ export function getUserData(user) {
 //   emulateServerReturn(userData, cb);
 // }
 export function getUserData2(user, cb){
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', '/user/1');
-  xhr.setRequestHeader('Authorization', 'Bearer eyJpZCI6MX0=');
-  xhr.addEventListener('load', function() {
-      // Call the callback with the data.
-      cb(JSON.parse(xhr.responseText));
+  sendXHR('GET', '/user/1', undefined, (xhr) => {
+    cb(JSON.parse(xhr.responseText));
   });
-  xhr.send();
+
 }
 export function getCollectionData(collection_id){
   return readDocumentCollection(collection_id);
