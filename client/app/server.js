@@ -129,6 +129,11 @@ function getMajorData2(major, cb){
   var majorData = getMajorItemSync(major)
   emulateServerReturn(majorData, cb)
 }
+
+
+
+
+
 export function addShownMajor(user, major, cb){
   sendXHR('PUT', '/user/' + user + '/majortoshow/' + major,
   undefined, (xhr) => {
