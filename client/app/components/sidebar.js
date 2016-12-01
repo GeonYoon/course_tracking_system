@@ -53,7 +53,7 @@ export default class Sidebar extends React.Component{
     return "./file.pdf";
   }
   saveGraph(){
-    saveAGraph(this.props.user);
+    saveAGraph(this.props.user, this.props.genp());
   }
   addMajor(){
     var already_added = false;
@@ -116,6 +116,10 @@ export default class Sidebar extends React.Component{
     var dataURL = func();
     button.href = dataURL;
 });
+  var button2 = document.getElementById('saveG');
+  button2.addEventListener('click', function () {
+    saveAGraph();
+  });
   }
   render(){
     // var userInfo = getUserData(this.props.user);
@@ -185,7 +189,7 @@ export default class Sidebar extends React.Component{
       <div className="btn-group" role="group">
 
         <button type="button" className="btn navbar-btn btn-default">
-          <span className="glyphicon glyphicon-floppy-disk" onClick={this.props.cyto.bind(this)}> Save Progress</span>
+          <span id="saveG" className="glyphicon glyphicon-floppy-disk"> Save Progress</span>
         </button>
         <br />
         <button type="button" className="btn navbar-btn btn-default">

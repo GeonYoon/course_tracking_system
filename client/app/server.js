@@ -86,18 +86,29 @@ export function haveTaken(user, courseId){
     writeDocument('users', newNew1)
 }
 
-export function saveAGraph(user, newIMG){//will add more info like courses and stuff
-  var newSaved = {
-    "name": "default",
-    "time": (new Date).getTime(),
-    "image": newIMG
-  };
-  var newNew = readDocument('savePage', readDocument('users',user).savedGraphs);
-  newNew['pages'].push(newSaved);
-  writeDocument('savePage', newNew);
-  alert("Graph saved, check 'Save Pages' to view your saved graph!");
+// export function saveAGraph(user, newIMG){//will add more info like courses and stuff
+//   var newSaved = {
+//     "name": "default",
+//     "time": (new Date).getTime(),
+//     "image": newIMG
+//   };
+//   var newNew = readDocument('savePage', readDocument('users',user).savedGraphs);
+//   newNew['pages'].push(newSaved);
+//   writeDocument('savePage', newNew);
+//   alert("Graph saved, check 'Save Pages' to view your saved graph!");
+// }
+/**
+* Adds a new status update to the database.
+*/
+export function saveAGraph(user, newIMG, cb) {
+sendXHR('POST', '/savedgraph', {
+userId: 1,
+contents: newIMG
+}, undefined, (xhr) => {
+// Return the new status update.
+cb(JSON.parse(xhr.responseText));
+});
 }
-
 export function unixTimeToString(time) {
   return new Date(time).toLocaleString();
 }

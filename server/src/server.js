@@ -33,6 +33,37 @@ function postFeedback(user, contents){
   //emulateServerReturn(newFeedback);
 }
 
+function postSavedGraph(user, newIMG) {
+var newSaved = {
+  "name": "default",
+  "time": (new Date).getTime(),
+  "image": newIMG
+};
+var newNew = readDocument('savePage', readDocument('users',user).savedGraphs);
+newNew['pages'].push(newSaved);
+writeDocument('savePage', newNew);
+console.log("Should have saved graph to server");
+return newNew;
+}
+app.post('/savedgraph', function(req, res) {
+var body = req.body;
+var fromUser = getUserIdFromToken(req.get('Authorization'));
+var userId = parseInt(body.userId, 10);
+console.log(fromUser + " " +userId+ " "+body.userId);
+// Check if requester is authorized to post this status update.
+// (The requester must be the author of the update.)
+if (fromUser === userId) {
+var newSavedGraph = postSavedGraph(body.userId, body.contents);
+// When POST creates a new resource, we should tell the client about it
+// in the 'Location' header and use status code 201.
+res.status(201);
+// Send the update!
+res.send(newSavedGraph);
+} else {
+// 401: Unauthorized.
+res.status(401).end();
+}
+});
 function getUserData2(user) {
   var userData = getUserItemSync(user);
   return userData;
