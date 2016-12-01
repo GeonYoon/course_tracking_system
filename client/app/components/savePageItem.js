@@ -23,7 +23,7 @@ export default class SavePageItem extends React.Component {
 
 
         {this.state.showReply &&
-          <img className="img-responsive" src={"img/" + this.props.picture}  width="100%" />
+          <img className="img-responsive" src={this.props.picture}  width="100%" />
         }
       </div>
     )

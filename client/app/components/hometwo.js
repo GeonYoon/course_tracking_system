@@ -221,12 +221,13 @@ this.cy.on('mouseout', 'node', function(event) {
     //  var element = new Image();
     //  element.src = this.cy.png()
      console.log(this.cy.png());
+     saveAGraph(this.props.user, this.cy.png(), ()=>{});
     //  saveAGraph(this.props.user, this.cy.png());
      // once we get the server working for the png, we can save it right here
    }
     generatePNG(){
      var img = this.cy.png();
-     console.log("generatePNG");
+    //  console.log("generatePNG");
      return img;
    }
 

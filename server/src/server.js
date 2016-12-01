@@ -4,6 +4,8 @@ var database = require('./database');
 var readDocument = database.readDocument;
 var writeDocument = database.writeDocument;
 var addDocument = database.addDocument;
+var validate = require('express-jsonschema').validate;
+var SavedGraphSchema = require('./schemas/savedgraph.json');
 
 var bodyParser = require('body-parser');
 
@@ -14,9 +16,12 @@ var app = express();
 // Support receiving text in HTTP request bodies
 app.use(bodyParser.text());
 // Support receiving JSON in HTTP request bodies
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 
 app.use(express.static('../client/build'));
+
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 
 //put server functions here
@@ -33,6 +38,37 @@ function postFeedback(user, contents){
   //emulateServerReturn(newFeedback);
 }
 
+function postSavedGraph(user, newIMG) {
+var newSaved = {
+  "name": "default",
+  "time": (new Date).getTime(),
+  "image": newIMG
+};
+var newNew = readDocument('savePage', readDocument('users',user).savedGraphs);
+newNew['pages'].push(newSaved);
+writeDocument('savePage', newNew);
+console.log("Should have saved graph to server");
+return newNew;
+}
+app.post('/savedgraph', validate({ body: SavedGraphSchema }), function(req, res) {
+var body = req.body;
+var fromUser = getUserIdFromToken(req.get('Authorization'));
+var userId = parseInt(body.userId, 10);
+console.log(fromUser + " " +userId+ " "+body.userId);
+// Check if requester is authorized to post this status update.
+// (The requester must be the author of the update.)
+if (fromUser === userId) {
+var newSavedGraph = postSavedGraph(body.userId, body.contents);
+// When POST creates a new resource, we should tell the client about it
+// in the 'Location' header and use status code 201.
+res.status(201);
+// Send the update!
+res.send(newSavedGraph);
+} else {
+// 401: Unauthorized.
+res.status(401).end();
+}
+});
 function getUserData2(user) {
   var userData = getUserItemSync(user);
   return userData;
