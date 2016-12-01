@@ -116,16 +116,19 @@ function getCourseItemSync(courseId){
   courseItem.prereqs = courseItem.prereqs.map((id) => getCourseItemSync(id));
   return courseItem;
 }
-function getCourseData2(course, cb){
-  var courseData = getCourseItemSync(course)
-  emulateServerReturn(courseData, cb)
+
+export function getCourseData2(course, cb){
+  sendXHR('GET', '/courses/' + course,
+  undefined, (xhr) => {
+    cb(JSON.parse(xhr.responseText));
+  });
 }
 function getMajorItemSync(majorId){
   var majorItem = readDocument('majors', majorId);
   majorItem.courses = majorItem.courses.map((id) => getCourseItemSync(id));
   return majorItem;
 }
-function getMajorData2(major, cb){
+export function getMajorData2(major, cb){
   var majorData = getMajorItemSync(major)
   emulateServerReturn(majorData, cb)
 }
@@ -207,46 +210,16 @@ function getUserItemSync(userId) {
   // Resolve comment author.
   return feedItem;
 }
-/**
-* Emulates a REST call to get the feed data for a particular user.
-* @param user The ID of the user whose feed we are requesting.
-* @param cb A Function object, which we will invoke when the Feed's data is available.
-*/
-export function getUserData(user) {
-  // Get the User object with the id "user".
-  var userData = readDocument('users', user);
-  emulateServerReturn(userData, (info)=>{info});
-  return userData;
-  // Get the Feed object for the user.
-  // Map the Feed's FeedItem references to actual FeedItem objects.
-  // Note: While map takes a callback function as an argument, it is
-  // synchronous, not asynchronous. It calls the callback immediately.
-  // userData = userData.map(getUserItemSync);
-  // Return FeedData with resolved references.
-  // emulateServerReturn will emulate an asynchronous server operation, which
-  // invokes (calls) the "cb" function some time in the future.
-  // emulateServerReturn(userData, cb);
-}
-// export function getUserData2(user, cb) {
-//   // Get the User object with the id "user".
-//   //var userData = readDocument('users', user);
-//   //return userData;
-//   // Get the Feed object for the user.
-//   // Map the Feed's FeedItem references to actual FeedItem objects.
-//   // Note: While map takes a callback function as an argument, it is
-//   // synchronous, not asynchronous. It calls the callback immediately.
-//   var userData = getUserItemSync(user);
-//   // Return FeedData with resolved references.
-//   // emulateServerReturn will emulate an asynchronous server operation, which
-//   // invokes (calls) the "cb" function some time in the future.
-//   emulateServerReturn(userData, cb);
-// }
+
+
 export function getUserData2(user, cb){
-  sendXHR('GET', '/user/1', undefined, (xhr) => {
+  sendXHR('GET', '/user/' + user, undefined, (xhr) => {
     cb(JSON.parse(xhr.responseText));
   });
-
 }
+
+
+
 export function getCollectionData(collection_id){
   return readDocumentCollection(collection_id);
 }
@@ -278,7 +251,7 @@ export function getFeedbackData(){
 // }
 
 export function getPageData(user, cb){
-  sendXHR('GET', '/user/1/page', undefined, (xhr) => {
+  sendXHR('GET', '/user/' + user + '/page', undefined, (xhr) => {
     cb(JSON.parse(xhr.responseText));
   });
 }

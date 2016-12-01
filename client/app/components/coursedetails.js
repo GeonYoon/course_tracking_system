@@ -1,6 +1,6 @@
 import React from 'react';
-import {getCourseData} from '../server'
-import {getUserData} from '../server'
+import {getCourseData2} from '../server'
+import {getUserData2} from '../server'
 import {Link} from 'react-router'
 import {haveTaken} from '../server'
 import {nextSem} from '../server'
@@ -14,44 +14,56 @@ export default class CourseDetails extends React.Component{
   }
 
   takeNextSemester(){
-   nextSem(this.props.route.user, parseInt(this.props.params.course))
- }
-
- takenAlready(){
-   haveTaken(this.props.route.user, parseInt(this.props.params.course))
- }
-
-  render(){
-
-  var data = getCourseData(this.props.params.course);
-  var userData = getUserData(this.props.route.user);
-  var prereqs = data.prereqs.map(course =>{
-    var info = getCourseData(course);
-    return (info.department + " " + info.number + ": " + info.name);
-  });
-
-  if (prereqs.length == 0){
-    prereqs = "None."
+    nextSem(this.props.route.user, parseInt(this.props.params.course))
   }
 
-  var takentext = "Eligible"
+  takenAlready(){
+    haveTaken(this.props.route.user, parseInt(this.props.params.course))
+  }
 
-  data.prereqs.map(course => {
-    if(userData.classesTaken.indexOf(course) == -1){
-      takentext = "Ineligible: must take " + prereqs[0];
-    }
-  })
+  render(){
+    var userData;
+    var courseData;
 
-  userData.classesTaken.map(course =>{
-    if(course == this.props.params.course){
-      takentext = "Taken"
+    getUserData2(this.props.route.user, data =>{
+      userData = data;
+    })
+
+    getCourseData2(this.params.course, data =>{
+      courseData = data;
+    })
+
+    var prereqs = courseData.prereqs.map(course =>{
+      var name;
+      getCourseData2(course, data =>{
+        name = data.name;
+      });
+      return name;
+    })
+
+    if (prereqs.length == 0){
+      prereqs = "None."
     }
-  });
-  userData.nextSemester.map(course =>{
-    if(course == this.props.params.course){
-      takentext = "Next Semester"
-    }
-  });
+
+    var takenText = "Eligible"
+
+    courseData.prereqs.map(course =>{
+      if(userData.classesTaken.indexOf(course) == -1){
+        takenText = "Ineligible: must take " + prereqs[0];
+      }
+    })
+
+    userData.classesTaken.map(course =>{
+      if(course == this.params.course){
+        takenText = "Taken"
+      }
+    })
+
+    userData.nextSemester.map(course =>{
+      if(course == this.params.course){
+        takenText = "Next Semester"
+      }
+    })
 
     return(
       <div className = "container">
@@ -62,10 +74,10 @@ export default class CourseDetails extends React.Component{
                 <div className = "media">
                   <div className = "media-body">
                     <h1>
-                      <strong>{data.department + " " + data.number}:</strong> {data.name}
+                      <strong>{courseData.department + " " + courseData.number}:</strong> {courseData.name}
                     </h1>
                     <h4>
-                      <strong>Status: </strong>{takentext}
+                      <strong>Status: </strong>{takenText}
                     </h4>
                     <button type = "button" className = "btn btn-default" onClick={this.takeNextSemester.bind(this)}>
                       I'll take this next semester!
@@ -84,9 +96,9 @@ export default class CourseDetails extends React.Component{
               <hr />
               <div className = "panel-body">
                 <h3>Description</h3>
-                <p>{data.description}</p>
+                <p>{courseData.description}</p>
                 <h3>Textbooks</h3>
-                <p>{data.textbooks}</p>
+                <p>{courseData.textbooks}</p>
                 <h3>Prerequisites</h3>
                 <p>{prereqs.toString()}</p>
                 <br />

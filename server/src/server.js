@@ -37,6 +37,8 @@ function getUserData2(user) {
   var userData = getUserItemSync(user);
   return userData;
 }
+
+
 function getUserItemSync(userId) {
   var feedItem = readDocument('users', userId);
   feedItem.majors = feedItem.majors.map((id) => getMajorItemSync(id));
@@ -63,18 +65,18 @@ function getCourseItemSync(courseId){
 * Get the data for a particular user.
 */
 app.get('/user/:userid', function(req, res) {
-var userid = req.params.userid;
-var fromUser = getUserIdFromToken(req.get('Authorization'));
-// userid is a string. We need it to be a number.
-// Parameters are always strings.
-var useridNumber = parseInt(userid, 10);
-if (fromUser === useridNumber) {
-// Send response.
-res.send(getUserData2(userid));
-} else {
-// 401: Unauthorized request.
-res.status(401).end();
-}
+  var userid = req.params.userid;
+  var fromUser = getUserIdFromToken(req.get('Authorization'));
+  // userid is a string. We need it to be a number.
+  // Parameters are always strings.
+  var useridNumber = parseInt(userid, 10);
+  if (fromUser === useridNumber) {
+    // Send response.
+    res.send(getUserData2(userid));
+  } else {
+    // 401: Unauthorized request.
+    res.status(401).end();
+  }
 });
 
 /**
@@ -164,9 +166,7 @@ if (fromUser === userId) {
     majItem.shown_majors.splice(courseIndex, 1);
     writeDocument('users', majItem);
   }
-// Return a resolved version of the likeCounter
-// Note that this request succeeds even if the
-// user already unliked the request!
+
 res.send(majItem.shown_majors.map((majId) =>
 readDocument('majors', majId)));
 } else {
@@ -252,9 +252,6 @@ app.get('/user/:userid/page',function(req,res) {
     res.status(401).end();
   }
 });
-
-
-
 
 
 
