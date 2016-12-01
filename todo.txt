@@ -17,3 +17,18 @@ OTHER FEATURES THAT SHOULD BE ADDED:
 take picture of graph on main screen
 classes that are in multiple majors not represented correctly in main app - fix by keeping track of all nodes added to the main graph,
   and only adding new ones if they haven't been added yet.
+
+
+NEW TO-DO - 
+for SA:
+-feedback HTTP route (post)
+-course data HTTP route (get)
+-two buttons in course details (put, delete)
+-adding/taking out majors/minors (put, delete)
+-delete saved graphs (delete)
+-fix course history page loading
+-name saved graphs
+
+-delete old database once everything is moved
+-error handling
+-finish written report
