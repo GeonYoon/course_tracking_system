@@ -16,7 +16,7 @@ var app = express();
 // Support receiving text in HTTP request bodies
 app.use(bodyParser.text());
 // Support receiving JSON in HTTP request bodies
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 
 app.use(express.static('../client/build'));
 
