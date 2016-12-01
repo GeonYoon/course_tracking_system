@@ -220,7 +220,7 @@ this.cy.on('mouseout', 'node', function(event) {
    saveAsPNG(){
     //  var element = new Image();
     //  element.src = this.cy.png()
-    //  console.log(this.cy.png());
+     console.log(this.cy.png());
      saveAGraph(this.props.user, this.cy.png(), ()=>{});
     //  saveAGraph(this.props.user, this.cy.png());
      // once we get the server working for the png, we can save it right here
