@@ -104,7 +104,7 @@ export function saveAGraph(user, newIMG, cb) {
 sendXHR('POST', '/savedgraph', {
 userId: 1,
 contents: newIMG
-}, undefined, (xhr) => {
+}, (xhr) => {
 // Return the new status update.
 cb(JSON.parse(xhr.responseText));
 });

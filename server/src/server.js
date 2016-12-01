@@ -4,6 +4,8 @@ var database = require('./database');
 var readDocument = database.readDocument;
 var writeDocument = database.writeDocument;
 var addDocument = database.addDocument;
+var validate = require('express-jsonschema').validate;
+var SavedGraphSchema = require('./schemas/savedgraph.json');
 
 var bodyParser = require('body-parser');
 
@@ -17,6 +19,9 @@ app.use(bodyParser.text());
 app.use(bodyParser.json());
 
 app.use(express.static('../client/build'));
+
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 
 //put server functions here
@@ -45,7 +50,7 @@ writeDocument('savePage', newNew);
 console.log("Should have saved graph to server");
 return newNew;
 }
-app.post('/savedgraph', function(req, res) {
+app.post('/savedgraph', validate({ body: SavedGraphSchema }), function(req, res) {
 var body = req.body;
 var fromUser = getUserIdFromToken(req.get('Authorization'));
 var userId = parseInt(body.userId, 10);
