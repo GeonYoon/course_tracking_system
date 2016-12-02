@@ -15,13 +15,20 @@ export default class SavePageItem extends React.Component {
     this.setState({showReply: !this.state.showReply})
   }
 
+  onDelete(e) {
+    e.preventDefault();
+    this.props.onDelete();
+  }
+
   render(){
     return(
       <div className="row panel-body box-line">
         <button onClick={this.onClick.bind(this)} className="btn btn-default pull-left">{this.props.name}</button>
-        <a className="pull-right">{unixTimeToString(this.props.time)}</a>
-        <br />{
-          this.state.showReply &&
+        <a className="pull-right">{unixTimeToString(this.props.time)}
+          <button onClick={this.onDelete.bind(this)} className="btn btn-default pleft">delete</button>
+        </a>
+        <br />
+        {this.state.showReply &&
           <img className="img-responsive" src={this.props.picture}  width="100%" />
         }
       </div>

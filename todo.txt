@@ -1,35 +1,13 @@
-FUNCTIONS THAT NEED TO BE IMPLEMENTED:
-getCourseData with emulateServerReturn (for course details page) - this is why in the main app, clicking on one of the courses
-  that is in the new database but not the old one causes an error. We need to switch course details to load data from new server.
-the two buttons in course details need to write to the real database (PUT, DELETE) - this is why clicking "I've taken this class" in
-  course details does not give a response in the main app - these buttons currently don't modify the new database
-the user should be able to add/take out majors/minors in their settings (PUT, DELETE)
-the user should be able to post feedback (POST)
-the user should be able to add/take out saved graphs(POST or PUT, DELETE)
+last final things to do:
+routes:
+-buttons for taken/next semester/undo in course details (2 PUT, 2 DELETE routes) (Andrew)
+-postFeedback button in About page (POST http route)
+-add/delete majors and minor in user settings (2 PUT, 2 DELETE routes)
 
-OTHER STUFF THAT NEEDS TO BE DONE:
-json schema matching (copy from workshop)
-delete old database (easy once we're done with everything else)
-error handling
-written report
-
-OTHER FEATURES THAT SHOULD BE ADDED:
-take picture of graph on main screen
-classes that are in multiple majors not represented correctly in main app - fix by keeping track of all nodes added to the main graph,
-  and only adding new ones if they haven't been added yet.
-
-
-NEW TO-DO -
-for SA:
--feedback HTTP route (post)
--course data HTTP route (get)
--two buttons in course details (put, delete)
--adding/taking out majors/minors (put, delete)
--delete saved graphs (delete)
--fix course history page loading
--name saved graphs
--take out text button
-
--delete old database once everything is moved
--error handling
--finish written report
+other:
+-delete old database
+-take out text button in main graph
+-take out drop down in course details
+-error handling double check (I think since we mostly copied the workshop we should be all set but we should make sure)
+-finish up the written report
+-prerequisites in course details
