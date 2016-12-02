@@ -47,7 +47,13 @@ export default class Navbar extends React.Component{
               <div className="btn-toolbar pull-right" role="toolbar">
                 <div className="btn-group" role="group">
                 <button className="btn btn-default navbar-btn reset-btn" type="button" onClick={() => {
-                  resetDatabase();
+                  var xhr = new XMLHttpRequest();
+xhr.open('POST', '/resetdb');
+xhr.addEventListener('load', function() {
+window.alert("Database reset! Refreshing the page now...");
+document.location.reload(false);
+});
+xhr.send();
                 }}>Reset Mock DB</button>
                 <Link to={"/Profile/"}>
                   <button type="button" className="btn navbar-btn btn-default">

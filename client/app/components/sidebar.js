@@ -43,7 +43,7 @@ export default class Sidebar extends React.Component{
 
   updatePNG(){
     var img = this.props.genp();
-    console.log(img);
+    // console.log(img);
     return img;
   }
 

@@ -24,9 +24,9 @@ export default class SavePageItem extends React.Component {
     return(
       <div className="row panel-body box-line">
         <button onClick={this.onClick.bind(this)} className="btn btn-default pull-left">{this.props.name}</button>
-        <a className="pull-right">{unixTimeToString(this.props.time)}
+        <p className="pull-right">{unixTimeToString(this.props.time)}
           <button onClick={this.onDelete.bind(this)} className="btn btn-default pleft">delete</button>
-        </a>
+        </p>
         <br />
         {this.state.showReply &&
           <img className="img-responsive" src={this.props.picture}  width="100%" />

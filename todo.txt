@@ -5,9 +5,9 @@ routes:
 -add/delete majors and minor in user settings (2 PUT, 2 DELETE routes)
 
 other:
--delete old database
--take out text button in main graph
--take out drop down in course details
+-delete old database (DONE)
+-take out text button in main graph (DONE)
+-take out drop down in course history
 -error handling double check (I think since we mostly copied the workshop we should be all set but we should make sure)
 -finish up the written report
 -prerequisites in course details
