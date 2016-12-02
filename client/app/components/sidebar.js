@@ -164,20 +164,20 @@ export default class Sidebar extends React.Component{
       <hr />
       <div className="settings-current">
         Currently Showing: <br />
-      <br />
       {this.state.shown_majors.map((major)=>{
             return(
               <div>
-              <p className="pull-left">{major.title} Major</p><button className="btn-xs btn-default pull-right" type="button" onClick={this.subtractMajor.bind(this, major._id)}><span className="glyphicon glyphicon-minus"></span></button>
+              <br />
+              <p className="pull-left sidebar-subtext">{major.title} Major</p><button className="btn-xs btn-default pull-right" type="button" onClick={this.subtractMajor.bind(this, major._id)}><span className="glyphicon glyphicon-minus"></span></button>
               <br />
             </div>
           )
           })}
-          <br />
           {this.state.shown_minors.map((minor)=>{
                 return(
                   <div>
-                  <p className="pull-left">{minor.title} Minor</p><button className="btn-xs btn-default pull-right" type="button" onClick={this.subtractMinor.bind(this, minor._id)}><span className="glyphicon glyphicon-minus"></span></button>
+                    <br />
+                  <p className="pull-left sidebar-subtext">{minor.title} Minor</p><button className="btn-xs btn-default pull-right" type="button" onClick={this.subtractMinor.bind(this, minor._id)}><span className="glyphicon glyphicon-minus"></span></button>
                   <br />
                 </div>
                 )
@@ -187,12 +187,13 @@ export default class Sidebar extends React.Component{
       <hr />
       <div className="btn-group" role="group">
         <button type="button" className="btn navbar-btn btn-default">
-          <span id="saveG" className="glyphicon glyphicon-floppy-disk" onClick={this.props.cyto.bind(this)}> Save Progress</span>
+          <span id="saveG" className="glyphicon glyphicon-floppy-disk" onClick={this.props.cyto.bind(this)}></span> Save Progress
         </button>
         <br />
+        <a id="exportP" download="file.png">
         <button type="button" className="btn navbar-btn btn-default">
-          <a id="exportP" className="glyphicon glyphicon-save" download="file.png"> Download PNG</a>
-        </button>
+           <span className="glyphicon glyphicon-save"></span> Download PNG
+        </button></a>
         <br />
       </div>
       </div>

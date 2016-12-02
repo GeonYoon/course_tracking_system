@@ -18,8 +18,13 @@ body {
 
 
 .main-app-border{
-  padding: 10px;
+  padding: 15px;
   position: fixed;
+  border-radius: 5px;
+}
+
+.sidebar-subtext{
+  font-size: 90%;
 }
 
 .cy1 {
