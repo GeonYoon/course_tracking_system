@@ -229,7 +229,7 @@ var initialData = {
         {
           "name": "second draft",
           "time": 1479258638865,
-          "image": "img/main_mock_1.png"
+          "image": "img/examplegraph1.png"
         },
         {
           "name": "third draft",

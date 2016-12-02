@@ -58,14 +58,6 @@ class Profile extends React.Component {
   }
 }
 
-class CourseDetailsFirst extends React.Component {
-  render() {
-    return (
-      <CourseDetails />
-    );
-  }
-}
-
 
 class App extends React.Component {
   render() {

@@ -19,7 +19,7 @@ classes that are in multiple majors not represented correctly in main app - fix 
   and only adding new ones if they haven't been added yet.
 
 
-NEW TO-DO - 
+NEW TO-DO -
 for SA:
 -feedback HTTP route (post)
 -course data HTTP route (get)
@@ -28,6 +28,7 @@ for SA:
 -delete saved graphs (delete)
 -fix course history page loading
 -name saved graphs
+-take out text button
 
 -delete old database once everything is moved
 -error handling
