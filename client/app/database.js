@@ -267,11 +267,20 @@ export function addDocument(collectionName, newDoc) {
 /**
  * Reset our browser-local database.
  */
-export function resetDatabase() {
-  localStorage.setItem(startupName, JSON.stringify(initialData));
-  data = JSONClone(initialData);
-}
+// export function resetDatabase() {
+//   localStorage.setItem(startupName, JSON.stringify(initialData));
+//   data = JSONClone(initialData);
+// }
 
+export function resetDatabase() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '/resetdb');
+  xhr.addEventListener('load', function() {
+  window.alert("Database reset! Refreshing the page now...");
+  document.location.reload(false);
+  });
+  xhr.send();
+}
 /**
  * Reset database button.
  */
