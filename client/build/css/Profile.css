@@ -12,15 +12,6 @@
   padding-left: 0px;
   color: black !important;
 }
-.sidebar{
-  background-color: maroon !important;
-  width:210px;
-  margin-top: 0px;
-  border-radius: 0px;
-}
-.sidebar-box{
-margin-left: 0px;
-}
 .category{
   font-weight: bold;
   font-size: 19px;
