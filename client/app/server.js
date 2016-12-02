@@ -99,9 +99,10 @@ export function haveTaken(user, courseId){
 /**
 * Adds a new status update to the database.
 */
-export function saveAGraph(user, newIMG, cb) {
+export function saveAGraph(user, graphTitle, newIMG, cb) {
 sendXHR('POST', '/savedgraph', {
 userId: 1,
+graphName: graphTitle,
 contents: newIMG
 }, (xhr) => {
 // Return the new status update.
