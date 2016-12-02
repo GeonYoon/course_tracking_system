@@ -1,5 +1,5 @@
 import React from 'react';
-import {getUserData2,getPassword,setPassword,emulateServerReturn} from '../server';
+import {getUserData,getPassword,setPassword,emulateServerReturn} from '../server';
 export default class Profile extends React.Component{
   constructor(props){
     super(props);
@@ -16,7 +16,7 @@ export default class Profile extends React.Component{
     }
   }
   refresh(){
-    getUserData2(this.props.user, (info) => {
+    getUserData(this.props.user, (info) => {
       this.setState(info);
     });
   }

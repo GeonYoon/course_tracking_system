@@ -22,7 +22,7 @@ export default class AboutPage extends React.Component{
     }
   }
   refresh(){
-    getUserData2(this.props.user, (info) => {
+    getUserData(this.props.user, (info) => {
       this.setState(info);
     });
   }
