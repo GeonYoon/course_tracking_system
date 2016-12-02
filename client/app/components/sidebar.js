@@ -139,7 +139,7 @@ export default class Sidebar extends React.Component{
           <label>Add a Major:</label>
           <br />
           <select className="form-control side-major" title="Choose one of the following..." onChange={this.updateSelectedMajor.bind(this)}>
-            <option value={0}>select a major..</option>
+            <option value={0}>select a major...</option>
             {this.state.majors.map((majornum)=>{
                 return(
                   <option value={majornum._id}>{majornum.title}</option>
@@ -154,7 +154,7 @@ export default class Sidebar extends React.Component{
           <label>Add a Minor:</label>
           <br />
           <span><select className="form-control side-minor" onChange={this.updateSelectedMinor.bind(this)}>
-            <option value={0}>select a minor..</option>
+            <option value={0}>select a minor...                       </option>
               {this.state.minors.map((majornum)=>{
                   return(
                     <option value={majornum._id}>{majornum.title}</option>
