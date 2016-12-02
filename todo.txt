@@ -10,3 +10,4 @@ other:
 -take out drop down in course details
 -error handling double check (I think since we mostly copied the workshop we should be all set but we should make sure)
 -finish up the written report
+-prerequisites in course details
