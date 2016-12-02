@@ -38,9 +38,9 @@ function postFeedback(user, contents){
   //emulateServerReturn(newFeedback);
 }
 
-function postSavedGraph(user, newIMG) {
+function postSavedGraph(user, graphName, newIMG) {
 var newSaved = {
-  "name": "default",
+  "name": graphName,
   "time": (new Date).getTime(),
   "image": newIMG
 };
@@ -58,7 +58,7 @@ console.log(fromUser + " " +userId+ " "+body.userId);
 // Check if requester is authorized to post this status update.
 // (The requester must be the author of the update.)
 if (fromUser === userId) {
-var newSavedGraph = postSavedGraph(body.userId, body.contents);
+var newSavedGraph = postSavedGraph(body.userId, body.graphName, body.contents);
 // When POST creates a new resource, we should tell the client about it
 // in the 'Location' header and use status code 201.
 res.status(201);

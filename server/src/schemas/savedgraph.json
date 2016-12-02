@@ -5,6 +5,9 @@
     "userId": {
       "type": "integer"
     },
+    "graphName": {
+      "type": "string"
+    },
     "contents": {
       "type": "string"
     }
