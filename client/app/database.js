@@ -1,6 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-
 // Modify with your startup's name!
 var startupName = 'Faucet';
 
