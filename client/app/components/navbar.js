@@ -1,6 +1,5 @@
 import React from 'react';
 import {Link} from 'react-router';
-import {resetDatabase} from '../database.js';
 import {getUserData} from '../server.js'
 export default class Navbar extends React.Component{
 
