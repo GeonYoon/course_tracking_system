@@ -21,6 +21,7 @@ export default class FormSub extends React.Component{
       this.setState({value: ""});
     }
   }
+  
   handleChange(e){
     e.preventDefault();
     this.setState({value: e.target.value});

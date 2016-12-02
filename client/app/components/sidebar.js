@@ -1,10 +1,6 @@
 import React from 'react';
-import {addShownMinor} from '../server.js';
-import {addShownMajor} from '../server.js';
-import {saveAGraph} from '../server.js';
-import {getUserData} from '../server.js';
-import {subtractShownMajor} from '../server.js';
-import {subtractShownMinor} from '../server.js';
+import {addShownMinor, addShownMajor, saveAGraph, getUserData, subtractShownMajor, subtractShownMinor} from '../server.js';
+
 
 
 //to do:
@@ -44,17 +40,21 @@ export default class Sidebar extends React.Component{
     };
 
   }
+
   updatePNG(){
     var img = this.props.genp();
     console.log(img);
     return img;
   }
+
   makePDF(){
     return "./file.pdf";
   }
+
   saveGraph(){
     saveAGraph(this.props.user, this.props.genp());
   }
+
   addMajor(){
     var already_added = false;
       this.state.shown_majors.map((courses)=>{
@@ -69,21 +69,25 @@ export default class Sidebar extends React.Component{
       this.props.refr();
     }
   }
+
   subtractMajor(majNum){
     subtractShownMajor(this.props.user, majNum, () => {
     this.refresh();
     });
     this.props.refr();
   }
+
   subtractMinor(majNum){
     subtractShownMinor(this.props.user, majNum, () => {
     this.refresh();
     });
     this.props.refr();
   }
+
   updateSelectedMajor(event){
     selmajnum = event.target.value;
   }
+
   addMinor(){
     var already_added = false;
     this.state.shown_minors.map((courses)=>{
@@ -100,15 +104,19 @@ export default class Sidebar extends React.Component{
 
     }
   }
+
   updateSelectedMinor(event){
     selminnum = event.target.value;
   }
+
   refresh(){
     getUserData(this.props.user, (info)=>this.setState(info));
   }
+
   componentWillMount(){
     this.refresh();
   }
+
   componentDidMount(){
     var func = this.props.genp;
     var button = document.getElementById('exportP');
@@ -125,12 +133,8 @@ export default class Sidebar extends React.Component{
     // var userInfo = getUserData(this.props.user);
     return(
       <div className="main-app-settings main-app-border">
-
-
-          <p id="settings-title"> Graph Settings </p>
-
+        <p id="settings-title"> Graph Settings </p>
         <hr />
-
         <div className="form-group form-inline">
           <label>Add a Major:</label>
           <br />
@@ -143,7 +147,6 @@ export default class Sidebar extends React.Component{
               })}
           </select>
             <button className="btn btn-default pull-right" type="button" onClick={this.addMajor.bind(this)}><span className="glyphicon glyphicon-plus"></span></button>
-
         </div>
         <div className="form-group form-inline select-minor">
           <label>Add a Minor:</label>
@@ -158,10 +161,7 @@ export default class Sidebar extends React.Component{
           </select></span>
             <button className="btn btn-default pull-right side-minor-btn" type="button" onClick={this.addMinor.bind(this)}><span className="glyphicon glyphicon-plus"></span></button>
         </div>
-
-
       <hr />
-
       <div className="settings-current">
         Currently Showing: <br />
       <br />
@@ -185,22 +185,16 @@ export default class Sidebar extends React.Component{
               <br />
       </div>
       <hr />
-
       <div className="btn-group" role="group">
-
         <button type="button" className="btn navbar-btn btn-default">
           <span id="saveG" className="glyphicon glyphicon-floppy-disk" onClick={this.props.cyto.bind(this)}> Save Progress</span>
         </button>
         <br />
         <button type="button" className="btn navbar-btn btn-default">
-
-
           <a id="exportP" className="glyphicon glyphicon-save" download="file.png"> Download PNG</a>
-
         </button>
         <br />
       </div>
-
       </div>
     )
   }

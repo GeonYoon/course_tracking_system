@@ -1,22 +1,25 @@
 import React from 'react';
 import {Link} from 'react-router';
 import {resetDatabase} from '../database.js';
-import {getUserData2} from '../server.js'
+import {getUserData} from '../server.js'
 export default class Navbar extends React.Component{
+
   constructor(props){
     super(props);
     this.state = {
       fullName: ""
     }
   }
+
   componentDidMount(){
-    getUserData2(this.props.user, (info) => {
+    getUserData(this.props.user, (info) => {
       this.setState(info);
     });
   }
-  render(){
-    return(
 
+  render(){
+
+    return(
       <nav className="navbar navbar-fixed-top navbar-default">
         <div className="container">
           <div className="collapse navbar-collapse">
@@ -69,7 +72,7 @@ export default class Navbar extends React.Component{
           </div>
         </div>
       </div>
-      </nav>
+    </nav>
     )
   }
 }

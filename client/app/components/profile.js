@@ -1,6 +1,7 @@
 import React from 'react';
-import {getUserData2,getPassword,setPassword,emulateServerReturn} from '../server';
+import {getUserData} from '../server';
 export default class Profile extends React.Component{
+
   constructor(props){
     super(props);
     this.state = { //THIS IS JUST A DUMMY VARIABLE, IT GETS OVERWRITTEN BY THE STATE
@@ -15,14 +16,17 @@ export default class Profile extends React.Component{
       "email":"WRONG"
     }
   }
+
   refresh(){
-    getUserData2(this.props.user, (info) => {
+    getUserData(this.props.user, (info) => {
       this.setState(info);
     });
   }
+
   componentDidMount(){
     this.refresh();
   }
+  
   render(){
     return(
       <div className="container">
