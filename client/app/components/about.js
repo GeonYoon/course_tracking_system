@@ -81,7 +81,11 @@ export default class AboutPage extends React.Component{
               <p className="about-subtext">After a subtle line break, I'm back to bring you a quick little tutorial of this app! Go to the main page, select which major/minor you would like to view, and take a look at the path to your favorite classes. Prerequisites are denoted by arrows. Make sure to check off the classes you have already taken so that you can easily see which ones are now open to you and which double major or minor you could complete! Check out the settings to customize your experience.</p>
             <h2 className="about-title">FAQ</h2>
               <h5 className="about-subtitle">How do I view my tracking form?</h5>
-                <p className="about-subtext">Clicking on the "Main" button in the top left will take you there!</p>
+                <p className="about-subtext">Clicking on the "Home" button in the top left will take you there!</p>
+              <h5 className="about-subtitle">Why is there nothing on my home screen?</h5>
+                <p className="about-subtext">You need to add majors to the display by using the dropdown menu in the home screen sidebar, then clicking on the plus sign.</p>
+              <h5 className="about-subtitle">Why can't I save a graph?</h5>
+                <p className="about-subtext">Make sure you have pop ups enabled and are clicking the "Save Progress" button. If the issue persists, use the feedback form below to let us know.</p>
             <h5 className="about-subtitle">Why are there no good questions in this FAQ?</h5>
               <p className="about-subtext">Well, quite frankly, nobody has asked any questions yet! So no questions are frequently asked at this point. Maybe someday. Making this line as long as possible is also my way of testing the borders of this very same web app! I hope that answers your question, if not then please contact us below!</p>
             <h2 className="about-title">Helpful Links</h2>

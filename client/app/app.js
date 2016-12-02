@@ -8,6 +8,7 @@ import AboutPage from './components/about';
 import ProfilePage from './components/profile';
 import CourseHistoryPage from './components/courseHistory';
 import CourseDetails from './components/coursedetails';
+import ErrorBanner from './components/errorbanner';
 
 class Home extends React.Component {
   render() {
@@ -54,6 +55,11 @@ class App extends React.Component {
   render() {
     return (
       <div><Navbar user={1}/>
+        <div className="row">
+  <div className="col-md-12">
+  <ErrorBanner />
+  </div>
+  </div>
       {this.props.children}
     </div>
     )
