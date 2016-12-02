@@ -33,7 +33,7 @@ export default class Navbar extends React.Component{
               <div className="btn-toolbar pull-right" role="toolbar">
                 <div className="btn-group" role="group">
                 <button className="btn btn-default navbar-btn reset-btn" type="button" onClick={() => {
-                  resetDatabase();                
+                  resetDatabase();
                 }}>Reset Mock DB</button>
 
 
