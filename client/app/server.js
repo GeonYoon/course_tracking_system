@@ -289,7 +289,14 @@ export function getFeedbackData(){
 // }
 
 export function getPageData(user, cb){
-  sendXHR('GET', '/user/1/page', undefined, (xhr) => {
+  sendXHR('GET', '/user/'+ user + '/page', undefined, (xhr) => {
+    cb(JSON.parse(xhr.responseText));
+  });
+}
+
+export function deletePageItem(user,pageid, cb){
+  sendXHR('DELETE', '/user/' + user + '/page/' + pageid,
+  undefined, (xhr) => {
     cb(JSON.parse(xhr.responseText));
   });
 }

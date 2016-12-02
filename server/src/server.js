@@ -237,9 +237,6 @@ res.status(401).end();
 
 
 
-
-
-
 // Defines what happens when it receives the `GET /` request
 app.get('/', function (req, res) {
 res.send('Hello World!');
@@ -290,8 +287,26 @@ app.get('/user/:userid/page',function(req,res) {
 });
 
 
+app.delete('/user/:userid/page/:pageid', function(req,res) {
+  var fromUser = getUserIdFromToken(req.get('Authorization'));
+  var pageId = parseInt(req.params.pageid, 10);
+  var useridNumber = parseInt(req.params.userid,10);
 
+  if (fromUser === useridNumber) {
+    var userData = readDocument('users',useridNumber)
+    var savePage = readDocument('savePage',userData.savedGraphs);
+    if(pageId !== -1){
+      savePage.pages.splice(pageId,1);
+      writeDocument('savePage',savePage)
+    }
+    res.send(savePage)
+  }
+  else {
+    // 401: Unauthorized.
+    res.status(401).end();
+  }
 
+});
 
 
 // Starts the server on port 3000!

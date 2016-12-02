@@ -1,6 +1,6 @@
 import React from 'react';
 import SavePageItem from "./savePageItem";
-import {getPageData} from '../server';
+import {getPageData,deletePageItem} from '../server';
 
 export default class SavePages extends React.Component {
   constructor(props){
@@ -28,6 +28,12 @@ export default class SavePages extends React.Component {
      getPageData(this.props.user, (pageData) => {
        this.setState({temp: pageData})
      });
+  }
+
+  deletePageItem(id) {
+    deletePageItem(this.props.user,id,() => {
+      this.refresh();
+    });
   }
 
   updateSearch(event) {
@@ -72,6 +78,7 @@ export default class SavePages extends React.Component {
                 filteredDAta.map((page,i) => {
                   return (
                     <SavePageItem key ={i}
+                                  onDelete={() => this.deletePageItem(i)}
                                   index = {i}
                                   name = {page.name}
                                   time = {page.time}
