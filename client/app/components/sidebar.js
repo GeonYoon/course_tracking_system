@@ -190,8 +190,8 @@ export default class Sidebar extends React.Component{
       </div>
       <hr />
       <div className="btn-group" role="group">
-        <button type="button" className="btn navbar-btn btn-default">
-          <span id="saveG" className="glyphicon glyphicon-floppy-disk" onClick={this.props.cyto.bind(this)}></span> Save Progress
+        <button type="button" onClick={this.props.cyto.bind(this)} className="btn navbar-btn btn-default">
+          <span id="saveG" className="glyphicon glyphicon-floppy-disk"></span> Save Progress
         </button>
         <br />
         <a id="exportP" download="file.png">
