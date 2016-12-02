@@ -2,7 +2,7 @@ import React from 'react';
 import Sidebar from './sidebar';
 import cytoscape from '../../build/js/cytoscape.js';
 import {Link} from 'react-router';
-import {getUserData2} from '../server.js';
+import {getUserData} from '../server.js';
 import {saveAGraph} from '../server.js';
 
 export default class GraphHome extends React.Component {
@@ -194,7 +194,7 @@ this.cy.on('mouseout', 'node', function(event) {
    //this.cy.png()
  }
  ref(){
-   getUserData2(this.props.user, (info) => {
+   getUserData(this.props.user, (info) => {
      this.setState(info);
    });
    //this.userInfo = getUserData(this.props.user);
@@ -220,8 +220,13 @@ this.cy.on('mouseout', 'node', function(event) {
    saveAsPNG(){
     //  var element = new Image();
     //  element.src = this.cy.png()
-     console.log(this.cy.png());
-     saveAGraph(this.props.user, this.cy.png(), ()=>{});
+    //  console.log(this.cy.png());
+    var graphName = "";
+    graphName = prompt("Please enter a name for the graph", "");
+    //  console.log(graphName);
+    if(!(graphName == "" || graphName == null)){
+     saveAGraph(this.props.user, graphName, this.cy.png(), ()=>{});
+    }
     //  saveAGraph(this.props.user, this.cy.png());
      // once we get the server working for the png, we can save it right here
    }

@@ -1,20 +1,32 @@
 import React from 'react';
 import {Link} from 'react-router';
-import {getUserData, getCourseData} from '../server'
+import {getUserData} from '../server'
 
 export default class CourseHistory extends React.Component {
 
+  constructor(props){
+    super(props);
+    this.state = {
+      "courses" : []
+    }
+  }
 
+  componentDidMount(){
+    this.refresh();
+  }
+
+  refresh(){
+    getUserData(1, user =>{
+      this.setState({
+        "courses" : user.classesTaken
+      })
+    });
+  }
 
   render() {
-
-    var history = getUserData(1).classesTaken;
-    var classes = history.map(course=>getCourseData(course));
-
-
-
     var rows = [];
-    classes.map(course=>{
+
+    this.state.courses.map(course=>{
       rows.push(
         <tr key = {course.id}>
           <td>
@@ -30,11 +42,9 @@ export default class CourseHistory extends React.Component {
       );
     })
 
-
     return (
       <div className="container">
         <div className="col-md-12 classTable">
-
           <div className="table-responsive">
             <table className="table table-bordered ">
               <thead className="thead">
@@ -76,7 +86,6 @@ export default class CourseHistory extends React.Component {
           </div>
         </div>
       </div>
-
     )
   }
 }

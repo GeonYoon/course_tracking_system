@@ -2,7 +2,7 @@ import React from 'react';
 import {addShownMinor} from '../server.js';
 import {addShownMajor} from '../server.js';
 import {saveAGraph} from '../server.js';
-import {getUserData2} from '../server.js';
+import {getUserData} from '../server.js';
 import {subtractShownMajor} from '../server.js';
 import {subtractShownMinor} from '../server.js';
 
@@ -104,7 +104,7 @@ export default class Sidebar extends React.Component{
     selminnum = event.target.value;
   }
   refresh(){
-    getUserData2(this.props.user, (info)=>this.setState(info));
+    getUserData(this.props.user, (info)=>this.setState(info));
   }
   componentWillMount(){
     this.refresh();

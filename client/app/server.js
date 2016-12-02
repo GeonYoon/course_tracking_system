@@ -1,4 +1,3 @@
-import {readDocument, writeDocument, addDocument, readDocumentCollection} from './database.js';
 var token = 'eyJpZCI6MX0=';
 /**
 * Properly configure+send an XMLHttpRequest with error handling,
@@ -75,16 +74,6 @@ export function postFeedback(user, contents){
   //emulateServerReturn(newFeedback);
 }
 
-export function nextSem(user, courseId){
-  var newNew = readDocument('users', user);
-  newNew['nextSemester'].push(courseId);
-  writeDocument('users', newNew)
-}
-export function haveTaken(user, courseId){
-  var newNew1 = readDocument('users', user);
-  newNew1['classesTaken'].push(courseId);
-    writeDocument('users', newNew1)
-}
 
 // export function saveAGraph(user, newIMG){//will add more info like courses and stuff
 //   var newSaved = {
@@ -100,9 +89,10 @@ export function haveTaken(user, courseId){
 /**
 * Adds a new status update to the database.
 */
-export function saveAGraph(user, newIMG, cb) {
+export function saveAGraph(user, graphTitle, newIMG, cb) {
 sendXHR('POST', '/savedgraph', {
 userId: 1,
+graphName: graphTitle,
 contents: newIMG
 }, (xhr) => {
 // Return the new status update.
@@ -122,21 +112,28 @@ function emulateServerReturn(data, cb) {
     cb(data);
   }, 4);
 }
+
 function getCourseItemSync(courseId){
   var courseItem = readDocument('courses', courseId);
   courseItem.prereqs = courseItem.prereqs.map((id) => getCourseItemSync(id));
   return courseItem;
 }
-function getCourseData2(course, cb){
-  var courseData = getCourseItemSync(course)
-  emulateServerReturn(courseData, cb)
+
+export function getCourseData(course, cb){
+  sendXHR('GET', '/courses/' + course,
+  undefined, (xhr) => {
+    cb(JSON.parse(xhr.responseText));
+  });
 }
+
+
 function getMajorItemSync(majorId){
   var majorItem = readDocument('majors', majorId);
   majorItem.courses = majorItem.courses.map((id) => getCourseItemSync(id));
   return majorItem;
 }
-function getMajorData2(major, cb){
+
+export function getMajorData2(major, cb){
   var majorData = getMajorItemSync(major)
   emulateServerReturn(majorData, cb)
 }
@@ -218,55 +215,21 @@ function getUserItemSync(userId) {
   // Resolve comment author.
   return feedItem;
 }
-/**
-* Emulates a REST call to get the feed data for a particular user.
-* @param user The ID of the user whose feed we are requesting.
-* @param cb A Function object, which we will invoke when the Feed's data is available.
-*/
-export function getUserData(user) {
-  // Get the User object with the id "user".
-  var userData = readDocument('users', user);
-  emulateServerReturn(userData, (info)=>{info});
-  return userData;
-  // Get the Feed object for the user.
-  // Map the Feed's FeedItem references to actual FeedItem objects.
-  // Note: While map takes a callback function as an argument, it is
-  // synchronous, not asynchronous. It calls the callback immediately.
-  // userData = userData.map(getUserItemSync);
-  // Return FeedData with resolved references.
-  // emulateServerReturn will emulate an asynchronous server operation, which
-  // invokes (calls) the "cb" function some time in the future.
-  // emulateServerReturn(userData, cb);
-}
-// export function getUserData2(user, cb) {
-//   // Get the User object with the id "user".
-//   //var userData = readDocument('users', user);
-//   //return userData;
-//   // Get the Feed object for the user.
-//   // Map the Feed's FeedItem references to actual FeedItem objects.
-//   // Note: While map takes a callback function as an argument, it is
-//   // synchronous, not asynchronous. It calls the callback immediately.
-//   var userData = getUserItemSync(user);
-//   // Return FeedData with resolved references.
-//   // emulateServerReturn will emulate an asynchronous server operation, which
-//   // invokes (calls) the "cb" function some time in the future.
-//   emulateServerReturn(userData, cb);
-// }
-export function getUserData2(user, cb){
-  sendXHR('GET', '/user/1', undefined, (xhr) => {
+
+
+export function getUserData(user, cb){
+  sendXHR('GET', '/user/' + user, undefined, (xhr) => {
     cb(JSON.parse(xhr.responseText));
   });
-
 }
+
+
+
 export function getCollectionData(collection_id){
   return readDocumentCollection(collection_id);
 }
 export function getMajorData(major){
   var majorData = readDocument('majors', major);
-  return majorData;
-}
-export function getCourseData(major){
-  var majorData = readDocument('courses', major);
   return majorData;
 }
 export function getMinorData(minor){

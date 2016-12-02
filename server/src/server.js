@@ -38,9 +38,9 @@ function postFeedback(user, contents){
   //emulateServerReturn(newFeedback);
 }
 
-function postSavedGraph(user, newIMG) {
+function postSavedGraph(user, graphName, newIMG) {
 var newSaved = {
-  "name": "default",
+  "name": graphName,
   "time": (new Date).getTime(),
   "image": newIMG
 };
@@ -58,7 +58,7 @@ console.log(fromUser + " " +userId+ " "+body.userId);
 // Check if requester is authorized to post this status update.
 // (The requester must be the author of the update.)
 if (fromUser === userId) {
-var newSavedGraph = postSavedGraph(body.userId, body.contents);
+var newSavedGraph = postSavedGraph(body.userId, body.graphName, body.contents);
 // When POST creates a new resource, we should tell the client about it
 // in the 'Location' header and use status code 201.
 res.status(201);
@@ -69,25 +69,30 @@ res.send(newSavedGraph);
 res.status(401).end();
 }
 });
+
 function getUserData2(user) {
   var userData = getUserItemSync(user);
   return userData;
 }
+
+
 function getUserItemSync(userId) {
-  var feedItem = readDocument('users', userId);
-  feedItem.majors = feedItem.majors.map((id) => getMajorItemSync(id));
-  feedItem.minors = feedItem.minors.map((id) => getMajorItemSync(id));
-  feedItem.classesTaken = feedItem.classesTaken.map((id) => getCourseItemSync(id));
-  feedItem.nextSemester = feedItem.nextSemester.map((id) => getCourseItemSync(id));
-  feedItem.shown_minors = feedItem.shown_minors.map((id) => getMajorItemSync(id));
-  feedItem.shown_majors = feedItem.shown_majors.map((id) => getMajorItemSync(id));
-  return feedItem;
+  var user = readDocument('users', userId);
+  user.majors = user.majors.map((id) => getMajorItemSync(id));
+  user.minors = user.minors.map((id) => getMajorItemSync(id));
+  user.classesTaken = user.classesTaken.map((id) => getCourseItemSync(id));
+  user.nextSemester = user.nextSemester.map((id) => getCourseItemSync(id));
+  user.shown_minors = user.shown_minors.map((id) => getMajorItemSync(id));
+  user.shown_majors = user.shown_majors.map((id) => getMajorItemSync(id));
+  return user;
 }
+
 function getMajorItemSync(majorId){
   var majorItem = readDocument('majors', majorId);
   majorItem.courses = majorItem.courses.map((id) => getCourseItemSync(id));
   return majorItem;
 }
+
 function getCourseItemSync(courseId){
   var courseItem = readDocument('courses', courseId);
   courseItem.prereqs = courseItem.prereqs.map((id) => getCourseItemSync(id));
@@ -99,19 +104,32 @@ function getCourseItemSync(courseId){
 * Get the data for a particular user.
 */
 app.get('/user/:userid', function(req, res) {
-var userid = req.params.userid;
-var fromUser = getUserIdFromToken(req.get('Authorization'));
-// userid is a string. We need it to be a number.
-// Parameters are always strings.
-var useridNumber = parseInt(userid, 10);
-if (fromUser === useridNumber) {
-// Send response.
-res.send(getUserData2(userid));
-} else {
-// 401: Unauthorized request.
-res.status(401).end();
-}
+  var userid = req.params.userid;
+  var fromUser = getUserIdFromToken(req.get('Authorization'));
+  // userid is a string. We need it to be a number.
+  // Parameters are always strings.
+  var useridNumber = parseInt(userid, 10);
+  if (fromUser === useridNumber) {
+    // Send response.
+    res.send(getUserData2(userid));
+  } else {
+    // 401: Unauthorized request.
+    res.status(401).end();
+  }
 });
+
+/**
+* Get the data for a course.
+*/
+
+app.get('/courses/:course', function(req, res){
+    res.send(getCourseData(req.params.course));
+})
+
+function getCourseData(courseId){
+  var courseItem = readDocument('courses', courseId);
+  return courseItem;
+}
 
 /**
 * Get the user ID from a token. Returns -1 (an invalid ID)
@@ -200,9 +218,7 @@ if (fromUser === userId) {
     majItem.shown_majors.splice(courseIndex, 1);
     writeDocument('users', majItem);
   }
-// Return a resolved version of the likeCounter
-// Note that this request succeeds even if the
-// user already unliked the request!
+
 res.send(majItem.shown_majors.map((majId) =>
 readDocument('majors', majId)));
 } else {
@@ -307,7 +323,6 @@ app.delete('/user/:userid/page/:pageid', function(req,res) {
   }
 
 });
-
 
 // Starts the server on port 3000!
 app.listen(3000, function () {

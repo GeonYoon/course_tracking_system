@@ -1,6 +1,5 @@
 import React from 'react';
-import {Link} from 'react-router';
-import {getUserData2,getPassword,setPassword,emulateServerReturn} from '../server';
+import {getUserData,getPassword,setPassword,emulateServerReturn} from '../server';
 export default class Profile extends React.Component{
   constructor(props){
     super(props);
@@ -17,7 +16,7 @@ export default class Profile extends React.Component{
     }
   }
   refresh(){
-    getUserData2(this.props.user, (info) => {
+    getUserData(this.props.user, (info) => {
       this.setState(info);
     });
   }
@@ -25,26 +24,13 @@ export default class Profile extends React.Component{
     this.refresh();
   }
   render(){
-    // var e = document.getElementById('pwrd-btn');
-    // e.onclick = function(){
-    //   var pw1 = document.getElementById('old-pwrd').value;
-    //   var pw2 = document.getElementById('new-pwrd-1').value;
-    //   var pw3 = document.getElementById('new-pwrd-2').value;
-    //   if(pw1!="" && pw2!="" && pw3!=""){
-    //     if(pw1===getPassword(1) && pw2===pw3){
-    //       setPassword(pw2);
-    //     }
-    //   }
-    // }
-
-
     return(
       <div className="container">
-        <div className="row">
-          <div className="col-xs-4">
+        <div className="row cntr">
+          <div className="col-xs-3">
             <img className="pic" src="../img/profile1.jpeg" alt="profile image" />
           </div>
-          <div className="col-xs-2 main-bdy">
+          <div className="col-xs-3 main-bdy">
             <span className="category">Full Name: </span>
             <p></p>
             <span className="category">University ID: </span>
@@ -57,7 +43,6 @@ export default class Profile extends React.Component{
             <p></p>
             <span className="category">Email: </span>
             <p></p>
-            <hr />
           </div>
           <div className="col-xs-5 main-bdy2">
             <span className="data">{this.state.fullName}</span>
@@ -84,53 +69,29 @@ export default class Profile extends React.Component{
             <p></p>
             <span className="data">{this.state.email}</span>
             <p></p>
-            <hr />
           </div>
         </div>
         <div className="row">
-          <div className="col-xs-4">
-            <div className="row sidebar-box">
-              <div className="sidebar">
-              <Link to={"savepage"}>
-                  <button type="button" className="btn navbar-btn btn-default">
-                    <span> Saved Graphs</span>
-                  </button>
-                  </Link>
-                  <br />
-                  <Link to={"coursehistory"}>
-                  <button type="button" className="btn navbar-btn btn-default">
-                    <span> Course History</span>
-                  </button>
-                  </Link>
-                  <br />
-                  <Link to={"about"}>
-                  <button type="button" className="btn navbar-btn btn-default">
-                    <span> About</span>
-                  </button>
-                  </Link>
-                  <br />
-                  <button type="button" className="btn navbar-btn btn-default">
-                    <span> blank</span>
-                  </button>
-              </div>
-            </div>
+          <div className="col-xs-5 shift">
+          <p></p>
           </div>
-          <div className="col-xs-5">
-              <div className="input-group">
-                <input type="text" id="old-pwrd" className="form-control fb-search" placeholder="Old Password" />
+          <div className="col-xs-2">
+              <div className="input-group txtbx">
+                <input type="text" id="old-pwrd" className="form-control" placeholder="Old Password" />
               </div>
               <br />
-              <div className="input-group">
-                <input type="text" id="new-pwrd-1" className="form-control fb-search" placeholder="New Password" />
+              <button type="button" id="pwrd-btn txtbx" className="btn btn-default">
+                <span>Change Password</span>
+                </button>
+          </div>
+          <div className="col-xs-3 shift2">
+              <div className="input-group txtbx">
+                <input type="text" id="new-pwrd-1" className="form-control" placeholder="New Password" />
               </div>
               <br />
-              <div className="input-group">
-                <input type="text" id="new-pwrd-2" className="form-control fb-search" placeholder="Confirm New Password" />
+              <div className="input-group txtbx">
+                <input type="text" id="new-pwrd-2" className="form-control" placeholder="Confirm New Password" />
               </div>
-              <br />
-          <button type="button" id="pwrd-btn" className="btn btn-default">
-            <span>Change Password</span>
-          </button>
         </div>
         </div>
       </div>
