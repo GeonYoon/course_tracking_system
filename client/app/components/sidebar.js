@@ -146,6 +146,8 @@ export default class Sidebar extends React.Component{
                 )
               })}
           </select>
+          &nbsp;
+          &nbsp;
             <button className="btn btn-default pull-right" type="button" onClick={this.addMajor.bind(this)}><span className="glyphicon glyphicon-plus"></span></button>
         </div>
         <div className="form-group form-inline select-minor">
@@ -159,6 +161,8 @@ export default class Sidebar extends React.Component{
                   )
                 })}
           </select></span>
+          &nbsp;
+          &nbsp;
             <button className="btn btn-default pull-right side-minor-btn" type="button" onClick={this.addMinor.bind(this)}><span className="glyphicon glyphicon-plus"></span></button>
         </div>
       <hr />

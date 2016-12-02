@@ -41,7 +41,10 @@ export default class AboutPage extends React.Component{
               <button type="button" className="btn navbar-btn btn-default">
                 <span>  Home</span>
               </button>
-            </Link>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </Link>
               <br />
               <Link to={"/profile/"}>
               <button type="button" className="btn navbar-btn btn-default">

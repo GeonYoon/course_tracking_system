@@ -6,9 +6,9 @@ body {
   background-color: #881c1c;
   padding-top: 10px;
   position: fixed;
-  padding: 10px;
-  height:inherit;
-  width:inherit;
+  padding: 5px;
+  align-items: stretch;
+  border-radius: 5px;
 }
 .about-settings > ul.li.select{
   text-align: right;

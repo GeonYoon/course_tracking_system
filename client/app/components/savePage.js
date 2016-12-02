@@ -50,7 +50,7 @@ export default class SavePages extends React.Component {
     return (
       <div className="container">
         <div className="row">
-          <div className="col-md-4 ">
+          <div className="col-md-4">
             <div className="marginUpSide">
               <div className="sidebar">
                 <div className="input-group">
