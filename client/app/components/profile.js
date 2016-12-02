@@ -1,9 +1,7 @@
 import React from 'react';
-<<<<<<< HEAD
+
 import {getUserData} from '../server';
-=======
-import {getUserData,getPassword,setPassword,emulateServerReturn} from '../server';
->>>>>>> b23460310fd01c30a5d0d041f016b7d826c3bd8a
+
 export default class Profile extends React.Component{
 
   constructor(props){
@@ -30,7 +28,7 @@ export default class Profile extends React.Component{
   componentDidMount(){
     this.refresh();
   }
-  
+
   render(){
     return(
       <div className="container">
