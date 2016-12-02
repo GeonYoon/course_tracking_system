@@ -9,7 +9,6 @@ import ProfilePage from './components/profile';
 import CourseHistoryPage from './components/courseHistory';
 import CourseDetails from './components/coursedetails';
 import HomePage from './components/home';
-import {ResetDatabase} from './database.js';
 
 class HomeTwo extends React.Component {
   render() {
@@ -55,14 +54,6 @@ class Profile extends React.Component {
   render() {
     return (
       <ProfilePage user={1}/>
-    );
-  }
-}
-
-class CourseDetailsFirst extends React.Component {
-  render() {
-    return (
-      <CourseDetails />
     );
   }
 }

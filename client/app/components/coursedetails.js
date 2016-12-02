@@ -1,69 +1,61 @@
 import React from 'react';
-import {getCourseData2} from '../server'
-import {getUserData2} from '../server'
+import {getCourseData, getUserData} from '../server'
 import {Link} from 'react-router'
-import {haveTaken} from '../server'
-import {nextSem} from '../server'
+
 
 
 export default class CourseDetails extends React.Component{
 
   constructor(props){
     super(props);
-    this.state = props
+    this.state = {
+      "course" : {
+        "id": 1,
+        "name": "Placeholder",
+        "description": "Placeholder",
+        "department": "Placeholder",
+        "number": 1,
+        "prereqs": [],
+        "textbooks": ["Placeholder"]
+      },
+      "takenText" : "placeholder"
+    }
   }
 
-  takeNextSemester(){
-    nextSem(this.props.route.user, parseInt(this.props.params.course))
+
+  componentDidMount(){
+    this.refresh();
   }
 
-  takenAlready(){
-    haveTaken(this.props.route.user, parseInt(this.props.params.course))
-  }
+  refresh(){
+    getCourseData(this.props.params.course, course => {
+        getUserData(this.props.route.user, user => {
+          var takenText = "Elligible";
 
-  render(){
-    var userData;
-    var courseData;
+          course.prereqs.map(course =>{
+            if(user.classesTaken.indexOf(course) == -1){
+              getCourseData(course, data => {
+                takenText = "Ineligible: must take " + data.name;
+              })
+            }
+          })
 
-    getUserData2(this.props.route.user, data =>{
-      userData = data;
-    })
+          user.classesTaken.map(classes =>{
+            if (classes.id == course.id){
+              takenText = "Taken";
+            }
+          })
 
-    getCourseData2(this.params.course, data =>{
-      courseData = data;
-    })
-
-    var prereqs = courseData.prereqs.map(course =>{
-      var name;
-      getCourseData2(course, data =>{
-        name = data.name;
+          this.setState({
+            "course" : course,
+            "takenText" : takenText
+          })
+        })
       });
-      return name;
-    })
-
-    if (prereqs.length == 0){
-      prereqs = "None."
     }
 
-    var takenText = "Eligible"
 
-    courseData.prereqs.map(course =>{
-      if(userData.classesTaken.indexOf(course) == -1){
-        takenText = "Ineligible: must take " + prereqs[0];
-      }
-    })
-
-    userData.classesTaken.map(course =>{
-      if(course == this.params.course){
-        takenText = "Taken"
-      }
-    })
-
-    userData.nextSemester.map(course =>{
-      if(course == this.params.course){
-        takenText = "Next Semester"
-      }
-    })
+  render(){
 
     return(
       <div className = "container">
@@ -74,19 +66,11 @@ export default class CourseDetails extends React.Component{
                 <div className = "media">
                   <div className = "media-body">
                     <h1>
-                      <strong>{courseData.department + " " + courseData.number}:</strong> {courseData.name}
+                      <strong>{this.state.course.department + " " + this.state.course.number}:</strong> {this.state.course.name}
                     </h1>
                     <h4>
-                      <strong>Status: </strong>{takenText}
+                      <strong>Status: </strong>{this.state.takenText}
                     </h4>
-                    <button type = "button" className = "btn btn-default" onClick={this.takeNextSemester.bind(this)}>
-                      I'll take this next semester!
-                    </button>
-
-                    <button type = "button" className = "btn btn-default" onClick={this.takenAlready.bind(this)}>
-                      I took this class!
-                    </button>
-
                   </div>
                   <div className = "media-right media-middle">
                     <img className = "media-object" src = "img/CS326.png" alt="CS326" />
@@ -96,11 +80,11 @@ export default class CourseDetails extends React.Component{
               <hr />
               <div className = "panel-body">
                 <h3>Description</h3>
-                <p>{courseData.description}</p>
+                <p>{this.state.course.description}</p>
                 <h3>Textbooks</h3>
-                <p>{courseData.textbooks}</p>
+                <p>{this.state.course.textbooks}</p>
                 <h3>Prerequisites</h3>
-                <p>{prereqs.toString()}</p>
+                <p>{this.state.course.prereqs.toString()}</p>
                 <br />
                 <hr />
                 <div className = "col-md-3">
