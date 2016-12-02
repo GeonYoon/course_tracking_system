@@ -17,25 +17,29 @@ export default class CourseHistory extends React.Component {
 
   refresh(){
     getUserData(1, user =>{
-      this.setState(user.classesTaken);
+      this.setState({
+        "courses" : user.classesTaken
+      })
     });
   }
 
   render() {
+    var rows = [];
 
     this.state.courses.map(course=>{
-      return(
-      <tr key = {course.id}>
-        <td>
-          <Link to={"/course/"+course.id}>{course.department + " " +course.number}</Link>
-        </td>
-        <td>
-          {course.name}
-        </td>
-        <td>
-          {course.description}
-        </td>
-      </tr>);
+      rows.push(
+        <tr key = {course.id}>
+          <td>
+            <Link to={"/course/"+course.id}>{course.department + " " +course.number}</Link>
+          </td>
+          <td>
+            {course.name}
+          </td>
+          <td>
+            {course.description}
+          </td>
+        </tr>
+      );
     })
 
     return (
@@ -76,13 +80,12 @@ export default class CourseHistory extends React.Component {
                     Description
                   </th>
                 </tr>
-                 {this.state.courses}
+                 {rows}
               </tbody>
             </table>
           </div>
         </div>
       </div>
-
     )
   }
 }
