@@ -1,4 +1,3 @@
-import {readDocument, writeDocument, addDocument, readDocumentCollection} from './database.js';
 var token = 'eyJpZCI6MX0=';
 /**
 * Properly configure+send an XMLHttpRequest with error handling,
@@ -122,23 +121,26 @@ function emulateServerReturn(data, cb) {
     cb(data);
   }, 4);
 }
+
 function getCourseItemSync(courseId){
   var courseItem = readDocument('courses', courseId);
   courseItem.prereqs = courseItem.prereqs.map((id) => getCourseItemSync(id));
   return courseItem;
 }
 
-export function getCourseData2(course, cb){
+export function getCourseData(course, cb){
   sendXHR('GET', '/courses/' + course,
   undefined, (xhr) => {
     cb(JSON.parse(xhr.responseText));
   });
 }
+
 function getMajorItemSync(majorId){
   var majorItem = readDocument('majors', majorId);
   majorItem.courses = majorItem.courses.map((id) => getCourseItemSync(id));
   return majorItem;
 }
+
 export function getMajorData2(major, cb){
   var majorData = getMajorItemSync(major)
   emulateServerReturn(majorData, cb)
@@ -223,7 +225,7 @@ function getUserItemSync(userId) {
 }
 
 
-export function getUserData2(user, cb){
+export function getUserData(user, cb){
   sendXHR('GET', '/user/' + user, undefined, (xhr) => {
     cb(JSON.parse(xhr.responseText));
   });
@@ -236,10 +238,6 @@ export function getCollectionData(collection_id){
 }
 export function getMajorData(major){
   var majorData = readDocument('majors', major);
-  return majorData;
-}
-export function getCourseData(major){
-  var majorData = readDocument('courses', major);
   return majorData;
 }
 export function getMinorData(minor){

@@ -1,40 +1,46 @@
 import React from 'react';
 import {Link} from 'react-router';
-import {getUserData, getCourseData} from '../server'
+import {getUserData} from '../server'
 
 export default class CourseHistory extends React.Component {
 
+  constructor(props){
+    super(props);
+    this.state = {
+      "courses" : []
+    }
+  }
 
+  componentDidMount(){
+    this.refresh();
+  }
+
+  refresh(){
+    getUserData(1, user =>{
+      this.setState(user.classesTaken);
+    });
+  }
 
   render() {
 
-    var history = getUserData(1).classesTaken;
-    var classes = history.map(course=>getCourseData(course));
-
-
-
-    var rows = [];
-    classes.map(course=>{
-      rows.push(
-        <tr key = {course.id}>
-          <td>
-            <Link to={"/course/"+course.id}>{course.department + " " +course.number}</Link>
-          </td>
-          <td>
-            {course.name}
-          </td>
-          <td>
-            {course.description}
-          </td>
-        </tr>
-      );
+    this.state.courses.map(course=>{
+      return(
+      <tr key = {course.id}>
+        <td>
+          <Link to={"/course/"+course.id}>{course.department + " " +course.number}</Link>
+        </td>
+        <td>
+          {course.name}
+        </td>
+        <td>
+          {course.description}
+        </td>
+      </tr>);
     })
-
 
     return (
       <div className="container">
         <div className="col-md-12 classTable">
-
           <div className="table-responsive">
             <table className="table table-bordered ">
               <thead className="thead">
@@ -70,7 +76,7 @@ export default class CourseHistory extends React.Component {
                     Description
                   </th>
                 </tr>
-                 {rows}
+                 {this.state.courses}
               </tbody>
             </table>
           </div>

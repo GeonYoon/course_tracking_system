@@ -2,7 +2,7 @@ import React from 'react';
 import Sidebar from './sidebar';
 import cytoscape from '../../build/js/cytoscape.js';
 import {Link} from 'react-router';
-import {getUserData2} from '../server.js';
+import {getUserData} from '../server.js';
 import {saveAGraph} from '../server.js';
 
 export default class GraphHome extends React.Component {
@@ -194,7 +194,7 @@ this.cy.on('mouseout', 'node', function(event) {
    //this.cy.png()
  }
  ref(){
-   getUserData2(this.props.user, (info) => {
+   getUserData(this.props.user, (info) => {
      this.setState(info);
    });
    //this.userInfo = getUserData(this.props.user);

@@ -69,6 +69,7 @@ res.send(newSavedGraph);
 res.status(401).end();
 }
 });
+
 function getUserData2(user) {
   var userData = getUserItemSync(user);
   return userData;
@@ -76,20 +77,22 @@ function getUserData2(user) {
 
 
 function getUserItemSync(userId) {
-  var feedItem = readDocument('users', userId);
-  feedItem.majors = feedItem.majors.map((id) => getMajorItemSync(id));
-  feedItem.minors = feedItem.minors.map((id) => getMajorItemSync(id));
-  feedItem.classesTaken = feedItem.classesTaken.map((id) => getCourseItemSync(id));
-  feedItem.nextSemester = feedItem.nextSemester.map((id) => getCourseItemSync(id));
-  feedItem.shown_minors = feedItem.shown_minors.map((id) => getMajorItemSync(id));
-  feedItem.shown_majors = feedItem.shown_majors.map((id) => getMajorItemSync(id));
-  return feedItem;
+  var user = readDocument('users', userId);
+  user.majors = user.majors.map((id) => getMajorItemSync(id));
+  user.minors = user.minors.map((id) => getMajorItemSync(id));
+  user.classesTaken = user.classesTaken.map((id) => getCourseItemSync(id));
+  user.nextSemester = user.nextSemester.map((id) => getCourseItemSync(id));
+  user.shown_minors = user.shown_minors.map((id) => getMajorItemSync(id));
+  user.shown_majors = user.shown_majors.map((id) => getMajorItemSync(id));
+  return user;
 }
+
 function getMajorItemSync(majorId){
   var majorItem = readDocument('majors', majorId);
   majorItem.courses = majorItem.courses.map((id) => getCourseItemSync(id));
   return majorItem;
 }
+
 function getCourseItemSync(courseId){
   var courseItem = readDocument('courses', courseId);
   courseItem.prereqs = courseItem.prereqs.map((id) => getCourseItemSync(id));
@@ -114,6 +117,19 @@ app.get('/user/:userid', function(req, res) {
     res.status(401).end();
   }
 });
+
+/**
+* Get the data for a course.
+*/
+
+app.get('/courses/:course', function(req, res){
+    res.send(getCourseData(req.params.course));
+})
+
+function getCourseData(courseId){
+  var courseItem = readDocument('courses', courseId);
+  return courseItem;
+}
 
 /**
 * Get the user ID from a token. Returns -1 (an invalid ID)
