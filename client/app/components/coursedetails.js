@@ -1,6 +1,7 @@
 import React from 'react';
 import {getCourseData, getUserData} from '../server'
 import {Link} from 'react-router'
+import CourseButton from './coursebutton'
 
 
 
@@ -32,16 +33,16 @@ export default class CourseDetails extends React.Component{
         getUserData(this.props.route.user, user => {
           var takenText = "Elligible";
 
-          course.prereqs.map(course =>{
-            if(user.classesTaken.indexOf(course) == -1){
-              getCourseData(course, data => {
-                takenText = "Ineligible: must take " + data.name;
-              })
+          var courseIds = user.classesTaken.map(classes=>{return classes.id});
+
+          course.prereqs.map(classes => {
+            if(courseIds.indexOf(classes) == -1){
+              takenText = "Inelligible"
             }
           })
 
           user.classesTaken.map(classes =>{
-            if (classes.id == course.id){
+            if (classes.id == this.props.params.course){
               takenText = "Taken";
             }
           })
@@ -70,6 +71,7 @@ export default class CourseDetails extends React.Component{
                     </h1>
                     <h4>
                       <strong>Status: </strong>{this.state.takenText}
+                       <CourseButton user = {this.props.route.user} course = {this.props.params.course} />
                     </h4>
                   </div>
                   <div className = "media-right media-middle">

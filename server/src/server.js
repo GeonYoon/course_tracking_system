@@ -241,8 +241,25 @@ app.put('/user/:userid/minortoshow/:minorid', function(req, res) {
     userItem.shown_minors.push(minorId);
     writeDocument('users', userItem);
     // Return a resolved version of the likeCounter
-    res.send(userItem.shown_minors.map((majId) =>
-    readDocument('majors', majId)));
+    res.send();
+  } else {
+    // 401: Unauthorized.
+    res.status(401).end();
+  }
+});
+
+//add a course
+app.put('/user/:userid/courses/:courseid', function(req, res){
+  var fromUser = getUserIdFromToken(req.get('Authorization'));
+  // Convert params from string to number.
+  var userId = parseInt(req.params.userid, 10);
+  var courseId = parseInt(req.params.courseid, 10);
+  if (fromUser === userId) {
+    var userItem = readDocument('users', userId);
+    userItem.classesTaken.push(courseId);
+    writeDocument('users', userItem);
+
+    res.send(readDocument('users', userId));
   } else {
     // 401: Unauthorized.
     res.status(401).end();
@@ -292,6 +309,24 @@ app.delete('/user/:userid/minortoshow/:minorid', function(req, res) {
   }
 });
 
+//delete a course
+app.delete('/user/:userid/courses/:courseid', function(req, res){
+  var fromUser = getUserIdFromToken(req.get('Authorization'));
+  // Convert params from string to number.
+  var userId = parseInt(req.params.userid, 10);
+  var courseId = parseInt(req.params.courseid, 10);
+  if (fromUser === userId) {
+    var userItem = readDocument('users', userId);
+    var courseIndex = userItem.classesTaken.indexOf(courseId);
+    userItem.classesTaken.splice(courseIndex, 1);
+    writeDocument('users', userItem);
+
+    res.send(readDocument('users', userId));
+  } else {
+    // 401: Unauthorized.
+    res.status(401).end();
+  }
+});
 
 app.delete('/user/:userid/page/:pageid', function(req,res) {
   var fromUser = getUserIdFromToken(req.get('Authorization'));

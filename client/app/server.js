@@ -51,6 +51,14 @@ export function addShownMinor(user, minor, cb){
   });
 }
 
+export function addCourse(user, course, cb){
+  sendXHR('PUT', '/user/'+ user + '/courses/' + course,
+  undefined, (xhr) => {
+    cb(JSON.parse(xhr.responseText));
+  });
+}
+
+
 export function subtractShownMajor(user, major, cb){
   sendXHR('DELETE', '/user/' + user + '/majortoshow/' + major,
   undefined, (xhr) => {
@@ -60,6 +68,13 @@ export function subtractShownMajor(user, major, cb){
 
 export function subtractShownMinor(user, minor, cb){
   sendXHR('DELETE', '/user/' + user + '/minortoshow/' + minor,
+  undefined, (xhr) => {
+    cb(JSON.parse(xhr.responseText));
+  });
+}
+
+export function removeCourse(user, course, cb){
+  sendXHR('DELETE', '/user/'+ user + '/courses/' + course,
   undefined, (xhr) => {
     cb(JSON.parse(xhr.responseText));
   });
