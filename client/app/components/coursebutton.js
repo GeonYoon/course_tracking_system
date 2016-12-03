@@ -32,7 +32,7 @@ export default class CourseButton extends React.Component{
           var courseIds = user.classesTaken.map(classes=>{return classes.id});
 
           course.prereqs.map(classes => {
-            if(courseIds.indexOf(classes) == -1){
+            if(courseIds.indexOf(classes.id) == -1){
               buttonText = ""
             }
           })

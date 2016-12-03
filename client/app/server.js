@@ -80,6 +80,20 @@ export function removeCourse(user, course, cb){
   });
 }
 
+export function addCourseNextSemester(user, course, cb){
+  sendXHR('PUT', '/user/'+ user + '/courses/' + course + '/nextsem/',
+  undefined, (xhr) => {
+    cb(JSON.parse(xhr.responseText));
+  });
+}
+
+export function removeCourseNextSemester(user, course, cb){
+  sendXHR('DELETE', '/user/'+ user + '/courses/' + course + '/nextsem/',
+  undefined, (xhr) => {
+    cb(JSON.parse(xhr.responseText));
+  });
+}
+
 export function unixTimeToString(time) {
   return new Date(time).toLocaleString();
 }

@@ -2,6 +2,8 @@ import React from 'react';
 import {getCourseData, getUserData} from '../server'
 import {Link} from 'react-router'
 import CourseButton from './coursebutton'
+import CourseButtonNextSemester from './nextsemesterbutton'
+
 
 
 
@@ -31,13 +33,13 @@ export default class CourseDetails extends React.Component{
   refresh(){
     getCourseData(this.props.params.course, course => {
         getUserData(this.props.route.user, user => {
-          var takenText = "Elligible";
+          var takenText = "Eligible";
 
           var courseIds = user.classesTaken.map(classes=>{return classes.id});
 
           course.prereqs.map(classes => {
-            if(courseIds.indexOf(classes) == -1){
-              takenText = "Inelligible"
+            if(courseIds.indexOf(classes.id) == -1){
+              takenText = "Ineligible"
             }
           })
 
@@ -72,6 +74,7 @@ export default class CourseDetails extends React.Component{
                     <h4>
                       <strong>Status: </strong>{this.state.takenText}
                        <CourseButton user = {this.props.route.user} course = {this.props.params.course} />
+                       <CourseButtonNextSemester user = {this.props.route.user} course = {this.props.params.course} />
                     </h4>
                   </div>
                   <div className = "media-right media-middle">
@@ -86,8 +89,9 @@ export default class CourseDetails extends React.Component{
                 <h3>Textbooks</h3>
                 <p>{this.state.course.textbooks}</p>
                 <h3>Prerequisites</h3>
-                <p>{this.state.course.prereqs.toString()}</p>
-                <br />
+                {this.state.course.prereqs.map((clss) => {
+                  console.log(clss.name);
+                  return(<p>{clss.name}</p>)})}
                 <hr />
                 <div className = "col-md-3">
                   <h4>Similar classes...</h4>
