@@ -222,31 +222,37 @@ var initialData = {
     "_id": 1,
     "pages": [
         {
+          "id": 0,
           "name": "first draft",
           "time": 1479258637215,
           "image": "img/examplegraph.png"
         },
         {
+          "id": 1,
           "name": "second draft",
           "time": 1479258638865,
           "image": "img/examplegraph1.png"
         },
         {
+          "id": 2,
           "name": "third draft",
           "time": 1479258639666,
           "image": "img/main_mock_1.png"
         },
         {
+          "id": 3,
           "name": "fourth draft",
           "time": 1479258640143,
           "image": "img/main_mock_1.png"
         },
         {
+          "id": 4,
           "name": "fifth draft",
           "time": 1479258640645,
           "image": "img/main_mock_1.png"
         },
         {
+          "id": 5,
           "name": "sixth draft",
           "time": 1479258641155,
           "image": "img/main_mock_1.png"
