@@ -96,13 +96,15 @@ function postFeedback(user, contents){
 
 
 function postSavedGraph(user, graphName, newIMG) {
+  var newNew = readDocument('savePage',
+                readDocument('users',user).savedGraphs)
   var newSaved = {
+    "id": newNew['pages'].length,
     "name": graphName,
     "time": (new Date).getTime(),
     "image": newIMG
   };
 
-  var newNew = readDocument('savePage', readDocument('users',user).savedGraphs);
   newNew['pages'].push(newSaved);
   writeDocument('savePage', newNew);
   console.log("Should have saved graph to server");
@@ -328,6 +330,15 @@ app.delete('/user/:userid/courses/:courseid', function(req, res){
   }
 });
 
+  function search(array, ide) {
+    for(var i = 0; i < array.length; i++){
+      if(array[i].id === ide){
+        return i
+      }
+    }
+  }
+
+//Delete page item
 app.delete('/user/:userid/page/:pageid', function(req,res) {
   var fromUser = getUserIdFromToken(req.get('Authorization'));
   var pageId = parseInt(req.params.pageid, 10);
@@ -336,8 +347,10 @@ app.delete('/user/:userid/page/:pageid', function(req,res) {
   if (fromUser === useridNumber) {
     var userData = readDocument('users',useridNumber)
     var savePage = readDocument('savePage',userData.savedGraphs);
+    var pageArray = savePage.pages;
+
     if(pageId !== -1){
-      savePage.pages.splice(pageId,1);
+      savePage.pages.splice(search(pageArray,pageId),1);
       writeDocument('savePage',savePage)
     }
     res.send(savePage)
