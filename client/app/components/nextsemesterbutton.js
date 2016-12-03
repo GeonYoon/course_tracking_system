@@ -29,7 +29,7 @@ export default class CourseButtonNextSemester extends React.Component{
     getCourseData(this.props.course, course => {
         getUserData(this.props.user, user => {
           var buttonText = "Add Class To Next Semester";
-          var courseIds = user.nextSemester.map(classes=>{return classes.id});
+          var courseIds = user.classesTaken.map(classes=>{return classes.id});
 
           course.prereqs.map(classes => {
             if(courseIds.indexOf(classes.id) == -1){
