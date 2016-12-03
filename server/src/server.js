@@ -243,7 +243,8 @@ app.put('/user/:userid/minortoshow/:minorid', function(req, res) {
     userItem.shown_minors.push(minorId);
     writeDocument('users', userItem);
     // Return a resolved version of the likeCounter
-    res.send();
+    res.send(userItem.shown_minors.map((majId) =>
+    readDocument('majors', majId)));
   } else {
     // 401: Unauthorized.
     res.status(401).end();
