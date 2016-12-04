@@ -19,7 +19,7 @@ export default class FormSub extends React.Component{
     var statusUpdateText = this.state.value.trim();
     if(statusUpdateText !== ""){
       postFeedback(this.props.user,statusUpdateText, info => {
-        // console.log(this.props.user + "," + statusUpdateText + ", " + info);
+        //  console.log(this.props.user + "," + statusUpdateText + ", " + info);
         this.refresh();
       });
     }else{
