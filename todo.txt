@@ -4,7 +4,6 @@ routes:
 -add/delete majors and minor in user settings (2 PUT, 2 DELETE routes) (Joe?)
 
 other:
--take out drop down in course history
 -finish up the written report and push to github
 
 
