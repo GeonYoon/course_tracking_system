@@ -448,7 +448,7 @@ app.get('/feedback/:userid', function(req,res) {
   var useridNumber = parseInt(userid,10);
   if(fromUser === useridNumber){
       // console.log(fromUser + "   " + useridNumber + "    ");
-    if(getAdmin(useridNumber) == 1){
+    if(getAdmin(useridNumber)){
       res.send(getFeedback());
     }
   }
