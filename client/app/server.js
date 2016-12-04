@@ -28,7 +28,7 @@ export function deletePageItem(user,pageid, cb){
 
 export function saveAGraph(user, graphTitle, newIMG, cb) {
   sendXHR('POST', '/savedgraph', {
-    userId: 1,
+    userId: user,
     graphName: graphTitle,
     contents: newIMG
   }, (xhr) => {
@@ -76,6 +76,22 @@ export function subtractShownMinor(user, minor, cb){
 export function removeCourse(user, course, cb){
   sendXHR('DELETE', '/user/'+ user + '/courses/' + course,
   undefined, (xhr) => {
+    cb(JSON.parse(xhr.responseText));
+  });
+}
+
+export function postFeedback(user, content, cb){
+  sendXHR('POST', '/feedback', {
+    userId: user,
+    contents: content
+  }, (xhr) => {
+    // Return the new status update.
+    cb(JSON.parse(xhr.responseText));
+  });
+}
+
+export function getFeedback(user,length, cb){
+  sendXHR('GET', '/feedback/' + user, undefined, (xhr) => {
     cb(JSON.parse(xhr.responseText));
   });
 }

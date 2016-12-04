@@ -6,6 +6,7 @@ var writeDocument = database.writeDocument;
 var addDocument = database.addDocument;
 var validate = require('express-jsonschema').validate;
 var SavedGraphSchema = require('./schemas/savedgraph.json');
+var FeedbackSchema = require('./schemas/feedback.json');
 var bodyParser = require('body-parser');
 var express = require('express');
 
@@ -87,13 +88,24 @@ function postFeedback(user, contents){
     "user": user,
     "contents": contents
   };
-  newFeedback = addDocument('feedback', newFeedback);
-
   addDocument('feedback', newFeedback);
-
+  console.log("feedback received!");
   return newFeedback;
 }
 
+function getFeedback(length){
+  console.log(length);
+  var tmp = [];
+  var i=1;
+  for(i;i<=length;i++){
+    tmp[i]=readDocument('feedback',i);
+  }
+  return tmp;
+}
+function getAdmin(user){
+var userData = readDocument('users', user);
+return userData.admin;
+}
 
 function postSavedGraph(user, graphName, newIMG) {
   var newNew = readDocument('savePage',
@@ -360,6 +372,42 @@ app.delete('/user/:userid/page/:pageid', function(req,res) {
     res.status(401).end();
   }
 
+});
+//post feedback
+app.post('/feedback', validate({ body: FeedbackSchema }), function(req, res) {
+  var body = req.body;
+  var fromUser = getUserIdFromToken(req.get('Authorization'));
+  var userId = parseInt(body.userId, 10);
+  console.log(fromUser + " " +userId+ " "+body.userId);
+  // Check if requester is authorized to post this status update.
+  // (The requester must be the author of the update.)
+  if (fromUser === userId) {
+    var newFeedback = postFeedback(body.userId, body.contents);
+    console.log(newFeedback);
+    // When POST creates a new resource, we should tell the client about it
+    // in the 'Location' header and use status code 201.
+    res.status(201);
+    // Send the update!
+    res.send(newFeedback);
+  } else {
+    // 401: Unauthorized.
+    res.status(401).end();
+  }
+});
+
+app.get('/feedback/:userid',function(req,res) {
+  var userid = req.params.userid;
+  var fromUser = getUserIdFromToken(req.get('Authorization'));
+  var useridNumber = parseInt(userid,10);
+  if(fromUser === useridNumber){
+    if(getAdmin(userid)){
+      res.send(getFeedback());
+    }
+  }
+  else {
+    // 401: Unathorized request.
+    res.status(401).end();
+  }
 });
 
 // Starts the server on port 3000!

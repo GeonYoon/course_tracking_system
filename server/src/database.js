@@ -13,7 +13,8 @@ var initialData = {
       "email":"sone@umass.edu",
       "nextSemester":[],
       "shown_majors":[],
-      "shown_minors":[]
+      "shown_minors":[],
+      "admin": true
     }
   },
   "accountData":{
@@ -21,11 +22,18 @@ var initialData = {
     "password": "Pasword1"
   },
   "feedback":{
+    "0":{
+      "length":2
+    },
     "1":{
       "user": 1,
       "content": "first feedback"
+    },
+    "2":{
+      "user": 1,
+      "content": "testing feedback"
     }
-  },
+},
   "majors":{
     "1":{
       "_id": 1,
@@ -262,7 +270,6 @@ var initialData = {
 }
 
 };
-
 var data;
 // If 'true', the in-memory object representing the database has changed,
 // and we should flush it to disk.

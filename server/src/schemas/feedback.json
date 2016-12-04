@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "userId": {
+      "type": "integer"
+    },
+    "contents": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "userId",
+    "contents"
+  ]
+}

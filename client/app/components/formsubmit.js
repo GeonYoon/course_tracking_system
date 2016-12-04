@@ -1,11 +1,9 @@
 import React from 'react';
-import {postFeedback} from '../server';
+import {postFeedback,getFeedback} from '../server';
 // import {writeDocument, addDocument} from '../database.js';
 
 
-
 export default class FormSub extends React.Component{
-
   constructor(props){
     super(props);
     this.state = {
@@ -17,11 +15,19 @@ export default class FormSub extends React.Component{
     e.preventDefault();
     var statusUpdateText = this.state.value.trim();
     if(statusUpdateText !== ""){
-      postFeedback(this.props.user,statusUpdateText);
-      this.setState({value: ""});
+      console.log(this.props.user + "," + statusUpdateText);
+      postFeedback(this.props.user,statusUpdateText, info => {
+        this.setState({value: "posted Feedback is: " + info})
+      });
+        // this.setState({value: ""});
+    }else{
+      getFeedback(this.props.user, info => {
+        console.log(info.content);
+        this.setState({value: info})
+      });
     }
   }
-  
+
   handleChange(e){
     e.preventDefault();
     this.setState({value: e.target.value});
