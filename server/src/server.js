@@ -4,6 +4,7 @@ var database = require('./database');
 var readDocument = database.readDocument;
 var writeDocument = database.writeDocument;
 var addDocument = database.addDocument;
+var getCollection = database.getCollection;
 var validate = require('express-jsonschema').validate;
 var SavedGraphSchema = require('./schemas/savedgraph.json');
 var FeedbackSchema = require('./schemas/feedback.json');
@@ -88,23 +89,27 @@ function postFeedback(user, contents){
     "user": user,
     "contents": contents
   };
-  addDocument('feedback', newFeedback);
-  console.log("feedback received!");
-  return newFeedback;
+  var testDoc = addDocument('feedback', newFeedback);
+  // console.log("feedback received!");
+  return testDoc;
 }
 
-function getFeedback(length){
-  console.log(length);
-  var tmp = [];
-  var i=1;
-  for(i;i<=length;i++){
-    tmp[i]=readDocument('feedback',i);
-  }
-  return tmp;
-}
+// function getFeedback(length){
+//   console.log(length);
+//   var tmp = [];
+//   var i=1;
+//   for(i;i<=length;i++){
+//     tmp[i]=readDocument('feedback',i);
+//   }
+//   return tmp;
+// }
 function getAdmin(user){
 var userData = readDocument('users', user);
 return userData.admin;
+}
+
+function getFeedback(){
+  return getCollection('feedback');
 }
 
 function postSavedGraph(user, graphName, newIMG) {
@@ -432,14 +437,19 @@ app.post('/feedback', validate({ body: FeedbackSchema }), function(req, res) {
   }
 });
 
-app.get('/feedback/:userid',function(req,res) {
+app.get('/feedback/', function(req,res) {
+      res.send(getFeedback());
+});
+
+app.get('/feedback/:userid', function(req,res) {
   var userid = req.params.userid;
   var fromUser = getUserIdFromToken(req.get('Authorization'));
   var useridNumber = parseInt(userid,10);
   if(fromUser === useridNumber){
-    if(getAdmin(userid)){
+      console.log(fromUser + "   " + useridNumber + "    ");
+    // if(getAdmin(userid)){
       res.send(getFeedback());
-    }
+    // }
   }
   else {
     // 401: Unathorized request.
