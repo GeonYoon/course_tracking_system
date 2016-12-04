@@ -1,24 +1,24 @@
 import React from 'react';
-import {getUserData, getCourseData, addCourse, removeCourse} from '../server.js';
+import {getUserData, getCourseData, addCourseNextSemester, removeCourseNextSemester} from '../server.js';
 
 
-export default class CourseButton extends React.Component{
+export default class CourseButtonNextSemester extends React.Component{
   constructor(props){
     super(props)
     this.state = {
-      "buttonText" : "Add Class"
+      "buttonText" : "Add Class To Next Semester"
     };
   }
 
 
   handleButton(e){
     e.preventDefault
-    if(this.state.buttonText == "Add Class"){
-      addCourse(this.props.user, this.props.course, res=>{this.refresh()
+    if(this.state.buttonText == "Add Class To Next Semester"){
+      addCourseNextSemester(this.props.user, this.props.course, res=>{this.refresh()
       console.log(res)
       })
     }else{
-      removeCourse(this.props.user, this.props.course, res=>{this.refresh()
+      removeCourseNextSemester(this.props.user, this.props.course, res=>{this.refresh()
       console.log(res)
       })
     }
@@ -28,7 +28,7 @@ export default class CourseButton extends React.Component{
   refresh(){
     getCourseData(this.props.course, course => {
         getUserData(this.props.user, user => {
-          var buttonText = "Add Class";
+          var buttonText = "Add Class To Next Semester";
           var courseIds = user.classesTaken.map(classes=>{return classes.id});
 
           course.prereqs.map(classes => {
@@ -37,9 +37,9 @@ export default class CourseButton extends React.Component{
             }
           })
 
-          user.classesTaken.map(classes =>{
+          user.nextSemester.map(classes =>{
             if (classes.id == this.props.course){
-              buttonText = "Remove Class";
+              buttonText = "Remove Class From Next Semester";
             }
           })
 

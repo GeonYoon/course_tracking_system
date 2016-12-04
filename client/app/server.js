@@ -85,13 +85,28 @@ export function postFeedback(user, content, cb){
     userId: user,
     contents: content
   }, (xhr) => {
+    cb(JSON.parse(xhr.responseText));
+  });
+  }
+
+  export function getFeedback(user, cb){
+    sendXHR('GET', '/feedback/' + user, undefined, (xhr) => {
+      cb(JSON.parse(xhr.responseText));
+      });
+      }
+
     // Return the new status update.
+export function addCourseNextSemester(user, course, cb){
+  sendXHR('PUT', '/user/'+ user + '/courses/' + course + '/nextsem/',
+  undefined, (xhr) => {
     cb(JSON.parse(xhr.responseText));
   });
 }
 
-export function getFeedback(user,length, cb){
-  sendXHR('GET', '/feedback/' + user, undefined, (xhr) => {
+
+export function removeCourseNextSemester(user, course, cb){
+  sendXHR('DELETE', '/user/'+ user + '/courses/' + course + '/nextsem/',
+  undefined, (xhr) => {
     cb(JSON.parse(xhr.responseText));
   });
 }

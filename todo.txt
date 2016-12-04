@@ -1,13 +1,8 @@
 last final things to do:
 routes:
--buttons for taken/next semester/undo in course details (2 PUT, 2 DELETE routes) (Andrew)
--postFeedback button in About page (POST http route)
--add/delete majors and minor in user settings (2 PUT, 2 DELETE routes)
+-postFeedback button in About page (POST http route) (Ben)
+-add/delete majors and minor in user settings (2 PUT, 2 DELETE routes) (Joe?)
 
 other:
--delete old database (DONE)
--take out text button in main graph (DONE)
 -take out drop down in course history
--error handling double check (DONE)
 -finish up the written report and push to github
--prerequisites in course detail

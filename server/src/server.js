@@ -56,7 +56,7 @@ function getUserItemSync(userId) {
 
 
 function getCourseData(courseId){
-  var courseItem = readDocument('courses', courseId);
+  var courseItem = getCourseItemSync(courseId);
   return courseItem;
 }
 
@@ -255,7 +255,8 @@ app.put('/user/:userid/minortoshow/:minorid', function(req, res) {
     userItem.shown_minors.push(minorId);
     writeDocument('users', userItem);
     // Return a resolved version of the likeCounter
-    res.send();
+    res.send(userItem.shown_minors.map((majId) =>
+    readDocument('majors', majId)));
   } else {
     // 401: Unauthorized.
     res.status(401).end();
@@ -280,6 +281,23 @@ app.put('/user/:userid/courses/:courseid', function(req, res){
   }
 });
 
+//add a course next semester
+app.put('/user/:userid/courses/:courseid/nextsem/', function(req, res){
+  var fromUser = getUserIdFromToken(req.get('Authorization'));
+  // Convert params from string to number.
+  var userId = parseInt(req.params.userid, 10);
+  var courseId = parseInt(req.params.courseid, 10);
+  if (fromUser === userId) {
+    var userItem = readDocument('users', userId);
+    userItem.nextSemester.push(courseId);
+    writeDocument('users', userItem);
+
+    res.send(readDocument('users', userId));
+  } else {
+    // 401: Unauthorized.
+    res.status(401).end();
+  }
+});
 
 // delete a shown major
 app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
@@ -333,6 +351,25 @@ app.delete('/user/:userid/courses/:courseid', function(req, res){
     var userItem = readDocument('users', userId);
     var courseIndex = userItem.classesTaken.indexOf(courseId);
     userItem.classesTaken.splice(courseIndex, 1);
+    writeDocument('users', userItem);
+
+    res.send(readDocument('users', userId));
+  } else {
+    // 401: Unauthorized.
+    res.status(401).end();
+  }
+});
+
+//delete a course nextsemester
+app.delete('/user/:userid/courses/:courseid/nextsem/', function(req, res){
+  var fromUser = getUserIdFromToken(req.get('Authorization'));
+  // Convert params from string to number.
+  var userId = parseInt(req.params.userid, 10);
+  var courseId = parseInt(req.params.courseid, 10);
+  if (fromUser === userId) {
+    var userItem = readDocument('users', userId);
+    var courseIndex = userItem.nextSemester.indexOf(courseId);
+    userItem.nextSemester.splice(courseIndex, 1);
     writeDocument('users', userItem);
 
     res.send(readDocument('users', userId));
