@@ -57,16 +57,6 @@ export default class CourseHistory extends React.Component {
               <tbody>
                 <tr>
                   <td colSpan="9">
-                    <div classNameName="dropdown pull-right">
-                      <button classNameName="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select year: All
-                      <span className="caret"></span></button>
-                      <ul className="dropdown-menu">
-                        <li><a href="#">All</a></li>
-                        <li className="divider"></li>
-                        <li><a href="#">2016</a></li>
-                        <li><a href="#">2015</a></li>
-                      </ul>
-                    </div>
                   </td>
                 </tr>
                 <tr>

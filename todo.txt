@@ -6,3 +6,18 @@ routes:
 other:
 -take out drop down in course history
 -finish up the written report and push to github
+
+
+code drop down that mike took out:
+
+
+<div classNameName="dropdown pull-right">
+  <button classNameName="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select year: All
+  <span className="caret"></span></button>
+  <ul className="dropdown-menu">
+    <li><a href="#">All</a></li>
+    <li className="divider"></li>
+    <li><a href="#">2016</a></li>
+    <li><a href="#">2015</a></li>
+  </ul>
+</div>
