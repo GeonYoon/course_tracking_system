@@ -105,6 +105,7 @@ function postFeedback(user, contents){
 // }
 function getAdmin(user){
 var userData = readDocument('users', user);
+// console.log("AYYYYYY" + userData.admin);
 return userData.admin;
 }
 
@@ -124,7 +125,7 @@ function postSavedGraph(user, graphName, newIMG) {
 
   newNew['pages'].push(newSaved);
   writeDocument('savePage', newNew);
-  console.log("Should have saved graph to server");
+  // console.log("Should have saved graph to server");
   return newNew;
 }
 
@@ -202,7 +203,7 @@ app.post('/savedgraph', validate({ body: SavedGraphSchema }), function(req, res)
   var body = req.body;
   var fromUser = getUserIdFromToken(req.get('Authorization'));
   var userId = parseInt(body.userId, 10);
-  console.log(fromUser + " " +userId+ " "+body.userId);
+  // console.log(fromUser + " " +userId+ " "+body.userId);
   // Check if requester is authorized to post this status update.
   // (The requester must be the author of the update.)
   if (fromUser === userId) {
@@ -221,7 +222,7 @@ app.post('/savedgraph', validate({ body: SavedGraphSchema }), function(req, res)
 
 // Reset database.
 app.post('/resetdb', function(req, res) {
-  console.log("Resetting database...");
+  // console.log("Resetting database...");
   // This is a debug route, so don't do any validation.
   database.resetDatabase();
   // res.send() sends an empty response with status code 200
@@ -420,12 +421,12 @@ app.post('/feedback', validate({ body: FeedbackSchema }), function(req, res) {
   var body = req.body;
   var fromUser = getUserIdFromToken(req.get('Authorization'));
   var userId = parseInt(body.userId, 10);
-  console.log(fromUser + " " +userId+ " "+body.userId);
+  // console.log(fromUser + " " +userId+ " "+body.userId);
   // Check if requester is authorized to post this status update.
   // (The requester must be the author of the update.)
   if (fromUser === userId) {
     var newFeedback = postFeedback(body.userId, body.contents);
-    console.log(newFeedback);
+    // console.log(newFeedback);
     // When POST creates a new resource, we should tell the client about it
     // in the 'Location' header and use status code 201.
     res.status(201);
@@ -446,10 +447,10 @@ app.get('/feedback/:userid', function(req,res) {
   var fromUser = getUserIdFromToken(req.get('Authorization'));
   var useridNumber = parseInt(userid,10);
   if(fromUser === useridNumber){
-      console.log(fromUser + "   " + useridNumber + "    ");
-    // if(getAdmin(userid)){
+      // console.log(fromUser + "   " + useridNumber + "    ");
+    if(getAdmin(useridNumber) == 1){
       res.send(getFeedback());
-    // }
+    }
   }
   else {
     // 401: Unathorized request.

@@ -14,7 +14,7 @@ var initialData = {
       "nextSemester":[],
       "shown_majors":[],
       "shown_minors":[],
-      "admin": true
+      "admin": 1
     }
   },
   "accountData":{

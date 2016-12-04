@@ -10,23 +10,20 @@ export default class FormSub extends React.Component{
       value: ""
     };
   }
+  refresh(){
+    this.setState({value: ""});
+  }
 
   handlePost(e){
     e.preventDefault();
     var statusUpdateText = this.state.value.trim();
     if(statusUpdateText !== ""){
       postFeedback(this.props.user,statusUpdateText, info => {
-        console.log(this.props.user + "," + statusUpdateText + ", " + info);
+        // console.log(this.props.user + "," + statusUpdateText + ", " + info);
+        this.refresh();
       });
-        // this.setState({value: ""});
-        getFeedback(this.props.user, info => {
-          console.log(info);
-        });
     }else{
-      getFeedback(this.props.user, info => {
-        console.log(info.content);
-        this.setState({value: info})
-      });
+      this.refresh();
     }
   }
 
