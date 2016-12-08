@@ -13,7 +13,7 @@ export default class CourseDetails extends React.Component{
     super(props);
     this.state = {
       "course" : {
-        "id": 1,
+        "id": "000000000000000000000001",
         "name": "Placeholder",
         "description": "Placeholder",
         "department": "Placeholder",

@@ -1,4 +1,4 @@
-var token = 'eyJpZCI6MX0=';
+var token = 'eyJpZCI6IjAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMSJ9';
 
 export function getUserData(user, cb){
   sendXHR('GET', '/user/' + user, undefined, (xhr) => {

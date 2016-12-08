@@ -11,8 +11,14 @@ var FeedbackSchema = require('./schemas/feedback.json');
 var bodyParser = require('body-parser');
 var express = require('express');
 
+var mongo_express = require('mongo-express/lib/middleware');
+// Import the default Mongo Express configuration
+var mongo_express_config = require('mongo-express/config.default.js');
+
 // Creates an Express server.
 var app = express();
+
+app.use('/mongo_express', mongo_express(mongo_express_config));
 
 // Support receiving text in HTTP request bodies
 app.use(bodyParser.text());
@@ -37,12 +43,117 @@ app.use(function(err, req, res, next) {
   }
 });
 
+var MongoDB = require('mongodb');
+var MongoClient = MongoDB.MongoClient;
+var ObjectID = MongoDB.ObjectID;
+var url = 'mongodb://localhost:27017/facebook';
+
+MongoClient.connect(url, function(err, db) {
+
 
 function getUserData(user) {
   var userData = getUserItemSync(user);
   return userData;
 }
 
+
+/**
+ * Resolves a list of major objects. Returns an object that maps major IDs to
+ * major objects.
+ */
+function resolveMajorObjects(majorList, callback) {
+  // Special case: userList is empty.
+  // It would be invalid to query the database with a logical OR
+  // query with an empty array.
+  if (majorList.length === 0) {
+    callback(null, {});
+  } else {
+    // Build up a MongoDB "OR" query to resolve all of the user objects
+    // in the userList.
+    var query = {
+      $or: majorList.map((id) => { return {_id: id } })
+    };
+    // Resolve 'like' counter
+    db.collection('majors').find(query).toArray(function(err, majors) {
+      if (err) {
+        return callback(err);
+      }
+      // Build a map from ID to user object.
+      // (so userMap["4"] will give the user with ID 4)
+      var majorMap = {};
+      majors.forEach((major) => {
+        majorMap[major._id] = major;
+      });
+      callback(null, majorMap);
+    });
+  }
+}
+
+//gotta add the calls to resolveCourse and resolveMajor in all of them. make the list, use the callback, all that.
+
+/**
+ * Resolves a list of course objects. Returns an object that maps course IDs to
+ * course objects.
+ */
+function resolveCourseObjects(courseList, callback) {
+  // Special case: userList is empty.
+  // It would be invalid to query the database with a logical OR
+  // query with an empty array.
+  if (courseList.length === 0) {
+    callback(null, {});
+  } else {
+    // Build up a MongoDB "OR" query to resolve all of the user objects
+    // in the userList.
+    var query = {
+      $or: courseList.map((id) => { return {_id: id } })
+    };
+    // Resolve 'like' counter
+    db.collection('courses').find(query).toArray(function(err, courses) {
+      if (err) {
+        return callback(err);
+      }
+      // Build a map from ID to user object.
+      // (so userMap["4"] will give the user with ID 4)
+      var courseMap = {};
+      courses.forEach((course) => {
+        courseMap[course._id] = course;
+      });
+      callback(null, courseMap);
+    });
+  }
+}
+
+/**
+ * Resolves a list of user objects. Returns an object that maps user IDs to
+ * user objects.
+ */
+function resolveUserObjects(userList, callback) {
+  // Special case: userList is empty.
+  // It would be invalid to query the database with a logical OR
+  // query with an empty array.
+  if (userList.length === 0) {
+    callback(null, {});
+  } else {
+    // Build up a MongoDB "OR" query to resolve all of the user objects
+    // in the userList.
+    var query = {
+      $or: userList.map((id) => { return {_id: id } })
+    };
+    // Resolve 'like' counter
+    db.collection('users').find(query).toArray(function(err, users) {
+      if (err) {
+        return callback(err);
+      }
+      // Build a map from ID to user object.
+      // (so userMap["4"] will give the user with ID 4)
+      var userMap = {};
+      users.forEach((user) => {
+        userMap[user._id] = user;
+      });
+      callback(null, userMap);
+    });
+  }
+}
 
 function getUserItemSync(userId) {
   var user = readDocument('users', userId);
@@ -462,3 +573,5 @@ app.get('/feedback/:userid', function(req,res) {
 app.listen(3000, function () {
 console.log('Example app listening on port 3000!');
 });
+});
+// The file ends here. Nothing should be after this.

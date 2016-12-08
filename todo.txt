@@ -20,3 +20,7 @@ code drop down that mike took out:
     <li><a href="#">2015</a></li>
   </ul>
 </div>
+
+
+NOTES FOR LAST SA:
+I took out the account info section in database because it wouldn't reset otherwise. not sure what that broke.

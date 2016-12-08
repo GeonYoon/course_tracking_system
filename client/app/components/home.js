@@ -8,11 +8,11 @@ export default class HomePage extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      "_id":1,
+      "_id":"000000000000000000000001",
       "fullName": "Student One",
       "classesTaken":[],
       "sId":12345678,
-      "savedGraphs":1,
+      "savedGraphs":"000000000000000000000001",
       "majors":[],
       "minors":[],
       "gradDate":"May 2018",

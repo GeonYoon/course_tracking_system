@@ -7,13 +7,13 @@ export default class Profile extends React.Component{
   constructor(props){
     super(props);
     this.state = { //THIS IS JUST A DUMMY VARIABLE, IT GETS OVERWRITTEN BY THE STATE
-      "_id":1,
+      "_id":"000000000000000000000001",
       "fullName": "WRONG",
-      "classesTaken":[1],
+      "classesTaken":["000000000000000000000001"],
       "sId":11111111,
-      "savedGraphs":1,
-      "majors":[1],
-      "minors":[1],
+      "savedGraphs":"000000000000000000000001",
+      "majors":["000000000000000000000001"],
+      "minors":["000000000000000000000001"],
       "gradDate":"WRONG",
       "email":"WRONG"
     }

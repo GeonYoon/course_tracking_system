@@ -25,13 +25,13 @@ export default class Sidebar extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
-      "_id":1,
+      "_id":"000000000000000000000001",
       "fullName": "null student",
       "classesTaken":[],
       "sId":12345678,
-      "savedGraphs":1,
-      "majors":[1,2,3],
-      "minors":[1,2,3],
+      "savedGraphs":"000000000000000000000001",
+      "majors":["000000000000000000000001"],
+      "minors":["000000000000000000000001"],
       "gradDate":"May 2018",
       "email":"sone@umass.edu",
       "nextSemester":[],

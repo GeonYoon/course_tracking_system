@@ -13,7 +13,7 @@ import ErrorBanner from './components/errorbanner';
 class Home extends React.Component {
   render() {
     return (
-      <HomePage user={1}/>
+      <HomePage user={"000000000000000000000001"}/>
     );
   }
 }
@@ -21,7 +21,7 @@ class Home extends React.Component {
 class About extends React.Component {
   render() {
     return (
-      <AboutPage user={1}/>
+      <AboutPage user={"000000000000000000000001"}/>
     );
   }
 }
@@ -29,7 +29,7 @@ class About extends React.Component {
 class SavePage extends React.Component {
   render() {
     return (
-      <SavePages user={1}/>
+      <SavePages user={"000000000000000000000001"}/>
     );
   }
 }
@@ -45,7 +45,7 @@ class CourseHistory extends React.Component {
 class Profile extends React.Component {
   render() {
     return (
-      <ProfilePage user={1}/>
+      <ProfilePage user={"000000000000000000000001"}/>
     );
   }
 }
@@ -54,7 +54,7 @@ class Profile extends React.Component {
 class App extends React.Component {
   render() {
     return (
-      <div><Navbar user={1}/>
+      <div><Navbar user={"000000000000000000000001"}/>
         <div className="row">
   <div className="col-md-12">
   <ErrorBanner />
