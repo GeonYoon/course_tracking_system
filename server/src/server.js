@@ -51,9 +51,25 @@ var url = 'mongodb://localhost:27017/facebook';
 MongoClient.connect(url, function(err, db) {
 
 
-function getUserData(user) {
-  var userData = getUserItemSync(user);
-  return userData;
+// function getUserData(user) {
+//   var userData = getUserItemSync(user);
+//   return userData;
+// }
+
+function getUserData(user, callback) {
+  db.collection('users').findOne({
+    _id: user
+  }, function(err, userData) {
+    if (err) {
+      return callback(err);
+    } else if (userData === null) {
+      // User not found.
+      return callback(null, null);
+    }
+    getUserItem(user, callback);
+
+
+  });
 }
 
 
@@ -82,6 +98,18 @@ function resolveMajorObjects(majorList, callback) {
       // (so userMap["4"] will give the user with ID 4)
       var majorMap = {};
       majors.forEach((major) => {
+
+        var newMajorList = [];
+        newMajorList = newMajorList.concat(major.courses);
+
+        resolveCourseObjects(newMajorList, function(err, courseMap2) {
+          if (err) {
+            return callback(err);
+          }
+          major.courses = major.courses.map((userId) => courseMap2[userId]);
+          callback(null, major);
+        });
+
         majorMap[major._id] = major;
       });
       callback(null, majorMap);
@@ -112,10 +140,23 @@ function resolveCourseObjects(courseList, callback) {
       if (err) {
         return callback(err);
       }
+
       // Build a map from ID to user object.
       // (so userMap["4"] will give the user with ID 4)
       var courseMap = {};
       courses.forEach((course) => {
+
+          var newCourseList = [];
+          newCourseList = newCourseList.concat(course.prereqs);
+
+          resolveCourseObjects(newCourseList, function(err, courseMap2) {
+            if (err) {
+              return callback(err);
+            }
+            course.prereqs = course.prereqs.map((userId) => courseMap2[userId]);
+            callback(null, course);
+          });
+
         courseMap[course._id] = course;
       });
       callback(null, courseMap);
@@ -155,15 +196,74 @@ function resolveUserObjects(userList, callback) {
   }
 }
 
-function getUserItemSync(userId) {
-  var user = readDocument('users', userId);
-  user.majors = user.majors.map((id) => getMajorItemSync(id));
-  user.minors = user.minors.map((id) => getMajorItemSync(id));
-  user.classesTaken = user.classesTaken.map((id) => getCourseItemSync(id));
-  user.nextSemester = user.nextSemester.map((id) => getCourseItemSync(id));
-  user.shown_minors = user.shown_minors.map((id) => getMajorItemSync(id));
-  user.shown_majors = user.shown_majors.map((id) => getMajorItemSync(id));
-  return user;
+// function getUserItemSync(userId) {
+//   var user = readDocument('users', userId);
+//   user.majors = user.majors.map((id) => getMajorItemSync(id));
+//   user.minors = user.minors.map((id) => getMajorItemSync(id));
+//   user.classesTaken = user.classesTaken.map((id) => getCourseItemSync(id));
+//   user.nextSemester = user.nextSemester.map((id) => getCourseItemSync(id));
+//   user.shown_minors = user.shown_minors.map((id) => getMajorItemSync(id));
+//   user.shown_majors = user.shown_majors.map((id) => getMajorItemSync(id));
+//   return user;
+// }
+
+function getUserItem(userId, callback) {
+  // Get the user item with the given ID.
+  db.collection('users').findOne({
+    _id: userId
+  }, function(err, userItem) {
+    if (err) {
+      // An error occurred.
+      return callback(err);
+    } else if (userItem === null) {
+      // Feed item not found!
+      return callback(null, null);
+    }
+
+    // Build a list of all of the user objects we need to resolve.
+    // Start off with the author of the feedItem.
+    var majorList = [];
+    // Add all of the user IDs in the likeCounter.
+    majorList = majorList.concat(userItem.majors);
+    majorList = majorList.concat(userItem.minors);
+    majorList = majorList.concat(userItem.shown_majors);
+    majorList = majorList.concat(userItem.shown_minors);
+    // Add all of the authors of the comments.
+    // feedItem.comments.forEach((comment) => userList.push(comment.author));
+    // Resolve all of the user objects!
+    resolveMajorObjects(majorList, function(err, majorMap) {
+      if (err) {
+        return callback(err);
+      }
+      // Use the userMap to look up the author's user object
+      // feedItem.contents.author = userMap[feedItem.contents.author];
+      // Look up the user objects for all users in the like counter.
+      userItem.majors = userItem.majors.map((userId) => majorMap[userId]);
+      userItem.minors = userItem.minors.map((userId) => majorMap[userId]);
+      userItem.shown_majors = userItem.shown_majors.map((userId) => majorMap[userId]);
+      userItem.shown_minors = userItem.shown_minors.map((userId) => majorMap[userId]);
+
+      var courseList = [];
+      courseList = courseList.concat(userItem.classesTaken);
+      courseList = courseList.concat(userItem.nextSemester);
+
+      resolveCourseObjects(courseList, function(err,courseMap) {
+        if (err) {
+          return callback(err);
+        }
+        userItem.classesTaken = userItem.classesTaken.map((userId) => courseMap[userId]);
+        userItem.nextSemester = userItem.nextSemester.map((userId) => courseMap[userId]);
+
+        callback(null,userItem);
+      });
+      // Look up each comment's author's user object.
+      // feedItem.comments.forEach((comment) => {
+      //   comment.author = userMap[comment.author];
+      // });
+      // Return the resolved feedItem!
+      callback(null, userItem);
+    });
+  });
 }
 
 
@@ -171,20 +271,20 @@ function getCourseData(courseId){
   var courseItem = getCourseItemSync(courseId);
   return courseItem;
 }
-
-
-function getCourseItemSync(courseId){
-  var courseItem = readDocument('courses', courseId);
-  courseItem.prereqs = courseItem.prereqs.map((id) => getCourseItemSync(id));
-  return courseItem;
-}
-
-
-function getMajorItemSync(majorId){
-  var majorItem = readDocument('majors', majorId);
-  majorItem.courses = majorItem.courses.map((id) => getCourseItemSync(id));
-  return majorItem;
-}
+//
+//
+// function getCourseItemSync(courseId){
+//   var courseItem = readDocument('courses', courseId);
+//   courseItem.prereqs = courseItem.prereqs.map((id) => getCourseItemSync(id));
+//   return courseItem;
+// }
+//
+//
+// function getMajorItemSync(majorId){
+//   var majorItem = readDocument('majors', majorId);
+//   majorItem.courses = majorItem.courses.map((id) => getCourseItemSync(id));
+//   return majorItem;
+// }
 
 
 // Get savePage data
@@ -255,11 +355,11 @@ function getUserIdFromToken(authorizationLine) {
     var tokenObj = JSON.parse(regularString);
     var id = tokenObj['id'];
     // Check that id is a number.
-    if (typeof id === 'number') {
+    if (typeof id === 'string') {
       return id;
     } else {
       // Not a number. Return -1, an invalid ID.
-      return -1;
+      return "";
     }
   } catch (e) {
     // Return an invalid ID.
@@ -274,16 +374,27 @@ function getUserIdFromToken(authorizationLine) {
 app.get('/user/:userid', function(req, res) {
   var userid = req.params.userid;
   var fromUser = getUserIdFromToken(req.get('Authorization'));
-  // userid is a string. We need it to be a number.
-  // Parameters are always strings.
-  var useridNumber = parseInt(userid, 10);
-  if (fromUser === useridNumber) {
-    // Send response.
-    res.send(getUserData(userid));
-  } else {
-    // 401: Unauthorized request.
-    res.status(401).end();
-  }
+  if (fromUser === userid) {
+      // Convert userid into an ObjectID before passing it to database queries.
+      console.log("1 " + userid);
+      console.log("2 " + new ObjectID(userid));
+      getUserData(new ObjectID(userid), function(err, feedData) {
+        if (err) {
+          // A database error happened.
+          // Internal Error: 500.
+          res.status(500).send("Database error: " + err);
+        } else if (feedData === null) {
+          // Couldn't find the feed in the database.
+          res.status(400).send("Could not look up feed for user " + userid);
+        } else {
+          // Send data.
+          res.send(feedData);
+        }
+      });
+    } else {
+      // 403: Unauthorized request.
+      res.status(403).end();
+    }
 });
 
 
