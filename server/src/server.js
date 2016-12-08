@@ -46,7 +46,7 @@ app.use(function(err, req, res, next) {
 var MongoDB = require('mongodb');
 var MongoClient = MongoDB.MongoClient;
 var ObjectID = MongoDB.ObjectID;
-var url = 'mongodb://localhost:27017/facebook';
+var url = 'mongodb://localhost:27017/faucet';
 
 MongoClient.connect(url, function(err, db) {
 
@@ -376,8 +376,6 @@ app.get('/user/:userid', function(req, res) {
   var fromUser = getUserIdFromToken(req.get('Authorization'));
   if (fromUser === userid) {
       // Convert userid into an ObjectID before passing it to database queries.
-      console.log("1 " + userid);
-      console.log("2 " + new ObjectID(userid));
       getUserData(new ObjectID(userid), function(err, feedData) {
         if (err) {
           // A database error happened.
