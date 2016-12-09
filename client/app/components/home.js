@@ -4,6 +4,8 @@ import cytoscape from '../../build/js/cytoscape.js';
 import {Link} from 'react-router';
 import {getUserData, saveAGraph} from '../server.js';
 
+var addedAlready = [];
+var preAlready = [];
 export default class HomePage extends React.Component {
   constructor(props){
     super(props);
@@ -109,15 +111,22 @@ export default class HomePage extends React.Component {
          if(nextTerm){
            takentext = "nextSemester";
          }
+         if(addedAlready.indexOf(course._id) == -1 ){
          this.cy.add({
-           data: {id: course.id, info: course.department + course.number, take: takentext, majmin: "maj"}
+           data: {id: course._id, info: course.department + course.number, take: takentext, majmin: "maj"}
          });
+         addedAlready.push(course._id);
+       }
        })
+      //  console.log(this.state);
         maj.courses.map((course)=>{
          course.prereqs.map((prereq)=>{
+           if(preAlready.indexOf(prereq._id) == -1){
            this.cy.add({
-             data: {id: prereq.id+''+course.id, source: prereq.id, target: course.id}
+             data: {id: prereq._id+''+course._id, source: prereq._id, target: course._id}
            });
+           preAlready.push(prereq._id)
+         }
          })
        }
      )
@@ -193,9 +202,12 @@ this.cy.on('mouseout', 'node', function(event) {
    //this.cy.png()
  }
  ref(){
+    console.log(this.state);
+
    getUserData(this.props.user, (info) => {
      this.setState(info);
    });
+  //  console.log(this.state);
    //this.userInfo = getUserData(this.props.user);
   //  this.renderCytoscapeElement();
  }

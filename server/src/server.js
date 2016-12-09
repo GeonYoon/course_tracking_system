@@ -57,6 +57,8 @@ MongoClient.connect(url, function(err, db) {
 // }
 
 function getUserData(user, callback) {
+  // console.log("test");
+  //right here is happening 3 times
   db.collection('users').findOne({
     _id: user
   }, function(err, userData) {
@@ -89,7 +91,7 @@ function resolveMajorObjects(majorList, callback) {
     var query = {
       $or: majorList.map((id) => { return {_id: id } })
     };
-    // Resolve 'like' counter
+        // Resolve 'like' counter
     db.collection('majors').find(query).toArray(function(err, majors) {
       if (err) {
         return callback(err);
@@ -97,7 +99,7 @@ function resolveMajorObjects(majorList, callback) {
       // Build a map from ID to user object.
       // (so userMap["4"] will give the user with ID 4)
       var majorMap = {};
-      majors.forEach((major) => {
+      majors = majors.forEach((major) => {
         if(major.courses.length > 0){
         var newMajorList = [];
         newMajorList = newMajorList.concat(major.courses);
@@ -108,18 +110,20 @@ function resolveMajorObjects(majorList, callback) {
           major.courses = major.courses.map((userId) => courseMap2[userId]);
           // console.log("yes courses " + major._id);
           // console.log(major.courses);
-          // callback(null, major);
+          // callback(null, majorMap);
+          // majorMap[major._id] = major;
+          // callback(null, majorMap);
         });
-        majorMap[major._id] = major;
+        // majorMap[major._id] = major;
 
       }
       else{
         // console.log("no courses " + major._id);
 
-        majorMap[major._id] = major;
+        // majorMap[major._id] = major;
       }
 
-        // majorMap[major._id] = major;
+        majorMap[major._id] = major;
       });
       callback(null, majorMap);
     });
@@ -127,6 +131,70 @@ function resolveMajorObjects(majorList, callback) {
 }
 
 //gotta add the calls to resolveCourse and resolveMajor in all of them. make the list, use the callback, all that.
+
+function resolveMajorObjects2(majorList, callback) {
+  if (majorList.length === 0) {
+    callback(null, {});
+  } else {
+    var query = {
+      $or: majorList.map((id) => { return {_id: id } })
+    };
+    db.collection('majors').find(query).toArray(function(err, majors) {
+      if (err) {
+        return callback(err);
+      }
+      var majorMap = {};
+      majors.forEach((major) => {
+        if(major.courses.length > 0){
+        var newMajorList = [];
+        newMajorList = newMajorList.concat(major.courses);
+        resolveCourseObjects(newMajorList, function(err, courseMap2) {
+          if (err) {
+            return callback(err);
+          }
+          major.courses = major.courses.map((userId) => courseMap2[userId]);
+        });
+        majorMap[major._id] = major;
+      }
+      else{
+        majorMap[major._id] = major;
+      }
+      });
+      callback(null, majorMap);
+    });
+  }
+}
+
+function resolveCourseObjects2(courseList, callback) {
+  if (courseList.length === 0) {
+    callback(null, {});
+  } else {
+    var query = {
+      $or: courseList.map((id) => { return {_id: id } })
+    };
+    db.collection('courses').find(query).toArray(function(err, courses) {
+      if (err) {
+        return callback(err);
+      }
+      var courseMap = {};
+      courses.forEach((course) => {
+          if(course.prereqs.length > 0){
+          var newCourseList = [];
+          newCourseList = newCourseList.concat(course.prereqs);
+          resolveCourseObjects(newCourseList, function(err, courseMap2) {
+            if (err) {
+              return callback(err);
+            }
+            course.prereqs = course.prereqs.map((userId) => courseMap2[userId]);
+          });
+        }
+      courseMap[course._id] = course;
+      });
+      callback(null, courseMap);
+    });
+  }
+}
+
 
 /**
  * Resolves a list of course objects. Returns an object that maps course IDs to
@@ -144,6 +212,7 @@ function resolveCourseObjects(courseList, callback) {
     var query = {
       $or: courseList.map((id) => { return {_id: id } })
     };
+    // console.log(courseList);
     // Resolve 'like' counter
     db.collection('courses').find(query).toArray(function(err, courses) {
       if (err) {
@@ -161,17 +230,25 @@ function resolveCourseObjects(courseList, callback) {
             if (err) {
               return callback(err);
             }
+            // console.log(course.prereqs);
             course.prereqs = course.prereqs.map((userId) => courseMap2[userId]);
-            // console.log("yes prereqs " + course._id);
+            // console.log(course);
             // console.log(course.prereqs);
             // callback(null, course);
+            // courseMap[course._id] = course;
+            // callback(null, courseMap);
           });
           courseMap[course._id] = course;
+          // callback(null, courseMap);
         }
         else{
+          // callback(null, courseMap);
           // console.log("no prereqs " + course._id);
-        courseMap[course._id] = course;
+        // courseMap[course._id] = course;
       }
+      // console.log(course);
+      // console.log(course.prereqs); //THIS IS WHAT'S NOT RIGHT
+      // courseMap[course._id] = course;
       });
       // console.log(courseMap); //sometimes the courses are undefined... hm
       callback(null, courseMap);
@@ -269,7 +346,8 @@ function getUserItem(userId, callback) {
         }
         userItem.classesTaken = userItem.classesTaken.map((userId) => courseMap[userId]);
         userItem.nextSemester = userItem.nextSemester.map((userId) => courseMap[userId]);
-
+        //for some reason, everything is loading 3 times
+        console.log(userItem);
         callback(null,userItem);
       });
       // Look up each comment's author's user object.
@@ -392,6 +470,7 @@ app.get('/user/:userid', function(req, res) {
   var fromUser = getUserIdFromToken(req.get('Authorization'));
   if (fromUser === userid) {
       // Convert userid into an ObjectID before passing it to database queries.
+      // console.log("test");
       getUserData(new ObjectID(userid), function(err, feedData) {
         if (err) {
           // A database error happened.
