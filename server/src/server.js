@@ -98,19 +98,28 @@ function resolveMajorObjects(majorList, callback) {
       // (so userMap["4"] will give the user with ID 4)
       var majorMap = {};
       majors.forEach((major) => {
-
+        if(major.courses.length > 0){
         var newMajorList = [];
         newMajorList = newMajorList.concat(major.courses);
-
         resolveCourseObjects(newMajorList, function(err, courseMap2) {
           if (err) {
             return callback(err);
           }
           major.courses = major.courses.map((userId) => courseMap2[userId]);
-          callback(null, major);
+          // console.log("yes courses " + major._id);
+          // console.log(major.courses);
+          // callback(null, major);
         });
+        majorMap[major._id] = major;
+
+      }
+      else{
+        // console.log("no courses " + major._id);
 
         majorMap[major._id] = major;
+      }
+
+        // majorMap[major._id] = major;
       });
       callback(null, majorMap);
     });
@@ -140,12 +149,11 @@ function resolveCourseObjects(courseList, callback) {
       if (err) {
         return callback(err);
       }
-
       // Build a map from ID to user object.
       // (so userMap["4"] will give the user with ID 4)
       var courseMap = {};
       courses.forEach((course) => {
-
+          if(course.prereqs.length > 0){
           var newCourseList = [];
           newCourseList = newCourseList.concat(course.prereqs);
 
@@ -154,11 +162,18 @@ function resolveCourseObjects(courseList, callback) {
               return callback(err);
             }
             course.prereqs = course.prereqs.map((userId) => courseMap2[userId]);
-            callback(null, course);
+            // console.log("yes prereqs " + course._id);
+            // console.log(course.prereqs);
+            // callback(null, course);
           });
-
+          courseMap[course._id] = course;
+        }
+        else{
+          // console.log("no prereqs " + course._id);
         courseMap[course._id] = course;
+      }
       });
+      // console.log(courseMap); //sometimes the courses are undefined... hm
       callback(null, courseMap);
     });
   }
@@ -238,11 +253,12 @@ function getUserItem(userId, callback) {
       // Use the userMap to look up the author's user object
       // feedItem.contents.author = userMap[feedItem.contents.author];
       // Look up the user objects for all users in the like counter.
+      // console.log(majorMap);
+
       userItem.majors = userItem.majors.map((userId) => majorMap[userId]);
       userItem.minors = userItem.minors.map((userId) => majorMap[userId]);
       userItem.shown_majors = userItem.shown_majors.map((userId) => majorMap[userId]);
       userItem.shown_minors = userItem.shown_minors.map((userId) => majorMap[userId]);
-
       var courseList = [];
       courseList = courseList.concat(userItem.classesTaken);
       courseList = courseList.concat(userItem.nextSemester);
@@ -261,7 +277,7 @@ function getUserItem(userId, callback) {
       //   comment.author = userMap[comment.author];
       // });
       // Return the resolved feedItem!
-      callback(null, userItem);
+      // callback(null, userItem);
     });
   });
 }
