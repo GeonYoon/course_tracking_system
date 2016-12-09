@@ -466,19 +466,48 @@ app.post('/resetdb', function(req, res) {
 });
 
 
-//add shown major
+/**
+ * Helper function: Sends back HTTP response with error code 500 due to
+ * a database error.
+ */
+function sendDatabaseError(res, err) {
+  res.status(500).send("A database error occurred: " + err);
+}
+
+// add shown major
 app.put('/user/:userid/majortoshow/:majorid', function(req, res) {
   var fromUser = getUserIdFromToken(req.get('Authorization'));
-  // Convert params from string to number.
-  var userId = parseInt(req.params.userid, 10);
-  var majorId = parseInt(req.params.majorid, 10);
-  if (fromUser === userId) {
-    var userItem = readDocument('users', userId);
-    userItem.shown_majors.push(majorId);
-    writeDocument('users', userItem);
-    // Return a resolved version of the likeCounter
-    res.send(userItem.shown_majors.map((majId) =>
-    readDocument('majors', majId)));
+  var majorId = req.params.majorid;
+  var userId = new ObjectID(req.params.userid);
+  if (fromUser === req.params.userid) {
+    // First, we can update the like counter.
+    db.collection('users').updateOne({ _id: userId },
+      {
+        // Add `userId` to the likeCounter if it is not already
+        // in the array.
+        $addToSet: {
+          shown_majors: new ObjectID(majorId)
+        }
+      }, function(err) {
+        if (err) {
+          return sendDatabaseError(res, err);
+        }
+        // Second, grab the feed item now that we have updated it.
+        db.collection('users').findOne({ _id: userId }, function(err, userItem) {
+          if (err) {
+            return sendDatabaseError(res, err);
+          }
+          // Return a resolved version of the likeCounter
+          resolveMajorObjects(userItem.shown_majors, function(err, majorMap) {
+            if (err) {
+              return sendDatabaseError(res, err);
+            }
+            // Return a resolved version of the likeCounter
+            res.send(userItem.shown_majors.map((userId) => majorMap[userId]));
+          });
+        }
+      );
+    });
   } else {
     // 401: Unauthorized.
     res.status(401).end();
@@ -486,19 +515,80 @@ app.put('/user/:userid/majortoshow/:majorid', function(req, res) {
 });
 
 
-//add shown minor
+// //add shown major
+// app.put('/user/:userid/majortoshow/:majorid', function(req, res) {
+//   var fromUser = getUserIdFromToken(req.get('Authorization'));
+//   // Convert params from string to number.
+//   var userId = parseInt(req.params.userid, 10);
+//   var majorId = parseInt(req.params.majorid, 10);
+//   if (fromUser === userId) {
+//     var userItem = readDocument('users', userId);
+//     userItem.shown_majors.push(majorId);
+//     writeDocument('users', userItem);
+//     // Return a resolved version of the likeCounter
+//     res.send(userItem.shown_majors.map((majId) =>
+//     readDocument('majors', majId)));
+//   } else {
+//     // 401: Unauthorized.
+//     res.status(401).end();
+//   }
+// });
+
+
+// //add shown minor
+// app.put('/user/:userid/minortoshow/:minorid', function(req, res) {
+//   var fromUser = getUserIdFromToken(req.get('Authorization'));
+//   // Convert params from string to number.
+//   var userId = parseInt(req.params.userid, 10);
+//   var minorId = parseInt(req.params.minorid, 10);
+//   if (fromUser === userId) {
+//     var userItem = readDocument('users', userId);
+//     userItem.shown_minors.push(minorId);
+//     writeDocument('users', userItem);
+//     // Return a resolved version of the likeCounter
+//     res.send(userItem.shown_minors.map((majId) =>
+//     readDocument('majors', majId)));
+//   } else {
+//     // 401: Unauthorized.
+//     res.status(401).end();
+//   }
+// });
+
+
+// add shown minor
 app.put('/user/:userid/minortoshow/:minorid', function(req, res) {
   var fromUser = getUserIdFromToken(req.get('Authorization'));
-  // Convert params from string to number.
-  var userId = parseInt(req.params.userid, 10);
-  var minorId = parseInt(req.params.minorid, 10);
-  if (fromUser === userId) {
-    var userItem = readDocument('users', userId);
-    userItem.shown_minors.push(minorId);
-    writeDocument('users', userItem);
-    // Return a resolved version of the likeCounter
-    res.send(userItem.shown_minors.map((majId) =>
-    readDocument('majors', majId)));
+  var minorId = req.params.minorid;
+  var userId = new ObjectID(req.params.userid);
+  if (fromUser === req.params.userid) {
+    // First, we can update the like counter.
+    db.collection('users').updateOne({ _id: userId },
+      {
+        // Add `userId` to the likeCounter if it is not already
+        // in the array.
+        $addToSet: {
+          shown_minors: new ObjectID(minorId)
+        }
+      }, function(err) {
+        if (err) {
+          return sendDatabaseError(res, err);
+        }
+        // Second, grab the feed item now that we have updated it.
+        db.collection('users').findOne({ _id: userId }, function(err, userItem) {
+          if (err) {
+            return sendDatabaseError(res, err);
+          }
+          // Return a resolved version of the likeCounter
+          resolveMajorObjects(userItem.shown_minors, function(err, majorMap) {
+            if (err) {
+              return sendDatabaseError(res, err);
+            }
+            // Return a resolved version of the likeCounter
+            res.send(userItem.shown_minors.map((userId) => majorMap[userId]));
+          });
+        }
+      );
+    });
   } else {
     // 401: Unauthorized.
     res.status(401).end();
@@ -541,47 +631,123 @@ app.put('/user/:userid/courses/:courseid/nextsem/', function(req, res){
   }
 });
 
-// delete a shown major
+//delete shown major
 app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
-var fromUser = getUserIdFromToken(req.get('Authorization'));
-// Convert params from string to number.
-var majorId = parseInt(req.params.majorid, 10);
-var userId = parseInt(req.params.userid, 10);
-if (fromUser === userId) {
-  var majItem = readDocument('users', userId);
-  var courseIndex = majItem.shown_majors.indexOf(majorId);
-  if(courseIndex !== -1){
-    majItem.shown_majors.splice(courseIndex, 1);
-    writeDocument('users', majItem);
-  }
-  res.send(majItem.shown_majors.map((majId) =>
-    readDocument('majors', majId)));
-} else {
-  // 401: Unauthorized.
-  res.status(401).end();
-  }
-});
-
-// delete a shown minor
-app.delete('/user/:userid/minortoshow/:minorid', function(req, res) {
   var fromUser = getUserIdFromToken(req.get('Authorization'));
-  // Convert params from string to number.
-  var minorId = parseInt(req.params.minorid, 10);
-  var userId = parseInt(req.params.userid, 10);
-  if (fromUser === userId) {
-    var majItem = readDocument('users', userId);
-    var courseIndex = majItem.shown_minors.indexOf(minorId);
-    if(courseIndex !== -1){
-      majItem.shown_minors.splice(courseIndex, 1);
-      writeDocument('users', majItem);
-    }
-    res.send(majItem.shown_minors.map((majId) =>
-      readDocument('majors', majId)));
+  var userId = new ObjectID(req.params.userid);
+  var majorId = req.params.majorid;
+  if (fromUser === req.params.userid) {
+    // Step 1: Remove userId from the likeCounter.
+    db.collection('users').updateOne({ _id: userId },
+      {
+        // Only removes the userId from the likeCounter, if it is in the likeCounter.
+        $pull: {
+          shown_majors: new ObjectID(majorId)
+        }
+      }, function(err) {
+      if (err) {
+        return sendDatabaseError(res, err);
+      }
+      // Step 2: Get the feed item.
+      db.collection('users').findOne({ _id: userId }, function(err, feedItem) {
+        if (err) {
+          return sendDatabaseError(res, err);
+        }
+        // Step 3: Resolve the user IDs in the like counter into user objects.
+        resolveMajorObjects(feedItem.shown_majors, function(err, userMap) {
+          if (err) {
+            return sendDatabaseError(res, err);
+          }
+          // Return a resolved version of the likeCounter
+          res.send(feedItem.shown_majors.map((userId) => userMap[userId]));
+        });
+      });
+    });
   } else {
     // 401: Unauthorized.
     res.status(401).end();
   }
 });
+
+//delete shown major
+app.delete('/user/:userid/minortoshow/:minorid', function(req, res) {
+  var fromUser = getUserIdFromToken(req.get('Authorization'));
+  var userId = new ObjectID(req.params.userid);
+  var minorId = req.params.minorid;
+  if (fromUser === req.params.userid) {
+    // Step 1: Remove userId from the likeCounter.
+    db.collection('users').updateOne({ _id: userId },
+      {
+        // Only removes the userId from the likeCounter, if it is in the likeCounter.
+        $pull: {
+          shown_minors: new ObjectID(minorId)
+        }
+      }, function(err) {
+      if (err) {
+        return sendDatabaseError(res, err);
+      }
+      // Step 2: Get the feed item.
+      db.collection('users').findOne({ _id: userId }, function(err, feedItem) {
+        if (err) {
+          return sendDatabaseError(res, err);
+        }
+        // Step 3: Resolve the user IDs in the like counter into user objects.
+        resolveMajorObjects(feedItem.shown_minors, function(err, userMap) {
+          if (err) {
+            return sendDatabaseError(res, err);
+          }
+          // Return a resolved version of the likeCounter
+          res.send(feedItem.shown_minors.map((userId) => userMap[userId]));
+        });
+      });
+    });
+  } else {
+    // 401: Unauthorized.
+    res.status(401).end();
+  }
+});
+
+// // delete a shown major
+// app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
+// var fromUser = getUserIdFromToken(req.get('Authorization'));
+// // Convert params from string to number.
+// var majorId = parseInt(req.params.majorid, 10);
+// var userId = parseInt(req.params.userid, 10);
+// if (fromUser === userId) {
+//   var majItem = readDocument('users', userId);
+//   var courseIndex = majItem.shown_majors.indexOf(majorId);
+//   if(courseIndex !== -1){
+//     majItem.shown_majors.splice(courseIndex, 1);
+//     writeDocument('users', majItem);
+//   }
+//   res.send(majItem.shown_majors.map((majId) =>
+//     readDocument('majors', majId)));
+// } else {
+//   // 401: Unauthorized.
+//   res.status(401).end();
+//   }
+// });
+
+// // delete a shown minor
+// app.delete('/user/:userid/minortoshow/:minorid', function(req, res) {
+//   var fromUser = getUserIdFromToken(req.get('Authorization'));
+//   // Convert params from string to number.
+//   var minorId = parseInt(req.params.minorid, 10);
+//   var userId = parseInt(req.params.userid, 10);
+//   if (fromUser === userId) {
+//     var majItem = readDocument('users', userId);
+//     var courseIndex = majItem.shown_minors.indexOf(minorId);
+//     if(courseIndex !== -1){
+//       majItem.shown_minors.splice(courseIndex, 1);
+//       writeDocument('users', majItem);
+//     }
+//     res.send(majItem.shown_minors.map((majId) =>
+//       readDocument('majors', majId)));
+//   } else {
+//     // 401: Unauthorized.
+//     res.status(401).end();
+//   }
+// });
 
 //delete a course
 app.delete('/user/:userid/courses/:courseid', function(req, res){
