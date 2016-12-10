@@ -2,7 +2,7 @@ import React from 'react';
 import Sidebar from './sidebar';
 import cytoscape from '../../build/js/cytoscape.js';
 import {Link} from 'react-router';
-import {getUserData, saveAGraph} from '../server.js';
+import {getUserData, getCourseData, saveAGraph} from '../server.js';
 
 var addedAlready = [];
 var preAlready = [];
@@ -93,13 +93,13 @@ export default class HomePage extends React.Component {
        maj.courses.map((course)=>{
          var taken = false;
           this.state.classesTaken.map((clss)=>{
-            if(clss.id == course.id){
+            if(clss._id == course._id){
               taken = true;
             }
           });
          var nextTerm = false;
          this.state.nextSemester.map((clss)=>{
-           if(clss.id == course.id){
+           if(clss._id == course._id){
              nextTerm = true;
            }
          });
@@ -111,26 +111,28 @@ export default class HomePage extends React.Component {
          if(nextTerm){
            takentext = "nextSemester";
          }
-         if(addedAlready.indexOf(course._id) == -1 ){
+        //  if(addedAlready.indexOf(course._id) == -1 ){
          this.cy.add({
            data: {id: course._id, info: course.department + course.number, take: takentext, majmin: "maj"}
          });
-         addedAlready.push(course._id);
-       }
+        //  addedAlready.push(course._id);
+      //  }
        })
       //  console.log(this.state);
-        maj.courses.map((course)=>{
-         course.prereqs.map((prereq)=>{
-           if(preAlready.indexOf(prereq._id) == -1){
-           this.cy.add({
-             data: {id: prereq._id+''+course._id, source: prereq._id, target: course._id}
-           });
-           preAlready.push(prereq._id)
-         }
-         })
-       }
-     )
-   });
+      maj.courses.map((course)=>{
+       course.prereqs.map((prereq)=>{
+        //  if(preAlready.indexOf(prereq) == -1){
+           // getCourseData(prereq, prq=>{
+             this.cy.add({
+               data: {id: prereq+''+course._id, source: prereq, target: course._id}
+             });
+           // });
+        //  preAlready.push(prereq)
+      //  }
+       })
+     }
+   )
+ });
    //small bug note:
    //overlapping classes across majors causes the prereq links to disappear
 
@@ -139,13 +141,13 @@ export default class HomePage extends React.Component {
        maj.courses.map((course)=>{
          var taken = false;
           this.state.classesTaken.map((clss)=>{
-            if(clss.id == course.id){
+            if(clss._id == course._id){
               taken = true;
             }
           });
          var nextTerm = false;
          this.state.nextSemester.map((clss)=>{
-           if(clss.id == course.id){
+           if(clss._id == course._id){
              nextTerm = true;
            }
          });
@@ -161,15 +163,20 @@ export default class HomePage extends React.Component {
            data: {id: course.id, info: course.department + course.number, take: takentext, majmin: "min"}
          });
        })
-        maj.courses.map((course)=>{
-         course.prereqs.map((prereq)=>{
-           this.cy.add({
-             data: {id: prereq.id+''+course.id, source: prereq.id, target: course.id}
-           });
-         })
-       }
-     )
-   });
+       maj.courses.map((course)=>{
+        course.prereqs.map((prereq)=>{
+          // if(preAlready.indexOf(prereq) == -1){
+            // getCourseData(prereq, prq=>{
+              this.cy.add({
+                data: {id: prereq+''+course._id, source: prereq, target: course._id}
+              });
+            // });
+          // preAlready.push(prereq)
+        // }
+        })
+      }
+    )
+  });
 
 
 
@@ -202,12 +209,12 @@ this.cy.on('mouseout', 'node', function(event) {
    //this.cy.png()
  }
  ref(){
-    console.log(this.state);
+    // console.log(this.state);
 
    getUserData(this.props.user, (info) => {
      this.setState(info);
    });
-  //  console.log(this.state);
+   console.log(this.state);
    //this.userInfo = getUserData(this.props.user);
   //  this.renderCytoscapeElement();
  }

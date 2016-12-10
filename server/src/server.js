@@ -222,30 +222,24 @@ function resolveCourseObjects(courseList, callback) {
       // (so userMap["4"] will give the user with ID 4)
       var courseMap = {};
       courses.forEach((course) => {
-          if(course.prereqs.length > 0){
-          var newCourseList = [];
-          newCourseList = newCourseList.concat(course.prereqs);
-
-          resolveCourseObjects(newCourseList, function(err, courseMap2) {
-            if (err) {
-              return callback(err);
-            }
-            // console.log(course.prereqs);
-            course.prereqs = course.prereqs.map((userId) => courseMap2[userId]);
-            // console.log(course);
-            // console.log(course.prereqs);
-            // callback(null, course);
-            // courseMap[course._id] = course;
-            // callback(null, courseMap);
-          });
+          // if(course.prereqs.length > 0){
+          // var newCourseList = [];
+          // newCourseList = newCourseList.concat(course.prereqs);
+          //
+          // resolveCourseObjects(newCourseList, function(err, courseMap2) {
+          //   if (err) {
+          //     return callback(err);
+          //   }
+          //   // console.log(course.prereqs);
+          //   course.prereqs = course.prereqs.map((userId) => courseMap2[userId]);
+          //   // console.log(course);
+          //   // console.log(course.prereqs);
+          //   // callback(null, course);
+          //   // courseMap[course._id] = course;
+          //   // callback(null, courseMap);
+          // });
           courseMap[course._id] = course;
           // callback(null, courseMap);
-        }
-        else{
-          // callback(null, courseMap);
-          // console.log("no prereqs " + course._id);
-        // courseMap[course._id] = course;
-      }
       // console.log(course);
       // console.log(course.prereqs); //THIS IS WHAT'S NOT RIGHT
       // courseMap[course._id] = course;
@@ -299,6 +293,27 @@ function resolveUserObjects(userList, callback) {
 //   return user;
 // }
 
+function getCourseItem(courseId, callback) {
+  db.collection('courses').findOne({
+    _id: new ObjectID(courseId)
+  }, function(err, courseItem){
+    if(err){
+      return callback(err);
+    } else if (courseItem === null) {
+      return callback(null, null);
+    }
+    var courseList = [];
+    courseList = courseList.concat(courseItem.prereqs);
+    resolveCourseObjects(courseList, function(err, courseMap) {
+      if (err) {
+        return callback(err);
+      }
+      courseItem.prereqs = courseItem.prereqs.map((courseId) => courseMap[courseId]);
+      callback(courseItem);
+    });
+    });
+}
+
 function getUserItem(userId, callback) {
   // Get the user item with the given ID.
   db.collection('users').findOne({
@@ -347,7 +362,7 @@ function getUserItem(userId, callback) {
         userItem.classesTaken = userItem.classesTaken.map((userId) => courseMap[userId]);
         userItem.nextSemester = userItem.nextSemester.map((userId) => courseMap[userId]);
         //for some reason, everything is loading 3 times
-        console.log(userItem);
+        // console.log(userItem);
         callback(null,userItem);
       });
       // Look up each comment's author's user object.
@@ -361,9 +376,27 @@ function getUserItem(userId, callback) {
 }
 
 
-function getCourseData(courseId){
-  var courseItem = getCourseItemSync(courseId);
-  return courseItem;
+// function getCourseData(courseId){
+//   var courseItem = getCourseItemSync(courseId);
+//   return courseItem;
+// }
+
+function getCourseData(course, callback) {
+  // console.log("test");
+  //right here is happening 3 times
+  db.collection('courses').findOne({
+    _id: new ObjectID(course)
+  }, function(err, userData) {
+    if (err) {
+      return callback(err);
+    } else if (userData === null) {
+      // User not found.
+      return callback(null, null);
+    }
+    getCourseItem(course, callback);
+
+
+  });
 }
 //
 //
