@@ -8,14 +8,14 @@ var initialData = {
     "1":{
       "_id":new ObjectID("000000000000000000000001"),
       "fullName": "Student One",
-      "classesTaken":[new ObjectID("000000000000000000000001"),new ObjectID("000000000000000000000002"),new ObjectID("000000000000000000000004"),new ObjectID("000000000000000000000005"),new ObjectID("000000000000000000000006")],
+      "classesTaken":[new ObjectID("000000000000000000000001"),new ObjectID("000000000000000000000004"),new ObjectID("000000000000000000000005"),new ObjectID("000000000000000000000003")],
       "sId":12345678,
       "savedGraphs":new ObjectID("000000000000000000000001"),
       "majors":[new ObjectID("000000000000000000000001"),new ObjectID("000000000000000000000003")],
       "minors":[new ObjectID("000000000000000000000002")],
       "gradDate":"May 2018",
       "email":"sone@umass.edu",
-      "nextSemester":[],
+      "nextSemester":[new ObjectID("000000000000000000000002")],
       "shown_majors":[],
       "shown_minors":[],
       "admin": true,
@@ -39,49 +39,22 @@ var initialData = {
     "1":{
       "_id": new ObjectID("000000000000000000000001"),
       "title": "Computer Science",
-      "courses":[new ObjectID("000000000000000000000001"),new ObjectID("000000000000000000000002"),new ObjectID("000000000000000000000005"),new ObjectID("000000000000000000000006"),new ObjectID("000000000000000000000007"),new ObjectID("000000000000000000000008"),new ObjectID("000000000000000000000009"),new ObjectID("000000000000000000000010"),new ObjectID("000000000000000000000011"),new ObjectID("000000000000000000000013"),new ObjectID("000000000000000000000014"),new ObjectID("000000000000000000000015"),new ObjectID("000000000000000000000016")]
+      "courses":[new ObjectID("000000000000000000000003"),new ObjectID("000000000000000000000004"),new ObjectID("000000000000000000000005"),new ObjectID("000000000000000000000006"),new ObjectID("000000000000000000000007"),new ObjectID("000000000000000000000008"),new ObjectID("000000000000000000000009"),new ObjectID("000000000000000000000010"),new ObjectID("000000000000000000000012"),new ObjectID("000000000000000000000013"),new ObjectID("000000000000000000000014"),new ObjectID("000000000000000000000015"),new ObjectID("000000000000000000000016")]
     },
     "2":{
       "_id": new ObjectID("000000000000000000000002"),
       "title": "Math",
-      "courses":[new ObjectID("000000000000000000000003"),new ObjectID("000000000000000000000004")]
+      "courses":[new ObjectID("000000000000000000000001"),new ObjectID("000000000000000000000002")]
     },
     "3":{
       "_id": new ObjectID("000000000000000000000003"),
       "title": "Philosophy",
-      "courses":[new ObjectID("000000000000000000000012"),new ObjectID("000000000000000000000017"),new ObjectID("000000000000000000000018"),new ObjectID("000000000000000000000019")]
+      "courses":[new ObjectID("000000000000000000000011"),new ObjectID("000000000000000000000017"),new ObjectID("000000000000000000000018"),new ObjectID("000000000000000000000019")]
     }
   },
   "courses":{
     "1":{
       "_id": new ObjectID("000000000000000000000001"),
-      "name": "Web Programming",
-      "description": "THIS IS A DESCRIPTION",
-      "department": "CS",
-      "number": 326,
-      "prereqs": [new ObjectID("000000000000000000000002")],
-      "textbooks": ["Web Programming for Nerds"]
-    },
-    "2":{
-      "_id": new ObjectID("000000000000000000000002"),
-      "name": "Programming Methodology",
-      "description": "THIS IS A DESCRIPTION",
-      "department": "CS",
-      "number": 220,
-      "prereqs": [new ObjectID("000000000000000000000005")],
-      "textbooks": ["Scala 4 Kidz"]
-    },
-    "3":{
-      "_id": new ObjectID("000000000000000000000003"),
-      "name": "Calculus II",
-      "description": "THIS IS A DESCRIPTION",
-      "department": "MATH",
-      "number": 132,
-      "prereqs": [new ObjectID("000000000000000000000004")],
-      "textbooks": ["INTEGRATE THIS"]
-    },
-    "4":{
-      "_id": new ObjectID("000000000000000000000004"),
       "name": "Calculus I",
       "description": "THIS IS A DESCRIPTION",
       "department": "MATH",
@@ -89,17 +62,17 @@ var initialData = {
       "prereqs": [],
       "textbooks": ["DERIVE THIS"]
     },
-    "5":{
-      "_id": new ObjectID("000000000000000000000005"),
-      "name": "Programming with Data Structures",
+    "2":{
+      "_id": new ObjectID("000000000000000000000002"),
+      "name": "Calculus II",
       "description": "THIS IS A DESCRIPTION",
-      "department": "CS",
-      "number": 187,
-      "prereqs": [new ObjectID("000000000000000000000006")],
-      "textbooks": ["How do i linked list?"]
+      "department": "MATH",
+      "number": 132,
+      "prereqs": [new ObjectID("000000000000000000000001")],
+      "textbooks": ["INTEGRATE THIS"]
     },
-    "6":{
-      "_id": new ObjectID("000000000000000000000006"),
+    "3":{
+      "_id": new ObjectID("000000000000000000000003"),
       "name": "Introduction to Problem Solving",
       "description": "THIS IS A DESCRIPTION",
       "department": "CS",
@@ -107,44 +80,62 @@ var initialData = {
       "prereqs": [],
       "textbooks": ["Gordon 'G Money' Anderson: A tour of Umass CS"]
     },
-    "7":{
-      "_id": new ObjectID("000000000000000000000007"),
+    "4":{
+      "_id": new ObjectID("000000000000000000000004"),
+      "name": "Programming with Data Structures",
+      "description": "THIS IS A DESCRIPTION",
+      "department": "CS",
+      "number": 187,
+      "prereqs": [new ObjectID("000000000000000000000003")],
+      "textbooks": ["How do i linked list?"]
+    },
+    "5":{
+      "_id": new ObjectID("000000000000000000000005"),
+      "name": "Programming Methodology",
+      "description": "THIS IS A DESCRIPTION",
+      "department": "CS",
+      "number": 220,
+      "prereqs": [new ObjectID("000000000000000000000004")],
+      "textbooks": ["Scala 4 Kidz"]
+    },
+    "6":{
+      "_id": new ObjectID("000000000000000000000006"),
       "name": "Reasoning Under Uncertainty",
       "description": "THIS IS A DESCRIPTION",
       "department": "CS",
       "number": 240,
-      "prereqs": [new ObjectID("000000000000000000000005")],
+      "prereqs": [new ObjectID("000000000000000000000004")],
       "textbooks": ["Stats with Computers"]
     },
-    "8":{
-      "_id": new ObjectID("000000000000000000000008"),
+    "7":{
+      "_id": new ObjectID("000000000000000000000007"),
       "name": "Computer Systems Principles",
       "description": "THIS IS A DESCRIPTION",
       "department": "CS",
       "number": 230,
-      "prereqs": [new ObjectID("000000000000000000000005")],
+      "prereqs": [new ObjectID("000000000000000000000004")],
       "textbooks": ["C Compilers"]
     },
-    "9":{
-      "_id": new ObjectID("000000000000000000000009"),
+    "8":{
+      "_id": new ObjectID("000000000000000000000008"),
       "name": "Introduction to Computation",
       "description": "THIS IS A DESCRIPTION",
       "department": "CS",
       "number": 250,
-      "prereqs": [new ObjectID("000000000000000000000005")],
+      "prereqs": [new ObjectID("000000000000000000000004")],
       "textbooks": ["Computers are whack, yo"]
     },
-    "10":{
-      "_id": new ObjectID("000000000000000000000010"),
+    "9":{
+      "_id": new ObjectID("000000000000000000000009"),
       "name": "Algorithms",
       "description": "THIS IS A DESCRIPTION",
       "department": "CS",
       "number": 311,
-      "prereqs": [new ObjectID("000000000000000000000009")],
+      "prereqs": [new ObjectID("000000000000000000000008")],
       "textbooks": ["Algorithm Design"]
     },
-    "11":{
-      "_id": new ObjectID("000000000000000000000011"),
+    "10":{
+      "_id": new ObjectID("000000000000000000000010"),
       "name": "CS Junior Year Writing",
       "description": "THIS IS A DESCRIPTION",
       "department": "CS",
@@ -152,8 +143,8 @@ var initialData = {
       "prereqs": [],
       "textbooks": ["none"]
     },
-    "12":{
-      "_id": new ObjectID("000000000000000000000012"),
+    "11":{
+      "_id": new ObjectID("000000000000000000000011"),
       "name": "Medical Ethics",
       "description": "THIS IS A DESCRIPTION",
       "department": "PHIL",
@@ -161,13 +152,22 @@ var initialData = {
       "prereqs": [],
       "textbooks": ["none"]
     },
+    "12":{
+      "_id": new ObjectID("000000000000000000000012"),
+      "name": "Web Programming",
+      "description": "THIS IS A DESCRIPTION",
+      "department": "CS",
+      "number": 326,
+      "prereqs": [new ObjectID("000000000000000000000005"),new ObjectID("000000000000000000000007")],
+      "textbooks": ["Web Programming for Nerds"]
+    },
     "13":{
       "_id": new ObjectID("000000000000000000000013"),
       "name": "Artificial Intelligence",
       "description": "THIS IS A DESCRIPTION",
       "department": "CS",
       "number": 383,
-      "prereqs": [new ObjectID("000000000000000000000002"),new ObjectID("000000000000000000000007")],
+      "prereqs": [new ObjectID("000000000000000000000005"),new ObjectID("000000000000000000000006")],
       "textbooks": ["none"]
     },
     "14":{
@@ -176,7 +176,7 @@ var initialData = {
       "description": "THIS IS A DESCRIPTION",
       "department": "CS",
       "number": 320,
-      "prereqs": [new ObjectID("000000000000000000000002")],
+      "prereqs": [new ObjectID("000000000000000000000005")],
       "textbooks": ["none"]
     },
     "15":{
@@ -185,7 +185,7 @@ var initialData = {
       "description": "THIS IS A DESCRIPTION",
       "department": "CS",
       "number": 377,
-      "prereqs": [new ObjectID("000000000000000000000008")],
+      "prereqs": [new ObjectID("000000000000000000000007")],
       "textbooks": ["none"]
     },
     "16":{
@@ -194,7 +194,7 @@ var initialData = {
       "description": "THIS IS A DESCRIPTION",
       "department": "CS",
       "number": 410,
-      "prereqs": [new ObjectID("000000000000000000000015"), new ObjectID("000000000000000000000009")],
+      "prereqs": [new ObjectID("000000000000000000000015"), new ObjectID("000000000000000000000008")],
       "textbooks": ["none"]
     },
     "17":{
@@ -208,20 +208,20 @@ var initialData = {
     },
     "18":{
       "_id": new ObjectID("000000000000000000000018"),
-      "name": "Modal Logic",
-      "description": "THIS IS A DESCRIPTION",
-      "department": "PHIL",
-      "number": 511,
-      "prereqs": [new ObjectID("000000000000000000000019")],
-      "textbooks": ["none"]
-    },
-    "19":{
-      "_id": new ObjectID("000000000000000000000019"),
       "name": "Intermediate Logic",
       "description": "THIS IS A DESCRIPTION",
       "department": "PHIL",
       "number": 310,
       "prereqs": [new ObjectID("000000000000000000000017")],
+      "textbooks": ["none"]
+    },
+    "19":{
+      "_id": new ObjectID("000000000000000000000019"),
+      "name": "Modal Logic",
+      "description": "THIS IS A DESCRIPTION",
+      "department": "PHIL",
+      "number": 511,
+      "prereqs": [new ObjectID("000000000000000000000018")],
       "textbooks": ["none"]
     }
 },

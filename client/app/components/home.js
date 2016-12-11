@@ -114,30 +114,23 @@ export default class HomePage extends React.Component {
            takentext = "nextSemester";
          }
         //  if(addedAlready.indexOf(course._id) == -1 ){
-         this.cy.add({
-           data: {id: course._id, info: course.department + course.number, take: takentext, majmin: "maj"}
-         });
-         this.cy.layout({
-           name: 'breadthfirst'
-         });
-         maj.courses.map((course)=>{
-           getCourseData(course, data=>{
+             this.cy.add({
+               data: {id: course._id, info: course.department + course.number, take: takentext, majmin: "maj"}
+             });
              // console.log(data);
-             data.prereqs.map((prereq)=>{
+             course.prereqs.map((prereq)=>{
               //  if(preAlready.indexOf(prereq) == -1){
                  // getCourseData(prereq, prq=>{
                    this.cy.add({
-                     data: {id: prereq._id+''+data._id, source: prereq._id, target: data._id}
-                   });
-                   this.cy.layout({
-                     name: 'breadthfirst'
+                     data: {id: prereq._id+''+course._id, source: prereq._id, target: course._id}
                    });
                  // });
               //  preAlready.push(prereq)
             //  }
           });
-           });
-        });
+          this.cy.layout({
+            name: 'breadthfirst'
+          });
         //  addedAlready.push(course._id);
       //  }
     });
@@ -170,21 +163,16 @@ export default class HomePage extends React.Component {
          if(nextTerm){
            takentext = "nextSemester";
          }
-         this.cy.add({
-           data: {id: course._id, info: course.department + course.number, take: takentext, majmin: "min"}
-         });
-         this.cy.layout({
-           name: 'breadthfirst'
-         });
-         maj.courses.map((course)=>{
-          //  console.log("TEST");
-           getCourseData(course, data=>{
+
+             this.cy.add({
+               data: {id: course._id, info: course.department + course.number, take: takentext, majmin: "min"}
+             });
             //  console.log(data);
-             data.prereqs.map((prereq)=>{
+             course.prereqs.map((prereq)=>{
               //  if(preAlready.indexOf(prereq) == -1){
                  // getCourseData(prereq, prq=>{
                    this.cy.add({
-                     data: {id: prereq._id+''+data._id, source: prereq._id, target: data._id}
+                     data: {id: prereq._id+''+course._id, source: prereq._id, target: course._id}
                    });
                    this.cy.layout({
                      name: 'breadthfirst'
@@ -195,8 +183,6 @@ export default class HomePage extends React.Component {
           });
            });
         });
-       });
-     });
 
   });
 
