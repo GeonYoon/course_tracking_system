@@ -90,7 +90,7 @@ export default class CourseDetails extends React.Component{
                 <p>{this.state.course.textbooks}</p>
                 <h3>Prerequisites</h3>
                 {this.state.course.prereqs.map((clss) => {
-                  console.log(clss.name);
+                  // console.log(clss.name);
                   return(<p>{clss.name}</p>)})}
                 <hr />
                 <div className = "col-md-3">

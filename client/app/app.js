@@ -76,7 +76,7 @@ ReactDOM.render((
       <Route path="/savepage" component={SavePage} />
       <Route path="/coursehistory" component={CourseHistory} />
       <Route path="/profile" component={Profile} />
-      <Route path = "/course/:course" component={CourseDetails} user={1}/>
+      <Route path = "/course/:course" component={CourseDetails} user={"000000000000000000000001"}/>
     </Route>
   </Router>
 ),document.getElementById('app'));

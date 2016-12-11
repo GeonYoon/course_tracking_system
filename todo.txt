@@ -1,10 +1,18 @@
-last final things to do:
-routes:
--postFeedback button in About page (POST http route) (Ben)
--add/delete majors and minor in user settings (2 PUT, 2 DELETE routes) (Joe?)
+FINAL SA TODO (moving to MongoDB):
+convert routes from mock database to regular database:
+  -save pages
+  -add taken class/take next semester
+  -feedback
+do other cleaning up to have a good final product
 
-other:
--finish up the written report and push to github
+
+bugs:
+main screen graph layout is not working - all nodes get put in corner
+  this happened when i tried to use getCourseData for each course to add the nodes,
+  but all of the course data loads correctly into the nodes. So I don't know why it changed the layout.
+
+
+
 
 
 code drop down that mike took out:
@@ -20,7 +28,3 @@ code drop down that mike took out:
     <li><a href="#">2015</a></li>
   </ul>
 </div>
-
-
-NOTES FOR LAST SA:
-I took out the account info section in database because it wouldn't reset otherwise. not sure what that broke.

@@ -16,7 +16,7 @@ export default class CourseHistory extends React.Component {
   }
 
   refresh(){
-    getUserData(1, user =>{
+    getUserData("000000000000000000000001", user =>{
       this.setState({
         "courses" : user.classesTaken
       })
@@ -30,7 +30,7 @@ export default class CourseHistory extends React.Component {
       rows.push(
         <tr key = {course.id}>
           <td>
-            <Link to={"/course/"+course.id}>{course.department + " " +course.number}</Link>
+            <Link to={"/course/"+course._id}>{course.department + " " +course.number}</Link>
           </td>
           <td>
             {course.name}

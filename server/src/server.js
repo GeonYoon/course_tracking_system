@@ -145,20 +145,7 @@ function resolveMajorObjects2(majorList, callback) {
       }
       var majorMap = {};
       majors.forEach((major) => {
-        if(major.courses.length > 0){
-        var newMajorList = [];
-        newMajorList = newMajorList.concat(major.courses);
-        resolveCourseObjects(newMajorList, function(err, courseMap2) {
-          if (err) {
-            return callback(err);
-          }
-          major.courses = major.courses.map((userId) => courseMap2[userId]);
-        });
         majorMap[major._id] = major;
-      }
-      else{
-        majorMap[major._id] = major;
-      }
       });
       callback(null, majorMap);
     });
@@ -309,7 +296,7 @@ function getCourseItem(courseId, callback) {
         return callback(err);
       }
       courseItem.prereqs = courseItem.prereqs.map((courseId) => courseMap[courseId]);
-      callback(courseItem);
+      callback(null, courseItem);
     });
     });
 }
@@ -338,7 +325,7 @@ function getUserItem(userId, callback) {
     // Add all of the authors of the comments.
     // feedItem.comments.forEach((comment) => userList.push(comment.author));
     // Resolve all of the user objects!
-    resolveMajorObjects(majorList, function(err, majorMap) {
+    resolveMajorObjects2(majorList, function(err, majorMap) {
       if (err) {
         return callback(err);
       }
@@ -528,7 +515,19 @@ app.get('/user/:userid', function(req, res) {
 * Get the data for a course.
 */
 app.get('/courses/:course', function(req, res){
-    res.send(getCourseData(req.params.course));
+  getCourseData(req.params.course, function(err, courseData) {
+      if (err) {
+        // A database error happened.
+        // Internal Error: 500.
+        res.status(500).send("Database error: " + err);
+      } else if (courseData === null) {
+        // Couldn't find the feed in the database.
+        res.status(400).send("Could not look up course number " + req.params.course);
+      } else {
+        // Send data.
+        res.send(courseData);
+      }
+    });
 })
 
 
@@ -610,7 +609,7 @@ app.put('/user/:userid/majortoshow/:majorid', function(req, res) {
             return sendDatabaseError(res, err);
           }
           // Return a resolved version of the likeCounter
-          resolveMajorObjects(userItem.shown_majors, function(err, majorMap) {
+          resolveMajorObjects2(userItem.shown_majors, function(err, majorMap) {
             if (err) {
               return sendDatabaseError(res, err);
             }
@@ -691,7 +690,7 @@ app.put('/user/:userid/minortoshow/:minorid', function(req, res) {
             return sendDatabaseError(res, err);
           }
           // Return a resolved version of the likeCounter
-          resolveMajorObjects(userItem.shown_minors, function(err, majorMap) {
+          resolveMajorObjects2(userItem.shown_minors, function(err, majorMap) {
             if (err) {
               return sendDatabaseError(res, err);
             }
@@ -766,7 +765,7 @@ app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
           return sendDatabaseError(res, err);
         }
         // Step 3: Resolve the user IDs in the like counter into user objects.
-        resolveMajorObjects(feedItem.shown_majors, function(err, userMap) {
+        resolveMajorObjects2(feedItem.shown_majors, function(err, userMap) {
           if (err) {
             return sendDatabaseError(res, err);
           }
@@ -804,7 +803,7 @@ app.delete('/user/:userid/minortoshow/:minorid', function(req, res) {
           return sendDatabaseError(res, err);
         }
         // Step 3: Resolve the user IDs in the like counter into user objects.
-        resolveMajorObjects(feedItem.shown_minors, function(err, userMap) {
+        resolveMajorObjects2(feedItem.shown_minors, function(err, userMap) {
           if (err) {
             return sendDatabaseError(res, err);
           }

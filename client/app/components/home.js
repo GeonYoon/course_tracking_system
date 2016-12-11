@@ -1,11 +1,11 @@
 import React from 'react';
 import Sidebar from './sidebar';
 import cytoscape from '../../build/js/cytoscape.js';
-import {Link} from 'react-router';
+// import {Link} from 'react-router';
 import {getUserData, getCourseData, saveAGraph} from '../server.js';
 
-var addedAlready = [];
-var preAlready = [];
+// var addedAlready = [];
+// var preAlready = [];
 export default class HomePage extends React.Component {
   constructor(props){
     super(props);
@@ -78,7 +78,7 @@ export default class HomePage extends React.Component {
        }
      ],
      layout: {
-       name: 'circle',
+       name: 'breadthfirst',
        directed: true
      }
    });
@@ -90,7 +90,9 @@ export default class HomePage extends React.Component {
 
    //ALL COURSES FROM THE MAJORS:
    this.state.shown_majors.map((maj)=>{
-       maj.courses.map((course)=>{
+     maj.courses.map((crse)=>{
+       getCourseData(crse, (course)=>{
+        //  console.log(course);
          var taken = false;
           this.state.classesTaken.map((clss)=>{
             if(clss._id == course._id){
@@ -117,28 +119,31 @@ export default class HomePage extends React.Component {
          });
         //  addedAlready.push(course._id);
       //  }
-       })
+    });
+  });
       //  console.log(this.state);
       maj.courses.map((course)=>{
-       course.prereqs.map((prereq)=>{
-        //  if(preAlready.indexOf(prereq) == -1){
-           // getCourseData(prereq, prq=>{
-             this.cy.add({
-               data: {id: prereq+''+course._id, source: prereq, target: course._id}
-             });
-           // });
-        //  preAlready.push(prereq)
-      //  }
-       })
-     }
-   )
+        getCourseData(course, data=>{
+          // console.log(data);
+          data.prereqs.map((prereq)=>{
+           //  if(preAlready.indexOf(prereq) == -1){
+              // getCourseData(prereq, prq=>{
+                this.cy.add({
+                  data: {id: prereq._id+''+data._id, source: prereq._id, target: data._id}
+                });
+              // });
+           //  preAlready.push(prereq)
+         //  }
+       });
+        });
+     });
  });
    //small bug note:
    //overlapping classes across majors causes the prereq links to disappear
-
    //ALL COURSES FROM THE MINORS:
    this.state.shown_minors.map((maj)=>{
-       maj.courses.map((course)=>{
+       maj.courses.map((crse)=>{
+         getCourseData(crse, (course)=>{
          var taken = false;
           this.state.classesTaken.map((clss)=>{
             if(clss._id == course._id){
@@ -160,22 +165,26 @@ export default class HomePage extends React.Component {
            takentext = "nextSemester";
          }
          this.cy.add({
-           data: {id: course.id, info: course.department + course.number, take: takentext, majmin: "min"}
+           data: {id: course._id, info: course.department + course.number, take: takentext, majmin: "min"}
          });
-       })
+       });
+     });
        maj.courses.map((course)=>{
-        course.prereqs.map((prereq)=>{
-          // if(preAlready.indexOf(prereq) == -1){
-            // getCourseData(prereq, prq=>{
-              this.cy.add({
-                data: {id: prereq+''+course._id, source: prereq, target: course._id}
-              });
-            // });
-          // preAlready.push(prereq)
-        // }
-        })
-      }
-    )
+        //  console.log("TEST");
+         getCourseData(course, data=>{
+          //  console.log(data);
+           data.prereqs.map((prereq)=>{
+            //  if(preAlready.indexOf(prereq) == -1){
+               // getCourseData(prereq, prq=>{
+                 this.cy.add({
+                   data: {id: prereq._id+''+data._id, source: prereq._id, target: data._id}
+                 });
+               // });
+            //  preAlready.push(prereq)
+          //  }
+        });
+         });
+      });
   });
 
 
@@ -190,10 +199,10 @@ export default class HomePage extends React.Component {
   //  this.cy.add({
   //    data: {id: 'zd', source:'z', target:'d'}
   //  });
-   this.cy.layout({
-     name: 'breadthfirst'
-   });
-   this.cy.on('tap', 'node', function (evt) {
+  this.cy.layout({
+    name: 'breadthfirst'
+  });
+   this.cy.on('tap', 'node', function () {
      //console.log(this.id())
      window.location.assign(("#/course/"+this.id()));
      //browserHistory.push('/course/'+this.id());//This is broken, not sure how to fix.
@@ -214,7 +223,7 @@ this.cy.on('mouseout', 'node', function(event) {
    getUserData(this.props.user, (info) => {
      this.setState(info);
    });
-   console.log(this.state);
+  //  console.log(this.state);
    //this.userInfo = getUserData(this.props.user);
   //  this.renderCytoscapeElement();
  }
