@@ -117,26 +117,32 @@ export default class HomePage extends React.Component {
          this.cy.add({
            data: {id: course._id, info: course.department + course.number, take: takentext, majmin: "maj"}
          });
+         this.cy.layout({
+           name: 'breadthfirst'
+         });
+         maj.courses.map((course)=>{
+           getCourseData(course, data=>{
+             // console.log(data);
+             data.prereqs.map((prereq)=>{
+              //  if(preAlready.indexOf(prereq) == -1){
+                 // getCourseData(prereq, prq=>{
+                   this.cy.add({
+                     data: {id: prereq._id+''+data._id, source: prereq._id, target: data._id}
+                   });
+                   this.cy.layout({
+                     name: 'breadthfirst'
+                   });
+                 // });
+              //  preAlready.push(prereq)
+            //  }
+          });
+           });
+        });
         //  addedAlready.push(course._id);
       //  }
     });
   });
       //  console.log(this.state);
-      maj.courses.map((course)=>{
-        getCourseData(course, data=>{
-          // console.log(data);
-          data.prereqs.map((prereq)=>{
-           //  if(preAlready.indexOf(prereq) == -1){
-              // getCourseData(prereq, prq=>{
-                this.cy.add({
-                  data: {id: prereq._id+''+data._id, source: prereq._id, target: data._id}
-                });
-              // });
-           //  preAlready.push(prereq)
-         //  }
-       });
-        });
-     });
  });
    //small bug note:
    //overlapping classes across majors causes the prereq links to disappear
@@ -167,24 +173,31 @@ export default class HomePage extends React.Component {
          this.cy.add({
            data: {id: course._id, info: course.department + course.number, take: takentext, majmin: "min"}
          });
+         this.cy.layout({
+           name: 'breadthfirst'
+         });
+         maj.courses.map((course)=>{
+          //  console.log("TEST");
+           getCourseData(course, data=>{
+            //  console.log(data);
+             data.prereqs.map((prereq)=>{
+              //  if(preAlready.indexOf(prereq) == -1){
+                 // getCourseData(prereq, prq=>{
+                   this.cy.add({
+                     data: {id: prereq._id+''+data._id, source: prereq._id, target: data._id}
+                   });
+                   this.cy.layout({
+                     name: 'breadthfirst'
+                   });
+                 // });
+              //  preAlready.push(prereq)
+            //  }
+          });
+           });
+        });
        });
      });
-       maj.courses.map((course)=>{
-        //  console.log("TEST");
-         getCourseData(course, data=>{
-          //  console.log(data);
-           data.prereqs.map((prereq)=>{
-            //  if(preAlready.indexOf(prereq) == -1){
-               // getCourseData(prereq, prq=>{
-                 this.cy.add({
-                   data: {id: prereq._id+''+data._id, source: prereq._id, target: data._id}
-                 });
-               // });
-            //  preAlready.push(prereq)
-          //  }
-        });
-         });
-      });
+
   });
 
 
