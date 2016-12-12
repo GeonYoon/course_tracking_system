@@ -613,11 +613,11 @@ MongoClient.connect(url, function(err, db) {
             res.status(400).send("Could not look up data for user " + userid);
           } else {
             // Send data.
+            console.log("we got data to send!: " + data);
             res.send(data);
           }
         })
-        console.log("you should never get here: get page");
-        res.send("you should never get here: get page");
+        console.log("its ok to get here it seems");
     }
     else {
       // 401: Unathorized request.
