@@ -295,7 +295,7 @@ function getCourseItem(courseId, callback) {
       if (err) {
         return callback(err);
       }
-      courseItem.prereqs = courseItem.prereqs.map((courseId) => courseMap[courseId]);
+      //courseItem.prereqs = courseItem.prereqs.map((courseId) => courseMap[courseId]);
       callback(null, courseItem);
     });
     });
@@ -401,12 +401,6 @@ function getCourseData(course, callback) {
 // }
 
 
-// Get savePage data
-function getPageData(user){
-  var userData = readDocument('users', user);
-  var pageData = readDocument('savePage',userData.savedGraphs);
-  return pageData;
-}
 
 
 function postFeedback(user, contents){
@@ -511,6 +505,32 @@ app.get('/user/:userid', function(req, res) {
 });
 
 
+
+
+// Get savePage data
+function getPageData(user,callback){
+  db.collection('users').findOne({
+    _id: new ObjectID(user)
+  }, function(err, userData) {
+    if(err) {
+      return callback(err);
+    } else if (userData === null) {
+      return callback(null,null)
+    }
+
+    db.collection('savePage').findOne({
+      _id: userData.savedGraphs
+    }, function(err, pageData) {
+      if(err) {
+        return callback(err);
+      } else if (pageData === null) {
+        return callback(null,null);
+      }
+      callback(null,pageData)
+    });
+  });
+}
+
 /**
 * Get the data for a course.
 */
@@ -531,13 +551,24 @@ app.get('/courses/:course', function(req, res){
 })
 
 
+
+// get page data
 app.get('/user/:userid/page',function(req,res) {
   var userid = req.params.userid;
   var fromUser = getUserIdFromToken(req.get('Authorization'));
-
   var useridNumber = parseInt(userid,10);
-  if(fromUser === useridNumber){
-    res.send(getPageData(userid));
+  if(fromUser === userid){
+    getPageData(userid,function(err,pageData) {
+      if(err) {
+        res.status(500).send("Database error: " + err);
+      }
+      else if (pageData === null) {
+        res.status(400).send("Could not look up page");
+      }
+      else {
+        res.send(pageData)
+      }
+    })
   }
   else {
     // 401: Unathorized request.
