@@ -741,7 +741,7 @@ app.put('/user/:userid/minortoshow/:minorid', function(req, res) {
 app.put('/user/:userid/courses/:courseid', function(req, res){
   var fromUser = getUserIdFromToken(req.get('Authorization'));
   // Convert params from string to number.
-  var userId = parseInt(req.params.userid, 10);
+  var userId = req.params.userid;
   var courseId = parseInt(req.params.courseid, 10);
   if (fromUser === userId) {
     var userItem = readDocument('users', userId);
@@ -759,13 +759,12 @@ app.put('/user/:userid/courses/:courseid', function(req, res){
 app.put('/user/:userid/courses/:courseid/nextsem/', function(req, res){
   var fromUser = getUserIdFromToken(req.get('Authorization'));
   // Convert params from string to number.
-  var userId = parseInt(req.params.userid, 10);
+  var userId = req.params.userid;
   var courseId = parseInt(req.params.courseid, 10);
   if (fromUser === userId) {
     var userItem = readDocument('users', userId);
     userItem.nextSemester.push(courseId);
     writeDocument('users', userItem);
-
     res.send(readDocument('users', userId));
   } else {
     // 401: Unauthorized.
