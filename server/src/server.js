@@ -295,7 +295,7 @@ function getCourseItem(courseId, callback) {
       if (err) {
         return callback(err);
       }
-      //courseItem.prereqs = courseItem.prereqs.map((courseId) => courseMap[courseId]);
+      courseItem.prereqs = courseItem.prereqs.map((courseId) => courseMap[courseId]);
       callback(null, courseItem);
     });
     });
