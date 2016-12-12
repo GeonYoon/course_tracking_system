@@ -761,10 +761,12 @@ app.put('/user/:userid/courses/:courseid/nextsem/', function(req, res){
   // Convert params from string to number.
   var userId = req.params.userid;
   var courseId = parseInt(req.params.courseid, 10);
-  if (fromUser === userId) {
+  if (fromUser === userId){
+    userId = 1;
     var userItem = readDocument('users', userId);
     userItem.nextSemester.push(courseId);
     writeDocument('users', userItem);
+    console.log(readDocument('users', userId));
     res.send(readDocument('users', userId));
   } else {
     // 401: Unauthorized.
