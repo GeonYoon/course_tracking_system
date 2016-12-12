@@ -472,7 +472,7 @@ MongoClient.connect(url, function(err, db) {
         }
         else{
           console.log("else data: "+ data);
-          return data;
+          return callback(null,data);
         }
       });
     console.log("userdata return: " + userData)
@@ -487,7 +487,7 @@ MongoClient.connect(url, function(err, db) {
           return callback(null, null);
         }
         else{
-          return data;
+          return callback(null,data);
         }
       }
     })
@@ -602,7 +602,7 @@ MongoClient.connect(url, function(err, db) {
     //var useridNumber = parseInt(userid,10);
     if(fromUser === userid){
       console.log("top: " + userid);
-      if(getPageData(new ObjectID(userid),
+      getPageData(new ObjectID(userid),
         function (err, data){
           console.log("data: "+data);
           if (err) {
@@ -613,13 +613,11 @@ MongoClient.connect(url, function(err, db) {
             res.status(400).send("Could not look up data for user " + userid);
           } else {
             // Send data.
-            res.send(feedData);
+            res.send(data);
           }
-        })){
-          console.log("here?1: ");
-        }
-        console.log("here?2: ");
-        res.send("here");
+        })
+        console.log("you should never get here: get page");
+        res.send("you should never get here: get page");
     }
     else {
       // 401: Unathorized request.
