@@ -1,21 +1,20 @@
 FINAL SA TODO (moving to MongoDB):
 convert routes from mock database to regular database:
-  -save pages
-  -add taken class/take next semester
-  -feedback
+  -save pages (post/get)
+  -post/get taken class/take next semester
+  -feedback (post/get)
+
 do other cleaning up to have a good final product
 
 
-bugs:
-main screen graph layout is not working - all nodes get put in corner
-  this happened when i tried to use getCourseData for each course to add the nodes,
-  but all of the course data loads correctly into the nodes. So I don't know why it changed the layout.
+known bugs:
 
 
 
 
 
-code drop down that mike took out:
+
+code for drop down that mike took out:
 
 
 <div classNameName="dropdown pull-right">

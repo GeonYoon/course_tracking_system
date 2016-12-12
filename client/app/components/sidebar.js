@@ -141,9 +141,9 @@ export default class Sidebar extends React.Component{
           <select className="form-control side-major" title="Choose one of the following..." onChange={this.updateSelectedMajor.bind(this)}>
             <option value={0}>select a major...</option>
             {this.state.majors.map((majornum)=>{
-                return(
-                  <option value={majornum._id}>{majornum.title}</option>
-                )
+              return(
+                  <option key={majornum._id} value={majornum._id}>{majornum.title}</option>
+                  )
               })}
           </select>
           &nbsp;
@@ -157,7 +157,7 @@ export default class Sidebar extends React.Component{
             <option value={0}>select a minor...                       </option>
               {this.state.minors.map((majornum)=>{
                   return(
-                    <option value={majornum._id}>{majornum.title}</option>
+                    <option key={majornum._id} value={majornum._id}>{majornum.title}</option>
                   )
                 })}
           </select></span>
@@ -170,7 +170,7 @@ export default class Sidebar extends React.Component{
         Currently Showing: <br />
       {this.state.shown_majors.map((major)=>{
             return(
-              <div>
+              <div key={major._id}>
               <br />
               <p className="pull-left sidebar-subtext">{major.title} Major</p><button className="btn-xs btn-default pull-right" type="button" onClick={this.subtractMajor.bind(this, major._id)}><span className="glyphicon glyphicon-minus"></span></button>
               <br />
@@ -179,7 +179,7 @@ export default class Sidebar extends React.Component{
           })}
           {this.state.shown_minors.map((minor)=>{
                 return(
-                  <div>
+                  <div key={minor._id}>
                     <br />
                   <p className="pull-left sidebar-subtext">{minor.title} Minor</p><button className="btn-xs btn-default pull-right" type="button" onClick={this.subtractMinor.bind(this, minor._id)}><span className="glyphicon glyphicon-minus"></span></button>
                   <br />
