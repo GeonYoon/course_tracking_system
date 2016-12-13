@@ -127,7 +127,6 @@ MongoClient.connect(url, function(err, db) {
   }
 
   //gotta add the calls to resolveCourse and resolveMajor in all of them. make the list, use the callback, all that.
-
   function resolveMajorObjects2(majorList, callback) {
     if (majorList.length === 0) {
       callback(null, {});
@@ -458,7 +457,6 @@ MongoClient.connect(url, function(err, db) {
     }
   }
 
-
   /*** Get the data for a particular user.*/
   app.get('/user/:userid', function(req, res) {
     var userid = req.params.userid;
@@ -731,9 +729,12 @@ MongoClient.connect(url, function(err, db) {
     var courseId = parseInt(req.params.courseid, 10);
     if (fromUser === userId){
       userId = 1;
+      //skip this
       var userItem = readDocument('users', userId);
+      //replace this with an update one
       userItem.nextSemester.push(courseId);
       writeDocument('users', userItem);
+      //replace with a find
       console.log(readDocument('users', userId));
       res.send(readDocument('users', userId));
     } else {
