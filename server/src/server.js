@@ -724,8 +724,20 @@ MongoClient.connect(url, function(err, db) {
       userItem.nextSemester.push(courseId);
       writeDocument('users', userItem);
       //replace with a find
-      //db.users.find({_id:ObjectId("000000000000000000000001")},{nextSemester:1})
-      console.log(readDocument('users', userId));
+      /*db.collection("users").find({_id:new ObjectID("000000000000000000000001")},{nextSemester:1},
+        function(err,data){
+          if(err) {
+            return console.log("error: " + err);
+          } else if (data === null) {
+            console.log("null");
+            return console.log(null,null)
+          }
+          else{
+            console.log("data");
+            console.log(data);
+          }
+        */
+      //console.log(readDocument('users', userId));
       res.send(readDocument('users', userId));
     } else {
       // 401: Unauthorized.
