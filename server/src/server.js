@@ -735,6 +735,7 @@ MongoClient.connect(url, function(err, db) {
       userItem.nextSemester.push(courseId);
       writeDocument('users', userItem);
       //replace with a find
+      //db.users.find({_id:ObjectId("000000000000000000000001")},{nextSemester:1})
       console.log(readDocument('users', userId));
       res.send(readDocument('users', userId));
     } else {
