@@ -50,9 +50,9 @@ var url = 'mongodb://localhost:27017/faucet';
 
 MongoClient.connect(url, function(err, db) {
   // function getUserData(user) {
-    //   var userData = getUserItemSync(user);
-    //   return userData;
-    // }
+  //   var userData = getUserItemSync(user);
+  //   return userData;
+  // }
 
   function getUserData(user, callback) {
     // console.log("test");
@@ -73,8 +73,8 @@ MongoClient.connect(url, function(err, db) {
   }
 
   /*** Resolves a list of major objects. Returns an object that maps major IDs to
-   * major objects.
-   */
+  * major objects.
+  */
   function resolveMajorObjects(majorList, callback) {
     // Special case: userList is empty.
     // It would be invalid to query the database with a logical OR
@@ -87,7 +87,7 @@ MongoClient.connect(url, function(err, db) {
       var query = {
         $or: majorList.map((id) => { return {_id: id } })
       };
-          // Resolve 'like' counter
+      // Resolve 'like' counter
       db.collection('majors').find(query).toArray(function(err, majors) {
         if (err) {
           return callback(err);
@@ -97,27 +97,27 @@ MongoClient.connect(url, function(err, db) {
         var majorMap = {};
         majors = majors.forEach((major) => {
           if(major.courses.length > 0){
-          var newMajorList = [];
-          newMajorList = newMajorList.concat(major.courses);
-          resolveCourseObjects(newMajorList, function(err, courseMap2) {
-            if (err) {
-              return callback(err);
-            }
-            major.courses = major.courses.map((userId) => courseMap2[userId]);
-            // console.log("yes courses " + major._id);
-            // console.log(major.courses);
-            // callback(null, majorMap);
+            var newMajorList = [];
+            newMajorList = newMajorList.concat(major.courses);
+            resolveCourseObjects(newMajorList, function(err, courseMap2) {
+              if (err) {
+                return callback(err);
+              }
+              major.courses = major.courses.map((userId) => courseMap2[userId]);
+              // console.log("yes courses " + major._id);
+              // console.log(major.courses);
+              // callback(null, majorMap);
+              // majorMap[major._id] = major;
+              // callback(null, majorMap);
+            });
             // majorMap[major._id] = major;
-            // callback(null, majorMap);
-          });
-          // majorMap[major._id] = major;
 
-        }
-        else{
-          // console.log("no courses " + major._id);
+          }
+          else{
+            // console.log("no courses " + major._id);
 
-          // majorMap[major._id] = major;
-        }
+            // majorMap[major._id] = major;
+          }
 
           majorMap[major._id] = major;
         });
@@ -160,7 +160,7 @@ MongoClient.connect(url, function(err, db) {
         }
         var courseMap = {};
         courses.forEach((course) => {
-            if(course.prereqs.length > 0){
+          if(course.prereqs.length > 0){
             var newCourseList = [];
             newCourseList = newCourseList.concat(course.prereqs);
             resolveCourseObjects(newCourseList, function(err, courseMap2) {
@@ -170,7 +170,7 @@ MongoClient.connect(url, function(err, db) {
               course.prereqs = course.prereqs.map((userId) => courseMap2[userId]);
             });
           }
-        courseMap[course._id] = course;
+          courseMap[course._id] = course;
         });
         callback(null, courseMap);
       });
@@ -178,8 +178,8 @@ MongoClient.connect(url, function(err, db) {
   }
 
   /*** Resolves a list of course objects. Returns an object that maps course IDs to
-   * course objects.
-   */
+  * course objects.
+  */
   function resolveCourseObjects(courseList, callback) {
     // Special case: userList is empty.
     // It would be invalid to query the database with a logical OR
@@ -202,27 +202,27 @@ MongoClient.connect(url, function(err, db) {
         // (so userMap["4"] will give the user with ID 4)
         var courseMap = {};
         courses.forEach((course) => {
-            // if(course.prereqs.length > 0){
-            // var newCourseList = [];
-            // newCourseList = newCourseList.concat(course.prereqs);
-            //
-            // resolveCourseObjects(newCourseList, function(err, courseMap2) {
-            //   if (err) {
-            //     return callback(err);
-            //   }
-            //   // console.log(course.prereqs);
-            //   course.prereqs = course.prereqs.map((userId) => courseMap2[userId]);
-            //   // console.log(course);
-            //   // console.log(course.prereqs);
-            //   // callback(null, course);
-            //   // courseMap[course._id] = course;
-            //   // callback(null, courseMap);
-            // });
-            courseMap[course._id] = course;
-            // callback(null, courseMap);
-        // console.log(course);
-        // console.log(course.prereqs); //THIS IS WHAT'S NOT RIGHT
-        // courseMap[course._id] = course;
+          // if(course.prereqs.length > 0){
+          // var newCourseList = [];
+          // newCourseList = newCourseList.concat(course.prereqs);
+          //
+          // resolveCourseObjects(newCourseList, function(err, courseMap2) {
+          //   if (err) {
+          //     return callback(err);
+          //   }
+          //   // console.log(course.prereqs);
+          //   course.prereqs = course.prereqs.map((userId) => courseMap2[userId]);
+          //   // console.log(course);
+          //   // console.log(course.prereqs);
+          //   // callback(null, course);
+          //   // courseMap[course._id] = course;
+          //   // callback(null, courseMap);
+          // });
+          courseMap[course._id] = course;
+          // callback(null, courseMap);
+          // console.log(course);
+          // console.log(course.prereqs); //THIS IS WHAT'S NOT RIGHT
+          // courseMap[course._id] = course;
         });
         // console.log(courseMap); //sometimes the courses are undefined... hm
         callback(null, courseMap);
@@ -231,8 +231,8 @@ MongoClient.connect(url, function(err, db) {
   }
 
   /*** Resolves a list of user objects. Returns an object that maps user IDs to
-   * user objects.
-   */
+  * user objects.
+  */
   function resolveUserObjects(userList, callback) {
     // Special case: userList is empty.
     // It would be invalid to query the database with a logical OR
@@ -261,15 +261,15 @@ MongoClient.connect(url, function(err, db) {
     }
   }
   // function getUserItemSync(userId) {
-    //   var user = readDocument('users', userId);
-    //   user.majors = user.majors.map((id) => getMajorItemSync(id));
-    //   user.minors = user.minors.map((id) => getMajorItemSync(id));
-    //   user.classesTaken = user.classesTaken.map((id) => getCourseItemSync(id));
-    //   user.nextSemester = user.nextSemester.map((id) => getCourseItemSync(id));
-    //   user.shown_minors = user.shown_minors.map((id) => getMajorItemSync(id));
-    //   user.shown_majors = user.shown_majors.map((id) => getMajorItemSync(id));
-    //   return user;
-    // }
+  //   var user = readDocument('users', userId);
+  //   user.majors = user.majors.map((id) => getMajorItemSync(id));
+  //   user.minors = user.minors.map((id) => getMajorItemSync(id));
+  //   user.classesTaken = user.classesTaken.map((id) => getCourseItemSync(id));
+  //   user.nextSemester = user.nextSemester.map((id) => getCourseItemSync(id));
+  //   user.shown_minors = user.shown_minors.map((id) => getMajorItemSync(id));
+  //   user.shown_majors = user.shown_majors.map((id) => getMajorItemSync(id));
+  //   return user;
+  // }
 
   function getCourseItem(courseId, callback) {
     db.collection('courses').findOne({
@@ -289,7 +289,7 @@ MongoClient.connect(url, function(err, db) {
         courseItem.prereqs = courseItem.prereqs.map((courseId) => courseMap[courseId]);
         callback(null, courseItem);
       });
-      });
+    });
   }
 
   function getUserItem(userId, callback) {
@@ -353,9 +353,9 @@ MongoClient.connect(url, function(err, db) {
     });
   }
   // function getCourseData(courseId){
-    //   var courseItem = getCourseItemSync(courseId);
-    //   return courseItem;
-    // }
+  //   var courseItem = getCourseItemSync(courseId);
+  //   return courseItem;
+  // }
 
   function getCourseData(course, callback) {
     //  console.log("test");
@@ -373,40 +373,21 @@ MongoClient.connect(url, function(err, db) {
     });
   }
   // function getCourseItemSync(courseId){
-    //   var courseItem = readDocument('courses', courseId);
-    //   courseItem.prereqs = courseItem.prereqs.map((id) => getCourseItemSync(id));
-    //   return courseItem;
-    // }
-    //
-    //
-    // function getMajorItemSync(majorId){
-    //   var majorItem = readDocument('majors', majorId);
-    //   majorItem.courses = majorItem.courses.map((id) => getCourseItemSync(id));
-    //   return majorItem;
-    // }
-
-  // function getFeedback(length){
-    //   console.log(length);
-    //   var tmp = [];
-    //   var i=1;
-    //   for(i;i<=length;i++){
-    //     tmp[i]=readDocument('feedback',i);
-    //   }
-    //   return tmp;
-    // }
-  function getAdmin(user){
-    var userData = readDocument('users', user);
-    // console.log("AYYYYYY" + userData.admin);
-    return userData.admin;
-  }
-
-  function getFeedback(){
-    return getCollection('feedback');
-  }
+  //   var courseItem = readDocument('courses', courseId);
+  //   courseItem.prereqs = courseItem.prereqs.map((id) => getCourseItemSync(id));
+  //   return courseItem;
+  // }
+  //
+  //
+  // function getMajorItemSync(majorId){
+  //   var majorItem = readDocument('majors', majorId);
+  //   majorItem.courses = majorItem.courses.map((id) => getCourseItemSync(id));
+  //   return majorItem;
+  // }
 
   function postSavedGraph(user, graphName, newIMG) {
     var newNew = readDocument('savePage',
-                  readDocument('users',user).savedGraphs)
+    readDocument('users',user).savedGraphs)
     var newSaved = {
       "id": newNew['pages'].length,
       "name": graphName,
@@ -450,25 +431,25 @@ MongoClient.connect(url, function(err, db) {
     var userid = req.params.userid;
     var fromUser = getUserIdFromToken(req.get('Authorization'));
     if (fromUser === userid) {
-        // Convert userid into an ObjectID before passing it to database queries.
-        // console.log("test");
-        getUserData(new ObjectID(userid), function(err, feedData) {
-          if (err) {
-            // A database error happened.
-            // Internal Error: 500.
-            res.status(500).send("Database error: " + err);
-          } else if (feedData === null) {
-            // Couldn't find the feed in the database.
-            res.status(400).send("Could not look up feed for user " + userid);
-          } else {
-            // Send data.
-            res.send(feedData);
-          }
-        });
-      } else {
-        // 403: Unauthorized request.
-        res.status(403).end();
-      }
+      // Convert userid into an ObjectID before passing it to database queries.
+      // console.log("test");
+      getUserData(new ObjectID(userid), function(err, feedData) {
+        if (err) {
+          // A database error happened.
+          // Internal Error: 500.
+          res.status(500).send("Database error: " + err);
+        } else if (feedData === null) {
+          // Couldn't find the feed in the database.
+          res.status(400).send("Could not look up feed for user " + userid);
+        } else {
+          // Send data.
+          res.send(feedData);
+        }
+      });
+    } else {
+      // 403: Unauthorized request.
+      res.status(403).end();
+    }
   });
 
   // Get savePage data
@@ -496,21 +477,21 @@ MongoClient.connect(url, function(err, db) {
   }
 
   /*** Get the data for a course.
-    */
+  */
   app.get('/courses/:course', function(req, res){
     getCourseData(req.params.course, function(err, courseData) {
-        if (err) {
-          // A database error happened.
-          // Internal Error: 500.
-          res.status(500).send("Database error: " + err);
-        } else if (courseData === null) {
-          // Couldn't find the feed in the database.
-          res.status(400).send("Could not look up course number " + req.params.course);
-        } else {
-          // Send data.
-          res.send(courseData);
-        }
-      });
+      if (err) {
+        // A database error happened.
+        // Internal Error: 500.
+        res.status(500).send("Database error: " + err);
+      } else if (courseData === null) {
+        // Couldn't find the feed in the database.
+        res.status(400).send("Could not look up course number " + req.params.course);
+      } else {
+        // Send data.
+        res.send(courseData);
+      }
+    });
   })
 
   // get page data
@@ -566,8 +547,8 @@ MongoClient.connect(url, function(err, db) {
   });
 
   /*** Helper function: Sends back HTTP response with error code 500 due to
-   * a database error.
-   */
+  * a database error.
+  */
   function sendDatabaseError(res, err) {
     res.status(500).send("A database error occurred: " + err);
   }
@@ -613,42 +594,42 @@ MongoClient.connect(url, function(err, db) {
   });
 
   // //add shown major
-    // app.put('/user/:userid/majortoshow/:majorid', function(req, res) {
-    //   var fromUser = getUserIdFromToken(req.get('Authorization'));
-    //   // Convert params from string to number.
-    //   var userId = parseInt(req.params.userid, 10);
-    //   var majorId = parseInt(req.params.majorid, 10);
-    //   if (fromUser === userId) {
-    //     var userItem = readDocument('users', userId);
-    //     userItem.shown_majors.push(majorId);
-    //     writeDocument('users', userItem);
-    //     // Return a resolved version of the likeCounter
-    //     res.send(userItem.shown_majors.map((majId) =>
-    //     readDocument('majors', majId)));
-    //   } else {
-    //     // 401: Unauthorized.
-    //     res.status(401).end();
-    //   }
-    // });
+  // app.put('/user/:userid/majortoshow/:majorid', function(req, res) {
+  //   var fromUser = getUserIdFromToken(req.get('Authorization'));
+  //   // Convert params from string to number.
+  //   var userId = parseInt(req.params.userid, 10);
+  //   var majorId = parseInt(req.params.majorid, 10);
+  //   if (fromUser === userId) {
+  //     var userItem = readDocument('users', userId);
+  //     userItem.shown_majors.push(majorId);
+  //     writeDocument('users', userItem);
+  //     // Return a resolved version of the likeCounter
+  //     res.send(userItem.shown_majors.map((majId) =>
+  //     readDocument('majors', majId)));
+  //   } else {
+  //     // 401: Unauthorized.
+  //     res.status(401).end();
+  //   }
+  // });
 
   // //add shown minor
-    // app.put('/user/:userid/minortoshow/:minorid', function(req, res) {
-    //   var fromUser = getUserIdFromToken(req.get('Authorization'));
-    //   // Convert params from string to number.
-    //   var userId = parseInt(req.params.userid, 10);
-    //   var minorId = parseInt(req.params.minorid, 10);
-    //   if (fromUser === userId) {
-    //     var userItem = readDocument('users', userId);
-    //     userItem.shown_minors.push(minorId);
-    //     writeDocument('users', userItem);
-    //     // Return a resolved version of the likeCounter
-    //     res.send(userItem.shown_minors.map((majId) =>
-    //     readDocument('majors', majId)));
-    //   } else {
-    //     // 401: Unauthorized.
-    //     res.status(401).end();
-    //   }
-    // });
+  // app.put('/user/:userid/minortoshow/:minorid', function(req, res) {
+  //   var fromUser = getUserIdFromToken(req.get('Authorization'));
+  //   // Convert params from string to number.
+  //   var userId = parseInt(req.params.userid, 10);
+  //   var minorId = parseInt(req.params.minorid, 10);
+  //   if (fromUser === userId) {
+  //     var userItem = readDocument('users', userId);
+  //     userItem.shown_minors.push(minorId);
+  //     writeDocument('users', userItem);
+  //     // Return a resolved version of the likeCounter
+  //     res.send(userItem.shown_minors.map((majId) =>
+  //     readDocument('majors', majId)));
+  //   } else {
+  //     // 401: Unauthorized.
+  //     res.status(401).end();
+  //   }
+  // });
 
   // add shown minor
   app.put('/user/:userid/minortoshow/:minorid', function(req, res) {
@@ -720,45 +701,45 @@ MongoClient.connect(url, function(err, db) {
       var userItem = readDocument('users', userId);
       //replace this with an update one.
       //db.collection("users").updateOne({"_id": new ObjectID("000000000000000000000001")},{$addToSet: {"nextSemester":new ObjectID(req.params.courseid)}},
-        //function(err,data){console.log("err: " +err+ " data: " + data)})
+      //function(err,data){console.log("err: " +err+ " data: " + data)})
       userItem.nextSemester.push(courseId);
       writeDocument('users', userItem);
       //replace with a find
       /*db.collection("users").find({_id:new ObjectID("000000000000000000000001")},{nextSemester:1},
-        function(err,data){
-          if(err) {
-            return console.log("error: " + err);
-          } else if (data === null) {
-            console.log("null");
-            return console.log(null,null)
-          }
-          else{
-            console.log("data");
-            console.log(data);
-          }
-        */
-      //console.log(readDocument('users', userId));
-      res.send(readDocument('users', userId));
-    } else {
-      // 401: Unauthorized.
-      res.status(401).end();
-    }
-  });
+      function(err,data){
+      if(err) {
+      return console.log("error: " + err);
+    } else if (data === null) {
+    console.log("null");
+    return console.log(null,null)
+  }
+  else{
+  console.log("data");
+  console.log(data);
+}
+*/
+//console.log(readDocument('users', userId));
+res.send(readDocument('users', userId));
+} else {
+  // 401: Unauthorized.
+  res.status(401).end();
+}
+});
 
-  //delete shown major
-  app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
-    var fromUser = getUserIdFromToken(req.get('Authorization'));
-    var userId = new ObjectID(req.params.userid);
-    var majorId = req.params.majorid;
-    if (fromUser === req.params.userid) {
-      // Step 1: Remove userId from the likeCounter.
-      db.collection('users').updateOne({ _id: userId },
-        {
-          // Only removes the userId from the likeCounter, if it is in the likeCounter.
-          $pull: {
-            shown_majors: new ObjectID(majorId)
-          }
-        }, function(err) {
+//delete shown major
+app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
+  var fromUser = getUserIdFromToken(req.get('Authorization'));
+  var userId = new ObjectID(req.params.userid);
+  var majorId = req.params.majorid;
+  if (fromUser === req.params.userid) {
+    // Step 1: Remove userId from the likeCounter.
+    db.collection('users').updateOne({ _id: userId },
+      {
+        // Only removes the userId from the likeCounter, if it is in the likeCounter.
+        $pull: {
+          shown_majors: new ObjectID(majorId)
+        }
+      }, function(err) {
         if (err) {
           return sendDatabaseError(res, err);
         }
@@ -797,31 +778,31 @@ MongoClient.connect(url, function(err, db) {
             shown_minors: new ObjectID(minorId)
           }
         }, function(err) {
-        if (err) {
-          return sendDatabaseError(res, err);
-        }
-        // Step 2: Get the feed item.
-        db.collection('users').findOne({ _id: userId }, function(err, feedItem) {
           if (err) {
             return sendDatabaseError(res, err);
           }
-          // Step 3: Resolve the user IDs in the like counter into user objects.
-          resolveMajorObjects2(feedItem.shown_minors, function(err, userMap) {
+          // Step 2: Get the feed item.
+          db.collection('users').findOne({ _id: userId }, function(err, feedItem) {
             if (err) {
               return sendDatabaseError(res, err);
             }
-            // Return a resolved version of the likeCounter
-            res.send(feedItem.shown_minors.map((userId) => userMap[userId]));
+            // Step 3: Resolve the user IDs in the like counter into user objects.
+            resolveMajorObjects2(feedItem.shown_minors, function(err, userMap) {
+              if (err) {
+                return sendDatabaseError(res, err);
+              }
+              // Return a resolved version of the likeCounter
+              res.send(feedItem.shown_minors.map((userId) => userMap[userId]));
+            });
           });
         });
-      });
-    } else {
-      // 401: Unauthorized.
-      res.status(401).end();
-    }
-  });
+      } else {
+        // 401: Unauthorized.
+        res.status(401).end();
+      }
+    });
 
-  // // delete a shown major
+    // // delete a shown major
     // app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
     // var fromUser = getUserIdFromToken(req.get('Authorization'));
     // // Convert params from string to number.
@@ -842,7 +823,7 @@ MongoClient.connect(url, function(err, db) {
     //   }
     // });
 
-  // // delete a shown minor
+    // // delete a shown minor
     // app.delete('/user/:userid/minortoshow/:minorid', function(req, res) {
     //   var fromUser = getUserIdFromToken(req.get('Authorization'));
     //   // Convert params from string to number.
@@ -863,65 +844,65 @@ MongoClient.connect(url, function(err, db) {
     //   }
     // });
 
-  //delete a course
-  app.delete('/user/:userid/courses/:courseid', function(req, res){
-    var fromUser = getUserIdFromToken(req.get('Authorization'));
-    // Convert params from string to number.
-    var userId = parseInt(req.params.userid, 10);
-    var courseId = parseInt(req.params.courseid, 10);
-    if (fromUser === userId) {
-      var userItem = readDocument('users', userId);
-      var courseIndex = userItem.classesTaken.indexOf(courseId);
-      userItem.classesTaken.splice(courseIndex, 1);
-      writeDocument('users', userItem);
+    //delete a course
+    app.delete('/user/:userid/courses/:courseid', function(req, res){
+      var fromUser = getUserIdFromToken(req.get('Authorization'));
+      // Convert params from string to number.
+      var userId = parseInt(req.params.userid, 10);
+      var courseId = parseInt(req.params.courseid, 10);
+      if (fromUser === userId) {
+        var userItem = readDocument('users', userId);
+        var courseIndex = userItem.classesTaken.indexOf(courseId);
+        userItem.classesTaken.splice(courseIndex, 1);
+        writeDocument('users', userItem);
 
-      res.send(readDocument('users', userId));
-    } else {
-      // 401: Unauthorized.
-      res.status(401).end();
-    }
-  });
+        res.send(readDocument('users', userId));
+      } else {
+        // 401: Unauthorized.
+        res.status(401).end();
+      }
+    });
 
-  //delete a course nextsemester
-  app.delete('/user/:userid/courses/:courseid/nextsem/', function(req, res){
-    var fromUser = getUserIdFromToken(req.get('Authorization'));
-    // Convert params from string to number.
-    var userId = parseInt(req.params.userid, 10);
-    var courseId = parseInt(req.params.courseid, 10);
-    if (fromUser === userId) {
-      var userItem = readDocument('users', userId);
-      var courseIndex = userItem.nextSemester.indexOf(courseId);
-      userItem.nextSemester.splice(courseIndex, 1);
-      writeDocument('users', userItem);
+    //delete a course nextsemester
+    app.delete('/user/:userid/courses/:courseid/nextsem/', function(req, res){
+      var fromUser = getUserIdFromToken(req.get('Authorization'));
+      // Convert params from string to number.
+      var userId = parseInt(req.params.userid, 10);
+      var courseId = parseInt(req.params.courseid, 10);
+      if (fromUser === userId) {
+        var userItem = readDocument('users', userId);
+        var courseIndex = userItem.nextSemester.indexOf(courseId);
+        userItem.nextSemester.splice(courseIndex, 1);
+        writeDocument('users', userItem);
 
-      res.send(readDocument('users', userId));
-    } else {
-      // 401: Unauthorized.
-      res.status(401).end();
-    }
-  });
+        res.send(readDocument('users', userId));
+      } else {
+        // 401: Unauthorized.
+        res.status(401).end();
+      }
+    });
 
-  //Delete page item
-  app.delete('/user/:userid/page/:pageid', function(req,res) {
-    var fromUser = getUserIdFromToken(req.get('Authorization'));
-    var pageId = req.params.pageid;
-    var useridNumber = new ObjectID(req.params.userid);
+    //Delete page item
+    app.delete('/user/:userid/page/:pageid', function(req,res) {
+      var fromUser = getUserIdFromToken(req.get('Authorization'));
+      var pageId = req.params.pageid;
+      var useridNumber = new ObjectID(req.params.userid);
 
-    if (fromUser === req.params.userid) {
-      db.collection('users').findOne({_id : useridNumber}, function(err, userData) {
-        if (err){
-          res.status(500).send("Database error: " + err);
-        }
-        else {
-          db.collection('savePage').updateOne(
-            {_id : userData.savedGraphs}, {
-              $pull : { pages : {id : new ObjectID(pageId)} }
-            }, function(err) {
-              if(err){
-                return sendDatabaseError(res, err);
-              }
-              else{
-                getPageData(useridNumber,function(err,pageData) {
+      if (fromUser === req.params.userid) {
+        db.collection('users').findOne({_id : useridNumber}, function(err, userData) {
+          if (err){
+            res.status(500).send("Database error: " + err);
+          }
+          else {
+            db.collection('savePage').updateOne(
+              {_id : userData.savedGraphs}, {
+                $pull : { pages : {id : new ObjectID(pageId)} }
+              }, function(err) {
+                if(err){
+                  return sendDatabaseError(res, err);
+                }
+                else{
+                  getPageData(useridNumber,function(err,pageData) {
                     if(err) {
                       res.status(500).send("Database error: " + err);
                     }
@@ -973,34 +954,51 @@ MongoClient.connect(url, function(err, db) {
           res.send(result);
         }
       });
-      } else {
+    } else {
       res.status(401).end();
     }
   });
 
-  app.get('/feedback/', function(req,res) {
-        res.send(getFeedback());
-  });
+  function getAdmin(user,cb){
+    db.collection('users').findOne(new ObjectID(user),function(err,result){
+      if(err){
+        return cb(err);
+      }
+      return cb(null,result);
+    });
+
+  }
+
+  function getFeedback(cb){
+    db.collection('feedback').find().toArray(function(err,result){
+      if(err){
+        return cb(err);
+      }
+      return cb(null,result);
+    });
+  }
 
   app.get('/feedback/:userid', function(req,res) {
-    var userid = req.params.userid;
     var fromUser = getUserIdFromToken(req.get('Authorization'));
-    var useridNumber = parseInt(userid,10);
-    if(fromUser === useridNumber){
-        // console.log(fromUser + "   " + useridNumber + "    ");
-      if(getAdmin(useridNumber)){
-        res.send(getFeedback());
-      }
-    }
-    else {
-      // 401: Unathorized request.
-      res.status(401).end();
-    }
-  });
+    getAdmin(fromUser,function(err,admin){
+      if(admin){
+        getFeedback(function(err,result){
+          if(err){
+            res.status(500).send("A database error occured: " + err);
+          }else{
+            res.status(201);
+            console.log(result);
+            res.send(result);
+          }
+        })
+      } else {
+        res.status(401).end();
+      }})
+    });
 
-  // Starts the server on port 3000!
-  app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+    // Starts the server on port 3000!
+    app.listen(3000, function () {
+      console.log('Example app listening on port 3000!');
+    });
   });
-});
-// The file ends here. Nothing should be after this.
+  // The file ends here. Nothing should be after this.
