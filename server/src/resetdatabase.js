@@ -23,16 +23,13 @@ var initialData = {
     }
   },
   "feedback":{
-    "0":{
-      "length":2
-    },
     "1":{
       "user": new ObjectID("000000000000000000000001"),
-      "content": "first feedback"
+      "contents": "first feedback"
     },
     "2":{
       "user": new ObjectID("000000000000000000000001"),
-      "content": "testing feedback"
+      "contents": "testing feedback"
     }
 },
   "majors":{

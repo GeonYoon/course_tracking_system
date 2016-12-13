@@ -3,7 +3,6 @@
 var database = require('./database');
 var readDocument = database.readDocument;
 var writeDocument = database.writeDocument;
-var addDocument = database.addDocument;
 var getCollection = database.getCollection;
 var validate = require('express-jsonschema').validate;
 var SavedGraphSchema = require('./schemas/savedgraph.json');
@@ -385,16 +384,6 @@ MongoClient.connect(url, function(err, db) {
     //   majorItem.courses = majorItem.courses.map((id) => getCourseItemSync(id));
     //   return majorItem;
     // }
-
-  function postFeedback(user, contents){
-    var newFeedback = {
-      "user": user,
-      "contents": contents
-    };
-    var testDoc = addDocument('feedback', newFeedback);
-    // console.log("feedback received!");
-    return testDoc;
-  }
 
   // function getFeedback(length){
     //   console.log(length);
@@ -944,24 +933,35 @@ MongoClient.connect(url, function(err, db) {
     }
 
   });
+
+  function postFeedback(user, contents, cb){
+    var newFeedback = {
+      "user": user,
+      "contents": contents
+    };
+    db.collection('feedback').insertOne(newFeedback,function(err,result){
+      if(err){
+        return cb(err);
+      }
+      newFeedback._id = result.insertedId;
+      return cb(null,result);
+    });
+  }
   //post feedback
   app.post('/feedback', validate({ body: FeedbackSchema }), function(req, res) {
     var body = req.body;
     var fromUser = getUserIdFromToken(req.get('Authorization'));
-    var userId = parseInt(body.userId, 10);
-    // console.log(fromUser + " " +userId+ " "+body.userId);
-    // Check if requester is authorized to post this status update.
-    // (The requester must be the author of the update.)
-    if (fromUser === userId) {
-      var newFeedback = postFeedback(body.userId, body.contents);
-      // console.log(newFeedback);
-      // When POST creates a new resource, we should tell the client about it
-      // in the 'Location' header and use status code 201.
-      res.status(201);
-      // Send the update!
-      res.send(newFeedback);
-    } else {
-      // 401: Unauthorized.
+    if (fromUser === body.userId) {
+      postFeedback(new ObjectID(fromUser), body.contents, function(err,result){
+        if(err){
+          res.status(500).send("A database error occured: " + err);
+        }else{
+          res.status(201);
+          res.set('Location', '/feedback' + result._id);
+          res.send(result);
+        }
+      });
+      } else {
       res.status(401).end();
     }
   });
