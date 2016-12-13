@@ -730,7 +730,8 @@ MongoClient.connect(url, function(err, db) {
       //skip this
       var userItem = readDocument('users', userId);
       //replace this with an update one.
-      //db.users.updateOne({"_id":ObjectId("000000000000000000000001")},{$addToSet: {"nextSemester":"cs class"}})
+      //db.collection("users").updateOne({"_id": new ObjectID("000000000000000000000001")},{$addToSet: {"nextSemester":new ObjectID(req.params.courseid)}},
+        //function(err,data){console.log("err: " +err+ " data: " + data)})
       userItem.nextSemester.push(courseId);
       writeDocument('users', userItem);
       //replace with a find
