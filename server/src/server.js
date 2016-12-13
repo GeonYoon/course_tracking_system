@@ -72,9 +72,7 @@ MongoClient.connect(url, function(err, db) {
     });
   }
 
-
-  /**
-   * Resolves a list of major objects. Returns an object that maps major IDs to
+  /*** Resolves a list of major objects. Returns an object that maps major IDs to
    * major objects.
    */
   function resolveMajorObjects(majorList, callback) {
@@ -180,8 +178,7 @@ MongoClient.connect(url, function(err, db) {
     }
   }
 
-  /**
-   * Resolves a list of course objects. Returns an object that maps course IDs to
+  /*** Resolves a list of course objects. Returns an object that maps course IDs to
    * course objects.
    */
   function resolveCourseObjects(courseList, callback) {
@@ -234,8 +231,7 @@ MongoClient.connect(url, function(err, db) {
     }
   }
 
-  /**
-   * Resolves a list of user objects. Returns an object that maps user IDs to
+  /*** Resolves a list of user objects. Returns an object that maps user IDs to
    * user objects.
    */
   function resolveUserObjects(userList, callback) {
@@ -265,7 +261,6 @@ MongoClient.connect(url, function(err, db) {
       });
     }
   }
-
   // function getUserItemSync(userId) {
     //   var user = readDocument('users', userId);
     //   user.majors = user.majors.map((id) => getMajorItemSync(id));
@@ -358,8 +353,6 @@ MongoClient.connect(url, function(err, db) {
       });
     });
   }
-
-
   // function getCourseData(courseId){
     //   var courseItem = getCourseItemSync(courseId);
     //   return courseItem;
@@ -440,7 +433,6 @@ MongoClient.connect(url, function(err, db) {
     return newNew;
   }
 
-
   /*** Get the user ID from a token. Returns -1 (an invalid ID)
   * if it fails.
   */
@@ -467,9 +459,7 @@ MongoClient.connect(url, function(err, db) {
   }
 
 
-  /**
-  * Get the data for a particular user.
-  */
+  /*** Get the data for a particular user.*/
   app.get('/user/:userid', function(req, res) {
     var userid = req.params.userid;
     var fromUser = getUserIdFromToken(req.get('Authorization'));
@@ -519,9 +509,8 @@ MongoClient.connect(url, function(err, db) {
     });
   }
 
-  /**
-  * Get the data for a course.
-  */
+  /*** Get the data for a course.
+    */
   app.get('/courses/:course', function(req, res){
     getCourseData(req.params.course, function(err, courseData) {
         if (err) {
@@ -591,8 +580,7 @@ MongoClient.connect(url, function(err, db) {
     res.send();
   });
 
-  /**
-   * Helper function: Sends back HTTP response with error code 500 due to
+  /*** Helper function: Sends back HTTP response with error code 500 due to
    * a database error.
    */
   function sendDatabaseError(res, err) {
@@ -639,7 +627,6 @@ MongoClient.connect(url, function(err, db) {
     }
   });
 
-
   // //add shown major
     // app.put('/user/:userid/majortoshow/:majorid', function(req, res) {
     //   var fromUser = getUserIdFromToken(req.get('Authorization'));
@@ -659,7 +646,6 @@ MongoClient.connect(url, function(err, db) {
     //   }
     // });
 
-
   // //add shown minor
     // app.put('/user/:userid/minortoshow/:minorid', function(req, res) {
     //   var fromUser = getUserIdFromToken(req.get('Authorization'));
@@ -678,7 +664,6 @@ MongoClient.connect(url, function(err, db) {
     //     res.status(401).end();
     //   }
     // });
-
 
   // add shown minor
   app.put('/user/:userid/minortoshow/:minorid', function(req, res) {
