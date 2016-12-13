@@ -3,7 +3,6 @@
 var database = require('./database');
 var readDocument = database.readDocument;
 var writeDocument = database.writeDocument;
-var getCollection = database.getCollection;
 var validate = require('express-jsonschema').validate;
 var SavedGraphSchema = require('./schemas/savedgraph.json');
 var FeedbackSchema = require('./schemas/feedback.json');
@@ -357,7 +356,7 @@ MongoClient.connect(url, function(err, db) {
   //   return courseItem;
   // }
 
-  function getCourseData(course, callback) {
+  function getCourseData(course, callback) {``
     //  console.log("test");
     //right here is happening 3 times
     db.collection('courses').findOne({
@@ -696,9 +695,9 @@ MongoClient.connect(url, function(err, db) {
     var userId = req.params.userid;
     var courseId = parseInt(req.params.courseid, 10);
     if (fromUser === userId){
-      userId = 1;
+      //userId = 1;
       //skip this
-      var userItem = readDocument('users', userId);
+      //var userItem = readDocument('users', userId);
       //replace this with an update one.
       //db.collection("users").updateOne({"_id": new ObjectID("000000000000000000000001")},{$addToSet: {"nextSemester":new ObjectID(req.params.courseid)}},
       //function(err,data){console.log("err: " +err+ " data: " + data)})
@@ -725,6 +724,36 @@ res.send(readDocument('users', userId));
   res.status(401).end();
 }
 });
+      db.collection("users").updateOne({"_id": new ObjectID("000000000000000000000001")},{$addToSet: {"nextSemester":new ObjectID(req.params.courseid)}},
+        function(err,data){
+          if(err) {
+            return res.send(err);
+          } else if (data === null) {
+            return res.send(null);
+          }else{
+            db.collection("users").findOne({"_id":new ObjectID("000000000000000000000001")},
+              function(err,data){
+                if(err) {
+                  return res.send(err);
+                } else if (data === null) {
+                  return res.send(null)
+                }
+                else{
+                  res.send(data);
+                }
+              })
+          }})
+      //userItem.nextSemester.push(courseId);
+      //writeDocument('users', userItem);
+      //replace with a find
+
+      //console.log(readDocument('users', userId));
+      //res.send(readDocument('users', userId));
+    } else {
+      // 401: Unauthorized.
+      res.status(401).end();
+    }
+  });
 
 //delete shown major
 app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
