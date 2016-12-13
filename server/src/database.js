@@ -22,16 +22,13 @@ var initialData = {
     "password": "Pasword1"
   },
   "feedback":{
-    "0":{
-      "length":2
-    },
     "1":{
       "user": 1,
-      "content": "first feedback"
+      "contents": "first feedback"
     },
     "2":{
       "user": 1,
-      "content": "testing feedback"
+      "contents": "testing feedback"
     }
 },
   "majors":{
