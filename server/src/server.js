@@ -10,6 +10,7 @@ var SavedGraphSchema = require('./schemas/savedgraph.json');
 var FeedbackSchema = require('./schemas/feedback.json');
 var bodyParser = require('body-parser');
 var express = require('express');
+var ResetDatabase = require('./resetdatabase');
 
 var mongo_express = require('mongo-express/lib/middleware');
 // Import the default Mongo Express configuration
@@ -567,13 +568,12 @@ MongoClient.connect(url, function(err, db) {
     }
   });
 
-  // Reset database.
+  // Reset the database.
   app.post('/resetdb', function(req, res) {
-    // console.log("Resetting database...");
-    // This is a debug route, so don't do any validation.
-    database.resetDatabase();
-    // res.send() sends an empty response with status code 200
-    res.send();
+    console.log("Resetting database...");
+    ResetDatabase(db, function() {
+      res.send();
+    });
   });
 
   /*** Helper function: Sends back HTTP response with error code 500 due to
@@ -899,30 +899,43 @@ MongoClient.connect(url, function(err, db) {
     }
   });
 
-    function search(array, ide) {
-      for(var i = 0; i < array.length; i++){
-        if(array[i].id === ide){
-          return i
-        }
-      }
-    }
-
   //Delete page item
   app.delete('/user/:userid/page/:pageid', function(req,res) {
     var fromUser = getUserIdFromToken(req.get('Authorization'));
-    var pageId = parseInt(req.params.pageid, 10);
-    var useridNumber = parseInt(req.params.userid,10);
+    var pageId = req.params.pageid;
+    var useridNumber = new ObjectID(req.params.userid);
 
-    if (fromUser === useridNumber) {
-      var userData = readDocument('users',useridNumber)
-      var savePage = readDocument('savePage',userData.savedGraphs);
-      var pageArray = savePage.pages;
-
-      if(pageId !== -1){
-        savePage.pages.splice(search(pageArray,pageId),1);
-        writeDocument('savePage',savePage)
-      }
-      res.send(savePage)
+    if (fromUser === req.params.userid) {
+      db.collection('users').findOne({_id : useridNumber}, function(err, userData) {
+        if (err){
+          res.status(500).send("Database error: " + err);
+        }
+        else {
+          db.collection('savePage').updateOne(
+            {_id : userData.savedGraphs}, {
+              $pull : { pages : {id : new ObjectID(pageId)} }
+            }, function(err) {
+              if(err){
+                return sendDatabaseError(res, err);
+              }
+              else{
+                getPageData(useridNumber,function(err,pageData) {
+                    if(err) {
+                      res.status(500).send("Database error: " + err);
+                    }
+                    else if (pageData === null) {
+                      res.status(400).send("Could not look up page");
+                    }
+                    else {
+                      res.send(pageData)
+                    }
+                  }
+                )
+              }
+            }
+          )
+        }
+      });
     }
     else {
       // 401: Unauthorized.

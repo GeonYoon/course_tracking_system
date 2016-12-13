@@ -308,7 +308,7 @@ function resetDatabase(db, cb) {
       // Use myself as a callback.
       resetCollection(db, collection, processNextCollection);
     } else {
-      cb();
+      addIndexes(db, cb);
     }
   }
 
@@ -338,4 +338,8 @@ if(require.main === module) {
 } else {
   // require()'d.  Export the function.
   module.exports = resetDatabase;
+}
+
+function addIndexes(db, cb) {
+  db.collection('feedItems').createIndex({ "contents.contents": "text" }, null, cb);
 }
