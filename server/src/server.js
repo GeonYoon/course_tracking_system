@@ -358,7 +358,7 @@ MongoClient.connect(url, function(err, db) {
     // }
 
   function getCourseData(course, callback) {
-    // console.log("test");
+     console.log("test");
     //right here is happening 3 times
     db.collection('courses').findOne({
       _id: new ObjectID(course)
@@ -370,8 +370,6 @@ MongoClient.connect(url, function(err, db) {
         return callback(null, null);
       }
       getCourseItem(course, callback);
-
-
     });
   }
   // function getCourseItemSync(courseId){
@@ -731,7 +729,8 @@ MongoClient.connect(url, function(err, db) {
       userId = 1;
       //skip this
       var userItem = readDocument('users', userId);
-      //replace this with an update one
+      //replace this with an update one.
+      //db.users.updateOne({"_id":ObjectId("000000000000000000000001")},{$addToSet: {"nextSemester":"cs class"}})
       userItem.nextSemester.push(courseId);
       writeDocument('users', userItem);
       //replace with a find
