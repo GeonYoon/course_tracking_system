@@ -359,7 +359,7 @@ MongoClient.connect(url, function(err, db) {
     // }
 
   function getCourseData(course, callback) {
-     console.log("test");
+    //  console.log("test");
     //right here is happening 3 times
     db.collection('courses').findOne({
       _id: new ObjectID(course)

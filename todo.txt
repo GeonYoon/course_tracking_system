@@ -1,6 +1,6 @@
 FINAL SA TODO (moving to MongoDB):
 convert routes from mock database to regular database:
-  -save pages (post/get)
+  -post save pages
   -post/get taken class/take next semester - Joe
   -feedback (post/get)
 
