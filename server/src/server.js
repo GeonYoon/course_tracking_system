@@ -743,41 +743,37 @@ MongoClient.connect(url, function(err, db) {
 }
 */
 //console.log(readDocument('users', userId));
-res.send(readDocument('users', userId));
-} else {
-  // 401: Unauthorized.
-  res.status(401).end();
-}
-});
-      db.collection("users").updateOne({"_id": new ObjectID("000000000000000000000001")},{$addToSet: {"nextSemester":new ObjectID(req.params.courseid)}},
-        function(err,data){
-          if(err) {
-            return res.send(err);
-          } else if (data === null) {
-            return res.send(null);
-          }else{
-            db.collection("users").findOne({"_id":new ObjectID("000000000000000000000001")},
-              function(err,data){
-                if(err) {
-                  return res.send(err);
-                } else if (data === null) {
-                  return res.send(null)
-                }
-                else{
-                  res.send(data);
-                }
-              })
-          }})
+// res.send(readDocument('users', userId));
+// } else {
+//   // 401: Unauthorized.
+//   res.status(401).end();
+// }
+// });
+//       db.collection("users").updateOne({"_id": new ObjectID("000000000000000000000001")},{$addToSet: {"nextSemester":new ObjectID(req.params.courseid)}},
+//         function(err,data){
+//           if(err) {
+//             return res.send(err);
+//           } else if (data === null) {
+//             return res.send(null);
+//           }else{
+//             db.collection("users").findOne({"_id":new ObjectID("000000000000000000000001")},
+//               function(err,data){
+//                 if(err) {
+//                   return res.send(err);
+//                 } else if (data === null) {
+//                   return res.send(null)
+//                 }
+//                 else{
+//                   res.send(data);
+//                 }
+//               })
+//           }})
       //userItem.nextSemester.push(courseId);
       //writeDocument('users', userItem);
       //replace with a find
 
       //console.log(readDocument('users', userId));
-<<<<<<< HEAD
       // res.send(readDocument('users', userId));
-=======
-      //res.send(readDocument('users', userId));
->>>>>>> 7280507176fe7ab421255424a0141751a2c3fba8
     } else {
       // 401: Unauthorized.
       res.status(401).end();
