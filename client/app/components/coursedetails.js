@@ -35,16 +35,16 @@ export default class CourseDetails extends React.Component{
         getUserData(this.props.route.user, user => {
           var takenText = "Eligible";
 
-          var courseIds = user.classesTaken.map(classes=>{return classes.id});
+          var courseIds = user.classesTaken.map(classes=>{return classes._id});
 
           course.prereqs.map(classes => {
-            if(courseIds.indexOf(classes.id) == -1){
+            if(courseIds.indexOf(classes._id) == -1){
               takenText = "Ineligible"
             }
           })
 
           user.classesTaken.map(classes =>{
-            if (classes.id == this.props.params.course){
+            if (classes._id == this.props.params.course){
               takenText = "Taken";
             }
           })

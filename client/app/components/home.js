@@ -87,7 +87,7 @@ export default class HomePage extends React.Component {
    //getUserData2(this.props.user, (info)=>this.setState(info))
 
    //this.userInfo = this.state;
-
+// console.log(this.state);
    //ALL COURSES FROM THE MAJORS:
    this.state.shown_majors.map((maj)=>{
      maj.courses.map((crse)=>{

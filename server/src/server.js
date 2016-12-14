@@ -713,16 +713,41 @@ MongoClient.connect(url, function(err, db) {
     var fromUser = getUserIdFromToken(req.get('Authorization'));
     // Convert params from string to number.
     var userId = req.params.userid;
-    var courseId = parseInt(req.params.courseid, 10);
+    var courseId = new ObjectID(req.params.courseid);
     if (fromUser === userId){
-      userId = 1;
+      // userId = 1;
       //skip this
-      var userItem = readDocument('users', userId);
+      // var userItem = readDocument('users', userId);
       //replace this with an update one.
-      //db.collection("users").updateOne({"_id": new ObjectID("000000000000000000000001")},{$addToSet: {"nextSemester":new ObjectID(req.params.courseid)}},
-        //function(err,data){console.log("err: " +err+ " data: " + data)})
-      userItem.nextSemester.push(courseId);
-      writeDocument('users', userItem);
+      db.collection('users').updateOne({_id: new ObjectID(userId)},
+        {
+          $addToSet: {
+            nextSemester: courseId
+          }
+        }, function(err) {
+          if (err) {
+            return sendDatabaseError(res, err);
+          }
+
+          db.collection('users').findOne({_id: new ObjectID(userId)}, function (err, userItem) {
+            if (err) {
+              return sendDatabaseError(res, err);
+            }
+
+            resolveCourseObjects(userItem.nextSemester, function(err, coursemap) {
+              if (err) {
+                return sendDatabaseError(res, err);
+              }
+              // Return a resolved version of the likeCounter
+              res.send(userItem.nextSemester.map((userId) => coursemap[userId]));
+            });
+
+          });
+
+        });
+        // function(err,data){console.log("err: " +err+ " data: " + data)})
+      // userItem.nextSemester.push(courseId);
+      // writeDocument('users', userItem);
       //replace with a find
       /*db.collection("users").find({_id:new ObjectID("000000000000000000000001")},{nextSemester:1},
         function(err,data){
@@ -738,7 +763,7 @@ MongoClient.connect(url, function(err, db) {
           }
         */
       //console.log(readDocument('users', userId));
-      res.send(readDocument('users', userId));
+      // res.send(readDocument('users', userId));
     } else {
       // 401: Unauthorized.
       res.status(401).end();
