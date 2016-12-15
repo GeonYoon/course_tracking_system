@@ -222,48 +222,49 @@ var initialData = {
       "textbooks": ["none"]
     }
 },
+"savePageItems":{
+  "1": {
+    "_id": new ObjectID("000000000000000000000001"),
+    "name": "first draft",
+    "time": 1479258637215,
+    "image": "img/examplegraph.png"
+  },
+  "2": {
+    "_id": new ObjectID("000000000000000000000002"),
+    "name": "second draft",
+    "time": 1479258638865,
+    "image": "img/examplegraph1.png"
+  },
+  "3": {
+    "_id": new ObjectID("000000000000000000000003"),
+    "name": "third draft",
+    "time": 1479258639666,
+    "image": "img/main_mock_1.png"
+  },
+  "4": {
+    "_id": new ObjectID("000000000000000000000004"),
+    "name": "fourth draft",
+    "time": 1479258640143,
+    "image": "img/main_mock_1.png"
+  },
+  "5": {
+    "_id": new ObjectID("000000000000000000000005"),
+    "name": "fifth draft",
+    "time": 1479258640645,
+    "image": "img/main_mock_1.png"
+  },
+  "6":{
+    "_id": new ObjectID("000000000000000000000006"),
+    "name": "sixth draft",
+    "time": 1479258641155,
+    "image": "img/main_mock_1.png"
+  }
+},
 
 "savePage": {
   "1": {
     "_id": new ObjectID("000000000000000000000001"),
-    "pages": [
-        {
-          "id": new ObjectID("000000000000000000000000"),
-          "name": "first draft",
-          "time": 1479258637215,
-          "image": "img/examplegraph.png"
-        },
-        {
-          "id": new ObjectID("000000000000000000000001"),
-          "name": "second draft",
-          "time": 1479258638865,
-          "image": "img/examplegraph1.png"
-        },
-        {
-          "id": new ObjectID("000000000000000000000002"),
-          "name": "third draft",
-          "time": 1479258639666,
-          "image": "img/main_mock_1.png"
-        },
-        {
-          "id": new ObjectID("000000000000000000000003"),
-          "name": "fourth draft",
-          "time": 1479258640143,
-          "image": "img/main_mock_1.png"
-        },
-        {
-          "id": new ObjectID("000000000000000000000004"),
-          "name": "fifth draft",
-          "time": 1479258640645,
-          "image": "img/main_mock_1.png"
-        },
-        {
-          "id": new ObjectID("000000000000000000000005"),
-          "name": "sixth draft",
-          "time": 1479258641155,
-          "image": "img/main_mock_1.png"
-        }
-      ]
+    "pages": [new ObjectID("000000000000000000000001"),new ObjectID("000000000000000000000002"),new ObjectID("000000000000000000000003"),new ObjectID("000000000000000000000004"),new ObjectID("000000000000000000000005"),new ObjectID("000000000000000000000006")]
   }
 }
 

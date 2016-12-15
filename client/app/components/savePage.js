@@ -75,7 +75,7 @@ export default class SavePages extends React.Component {
                 filteredDAta.map((page,i) => {
                   return (
                     <SavePageItem key ={i}
-                                  onDelete={() => this.deletePageItem(page.id)}
+                                  onDelete={() => this.deletePageItem(page._id)}
                                   index = {i}
                                   name = {page.name}
                                   time = {page.time}

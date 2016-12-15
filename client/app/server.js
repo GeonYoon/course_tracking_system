@@ -22,7 +22,7 @@ export function getPageData(user, cb){
 export function deletePageItem(user,pageid, cb){
    sendXHR('DELETE', '/user/' + user + '/page/' + pageid,
    undefined, (xhr) => {
-      cb(JSON.parse(xhr.responseText));
+      cb();
     });
 }
 
