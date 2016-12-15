@@ -672,16 +672,34 @@ MongoClient.connect(url, function(err, db) {
 
   //add a course
   app.put('/user/:userid/courses/:courseid', function(req, res){
+
     var fromUser = getUserIdFromToken(req.get('Authorization'));
     // Convert params from string to number.
     var userId = req.params.userid;
-    var courseId = parseInt(req.params.courseid, 10);
-    if (fromUser === userId) {
-      var userItem = readDocument('users', userId);
-      userItem.classesTaken.push(courseId);
-      writeDocument('users', userItem);
-
-      res.send(readDocument('users', userId));
+    var courseId = new ObjectID(req.params.courseid);
+    if (fromUser === userId){
+      db.collection('users').updateOne({_id: new ObjectID(userId)},
+        {
+          $addToSet: {
+            classesTaken: courseId
+          }
+        }, function(err) {
+          if (err) {
+            return sendDatabaseError(res, err);
+          }
+          db.collection('users').findOne({_id: new ObjectID(userId)}, function (err, userItem) {
+            if (err) {
+              return sendDatabaseError(res, err);
+            }
+            resolveCourseObjects(userItem.classesTaken, function(err, coursemap) {
+              if (err) {
+                return sendDatabaseError(res, err);
+              }
+              // Return a resolved version of the likeCounter
+              res.send(userItem.classesTaken.map((userId) => coursemap[userId]));
+            });
+          });
+        });
     } else {
       // 401: Unauthorized.
       res.status(401).end();
