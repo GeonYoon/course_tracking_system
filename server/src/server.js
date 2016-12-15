@@ -517,25 +517,75 @@ MongoClient.connect(url, function(err, db) {
     }
   });
 
-  app.post('/savedgraph', validate({ body: SavedGraphSchema }), function(req, res) {
-    var body = req.body;
+  // app.post('/savedgraph', validate({ body: SavedGraphSchema }), function(req, res) {
+  //   var body = req.body;
+  //   var fromUser = getUserIdFromToken(req.get('Authorization'));
+  //   var userId = parseInt(body.userId, 10);
+  //   // console.log(fromUser + " " +userId+ " "+body.userId);
+  //   // Check if requester is authorized to post this status update.
+  //   // (The requester must be the author of the update.)
+  //   if (fromUser === userId) {
+  //     var newSavedGraph = postSavedGraph(body.userId, body.graphName, body.contents);
+  //     // When POST creates a new resource, we should tell the client about it
+  //     // in the 'Location' header and use status code 201.
+  //     res.status(201);
+  //     // Send the update!
+  //     res.send(newSavedGraph);
+  //   } else {
+  //     // 401: Unauthorized.
+  //     res.status(401).end();
+  //   }
+  // });
+
+  //post a saved graph
+app.post('/savedgraph', validate({ body: SavedGraphSchema }), function(req, res) {
     var fromUser = getUserIdFromToken(req.get('Authorization'));
-    var userId = parseInt(body.userId, 10);
-    // console.log(fromUser + " " +userId+ " "+body.userId);
-    // Check if requester is authorized to post this status update.
-    // (The requester must be the author of the update.)
-    if (fromUser === userId) {
-      var newSavedGraph = postSavedGraph(body.userId, body.graphName, body.contents);
-      // When POST creates a new resource, we should tell the client about it
-      // in the 'Location' header and use status code 201.
-      res.status(201);
-      // Send the update!
-      res.send(newSavedGraph);
-    } else {
-      // 401: Unauthorized.
-      res.status(401).end();
-    }
-  });
+    var body = body.graphName;
+    var useridNumber = new ObjectID(body.userId);
+
+    if (fromUser === body.userId) {
+      db.collection('users').findOne({_id : useridNumber}, function(err, userData) {
+        if (err){
+          res.status(500).send("Database error: " + err);
+        }
+        else {
+          db.collection('savePage').updateOne(
+            {_id : userData.savedGraphs}, {
+              $addToSet : { pages:  {
+                "id": { $size: "$pages" },
+                "name": body,
+                "time": (new Date).getTime(),
+                "image": req.contents
+              }}
+            }, function(err) {
+              if(err){
+                return sendDatabaseError(res, err);
+              }
+              else{
+                getPageData(useridNumber,function(err,pageData) {
+                  if(err) {
+                    res.status(500).send("Database error: " + err);
+                  }
+                  else if (pageData === null) {
+                    res.status(400).send("Could not look up page");
+                  }
+                  else {
+                    res.send(pageData)
+                  }
+                }
+              )
+            }
+          }
+        )
+      }
+    });
+  }
+  else {
+    // 401: Unauthorized.
+    res.status(401).end();
+  }
+
+});
 
   // Reset the database.
   app.post('/resetdb', function(req, res) {
