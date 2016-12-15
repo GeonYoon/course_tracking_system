@@ -552,7 +552,8 @@ app.post('/savedgraph', validate({ body: SavedGraphSchema }), function(req, res)
           db.collection('savePage').updateOne(
             {_id : userData.savedGraphs}, {
               $addToSet : { pages:  {
-                "id": ObjectID.createFromTime(({ $size: "$pages" })),
+                "id": new ObjectID("000000000000000000000010"),
+                // "id": ObjectID.createFromTime(({ $size: "$pages" })),
                 "name": body.graphName,
                 "time": (new Date).getTime(),
                 "image": body.contents
@@ -1135,7 +1136,6 @@ app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
           var courseIndex = userItem.nextSemester.indexOf(courseId);
           userItem.nextSemester.splice(courseIndex, 1);
           writeDocument('users', userItem);
-
           res.send(readDocument('users', userId));
         } else {
           // 401: Unauthorized.
