@@ -679,27 +679,27 @@ MongoClient.connect(url, function(err, db) {
     var courseId = new ObjectID(req.params.courseid);
     if (fromUser === userId){
       db.collection('users').updateOne({_id: new ObjectID(userId)},
-        {
-          $addToSet: {
-            classesTaken: courseId
-          }
-        }, function(err) {
+      {
+        $addToSet: {
+          classesTaken: courseId
+        }
+      }, function(err) {
+        if (err) {
+          return sendDatabaseError(res, err);
+        }
+        db.collection('users').findOne({_id: new ObjectID(userId)}, function (err, userItem) {
           if (err) {
             return sendDatabaseError(res, err);
           }
-          db.collection('users').findOne({_id: new ObjectID(userId)}, function (err, userItem) {
+          resolveCourseObjects(userItem.classesTaken, function(err, coursemap) {
             if (err) {
               return sendDatabaseError(res, err);
             }
-            resolveCourseObjects(userItem.classesTaken, function(err, coursemap) {
-              if (err) {
-                return sendDatabaseError(res, err);
-              }
-              // Return a resolved version of the likeCounter
-              res.send(userItem.classesTaken.map((userId) => coursemap[userId]));
-            });
+            // Return a resolved version of the likeCounter
+            res.send(userItem.classesTaken.map((userId) => coursemap[userId]));
           });
         });
+      });
     } else {
       // 401: Unauthorized.
       res.status(401).end();
@@ -718,32 +718,32 @@ MongoClient.connect(url, function(err, db) {
       // var userItem = readDocument('users', userId);
       //replace this with an update one.
       db.collection('users').updateOne({_id: new ObjectID(userId)},
-        {
-          $addToSet: {
-            nextSemester: courseId
-          }
-        }, function(err) {
+      {
+        $addToSet: {
+          nextSemester: courseId
+        }
+      }, function(err) {
+        if (err) {
+          return sendDatabaseError(res, err);
+        }
+
+        db.collection('users').findOne({_id: new ObjectID(userId)}, function (err, userItem) {
           if (err) {
             return sendDatabaseError(res, err);
           }
 
-          db.collection('users').findOne({_id: new ObjectID(userId)}, function (err, userItem) {
+          resolveCourseObjects(userItem.nextSemester, function(err, coursemap) {
             if (err) {
               return sendDatabaseError(res, err);
             }
-
-            resolveCourseObjects(userItem.nextSemester, function(err, coursemap) {
-              if (err) {
-                return sendDatabaseError(res, err);
-              }
-              // Return a resolved version of the likeCounter
-              res.send(userItem.nextSemester.map((userId) => coursemap[userId]));
-            });
-
+            // Return a resolved version of the likeCounter
+            res.send(userItem.nextSemester.map((userId) => coursemap[userId]));
           });
 
         });
-        // function(err,data){console.log("err: " +err+ " data: " + data)})
+
+      });
+      // function(err,data){console.log("err: " +err+ " data: " + data)})
       // userItem.nextSemester.push(courseId);
       // writeDocument('users', userItem);
       //replace with a find
@@ -786,17 +786,17 @@ MongoClient.connect(url, function(err, db) {
 //                 }
 //               })
 //           }})
-      //userItem.nextSemester.push(courseId);
-      //writeDocument('users', userItem);
-      //replace with a find
+//userItem.nextSemester.push(courseId);
+//writeDocument('users', userItem);
+//replace with a find
 
-      //console.log(readDocument('users', userId));
-      // res.send(readDocument('users', userId));
-    } else {
-      // 401: Unauthorized.
-      res.status(401).end();
-    }
-  });
+//console.log(readDocument('users', userId));
+// res.send(readDocument('users', userId));
+} else {
+  // 401: Unauthorized.
+  res.status(401).end();
+}
+});
 
 //delete shown major
 app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
@@ -935,7 +935,7 @@ app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
     //   }
     // });
 
-    //delete shown major
+    // //delete a course
     app.delete('/user/:userid/courses/:courseid', function(req, res) {
       var fromUser = getUserIdFromToken(req.get('Authorization'));
       var userId = new ObjectID(req.params.userid);
@@ -973,142 +973,246 @@ app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
         }
       });
 
-    //delete a course nextsemester
-    app.delete('/user/:userid/courses/:courseid/nextsem/', function(req, res){
-      var fromUser = getUserIdFromToken(req.get('Authorization'));
-      // Convert params from string to number.
-      var userId = parseInt(req.params.userid, 10);
-      var courseId = parseInt(req.params.courseid, 10);
-      if (fromUser === userId) {
-        var userItem = readDocument('users', userId);
-        var courseIndex = userItem.nextSemester.indexOf(courseId);
-        userItem.nextSemester.splice(courseIndex, 1);
-        writeDocument('users', userItem);
+      //delete a course nextsemester
+      app.delete('/user/:userid/courses/:courseid/nextsem/', function(req, res){
+        var fromUser = getUserIdFromToken(req.get('Authorization'));
+        // Convert params from string to number.
+        var userId = parseInt(req.params.userid, 10);
+        var courseId = parseInt(req.params.courseid, 10);
+        if (fromUser === userId) {
+          var userItem = readDocument('users', userId);
+          var courseIndex = userItem.nextSemester.indexOf(courseId);
+          userItem.nextSemester.splice(courseIndex, 1);
+          writeDocument('users', userItem);
 
-        res.send(readDocument('users', userId));
-      } else {
+          res.send(readDocument('users', userId));
+        } else {
+          // 401: Unauthorized.
+          res.status(401).end();
+        }
+      });
+
+      //Delete page item
+      app.delete('/user/:userid/page/:pageid', function(req,res) {
+        var fromUser = getUserIdFromToken(req.get('Authorization'));
+        var pageId = req.params.pageid;
+        var useridNumber = new ObjectID(req.params.userid);
+
+        if (fromUser === req.params.userid) {
+          db.collection('users').findOne({_id : useridNumber}, function(err, userData) {
+            if (err){
+              res.status(500).send("Database error: " + err);
+            }
+            else {
+              db.collection('savePage').updateOne(
+                {_id : userData.savedGraphs}, {
+                  $pull : { pages : {id : new ObjectID(pageId)} }
+                }, function(err) {
+                  if(err){
+                    return sendDatabaseError(res, err);
+                  }
+                  else{
+                    getPageData(useridNumber,function(err,pageData) {
+                      if(err) {
+                        res.status(500).send("Database error: " + err);
+                      }
+                      else if (pageData === null) {
+                        res.status(400).send("Could not look up page");
+                      }
+                      else {
+                        res.send(pageData)
+                      }
+                    }
+                  )
+                }
+              }
+            )
+          }
+        });
+      }
+      else {
         // 401: Unauthorized.
         res.status(401).end();
       }
+
     });
 
-    //Delete page item
-    app.delete('/user/:userid/page/:pageid', function(req,res) {
+    //delete a course nextsemester
+    //still needs a little work
+    app.delete('/user/:userid/courses/:courseid/nextsem/', function(req, res) {
       var fromUser = getUserIdFromToken(req.get('Authorization'));
-      var pageId = req.params.pageid;
-      var useridNumber = new ObjectID(req.params.userid);
-
+      var userId = new ObjectID(req.params.userid);
+      var courseId = req.params.courseid;
       if (fromUser === req.params.userid) {
-        db.collection('users').findOne({_id : useridNumber}, function(err, userData) {
-          if (err){
-            res.status(500).send("Database error: " + err);
-          }
-          else {
-            db.collection('savePage').updateOne(
-              {_id : userData.savedGraphs}, {
-                $pull : { pages : {id : new ObjectID(pageId)} }
-              }, function(err) {
-                if(err){
+        // Step 1: Remove userId from the likeCounter.
+        db.collection('users').updateOne({ _id: userId },
+          {
+            // Only removes the userId from the likeCounter, if it is in the likeCounter.
+            $pull: {
+              nextsemester: new ObjectID(courseId)
+            }
+          }, function(err) {
+            if (err) {
+              return sendDatabaseError(res, err);
+            }
+            // Step 2: Get the feed item.
+            db.collection('users').findOne({ _id: userId }, function(err, feedItem) {
+              if (err) {
+                return sendDatabaseError(res, err);
+              }
+              // Step 3: Resolve the user IDs in the like counter into user objects.
+              resolveCourseObjects2(feedItem.classesTaken, function(err, userMap) {
+                if (err) {
                   return sendDatabaseError(res, err);
                 }
-                else{
-                  getPageData(useridNumber,function(err,pageData) {
-                    if(err) {
-                      res.status(500).send("Database error: " + err);
-                    }
-                    else if (pageData === null) {
-                      res.status(400).send("Could not look up page");
-                    }
-                    else {
-                      res.send(pageData)
-                    }
-                  }
-                )
-              }
+                // Return a resolved version of the likeCounter
+                res.send(feedItem.classesTaken.map((userId) => userMap[userId]));
+              });
+            });
+          });
+        } else {
+          // 401: Unauthorized.
+          res.status(401).end();
+        }
+      });
+
+      /*delete a course nextsemester
+      app.delete('/user/:userid/courses/:courseid/nextsem/', function(req, res){
+        var fromUser = getUserIdFromToken(req.get('Authorization'));
+        // Convert params from string to number.
+        var userId = parseInt(req.params.userid, 10);
+        var courseId = parseInt(req.params.courseid, 10);
+        if (fromUser === userId) {
+          var userItem = readDocument('users', userId);
+          var courseIndex = userItem.nextSemester.indexOf(courseId);
+          userItem.nextSemester.splice(courseIndex, 1);
+          writeDocument('users', userItem);
+
+          res.send(readDocument('users', userId));
+        } else {
+          // 401: Unauthorized.
+          res.status(401).end();
+        }
+      });*/
+
+      //Delete page item
+      app.delete('/user/:userid/page/:pageid', function(req,res) {
+        var fromUser = getUserIdFromToken(req.get('Authorization'));
+        var pageId = req.params.pageid;
+        var useridNumber = new ObjectID(req.params.userid);
+
+        if (fromUser === req.params.userid) {
+          db.collection('users').findOne({_id : useridNumber}, function(err, userData) {
+            if (err){
+              res.status(500).send("Database error: " + err);
             }
-          )
-        }
-      });
-    }
-    else {
-      // 401: Unauthorized.
-      res.status(401).end();
-    }
-
-  });
-
-  function postFeedback(user, contents, cb){
-    var newFeedback = {
-      "user": user,
-      "contents": contents
-    };
-    db.collection('feedback').insertOne(newFeedback,function(err,result){
-      if(err){
-        return cb(err);
+            else {
+              db.collection('savePage').updateOne(
+                {_id : userData.savedGraphs}, {
+                  $pull : { pages : {id : new ObjectID(pageId)} }
+                }, function(err) {
+                  if(err){
+                    return sendDatabaseError(res, err);
+                  }
+                  else{
+                    getPageData(useridNumber,function(err,pageData) {
+                      if(err) {
+                        res.status(500).send("Database error: " + err);
+                      }
+                      else if (pageData === null) {
+                        res.status(400).send("Could not look up page");
+                      }
+                      else {
+                        res.send(pageData)
+                      }
+                    }
+                  )
+                }
+              }
+            )
+          }
+        });
       }
-      newFeedback._id = result.insertedId;
-      return cb(null,result);
+      else {
+        // 401: Unauthorized.
+        res.status(401).end();
+      }
+
     });
-  }
-  //post feedback
-  app.post('/feedback', validate({ body: FeedbackSchema }), function(req, res) {
-    var body = req.body;
-    var fromUser = getUserIdFromToken(req.get('Authorization'));
-    if (fromUser === body.userId) {
-      postFeedback(new ObjectID(fromUser), body.contents, function(err,result){
+
+
+    function postFeedback(user, contents, cb){
+      var newFeedback = {
+        "user": user,
+        "contents": contents
+      };
+      db.collection('feedback').insertOne(newFeedback,function(err,result){
         if(err){
-          res.status(500).send("A database error occured: " + err);
-        }else{
-          res.status(201);
-          res.set('Location', '/feedback' + result._id);
-          res.send(result);
+          return cb(err);
         }
+        newFeedback._id = result.insertedId;
+        return cb(null,result);
       });
-    } else {
-      res.status(401).end();
     }
-  });
-
-  function getAdmin(user,cb){
-    db.collection('users').findOne(new ObjectID(user),function(err,result){
-      if(err){
-        return cb(err);
-      }
-      return cb(null,result);
-    });
-
-  }
-
-  function getFeedback(cb){
-    db.collection('feedback').find().toArray(function(err,result){
-      if(err){
-        return cb(err);
-      }
-      return cb(null,result);
-    });
-  }
-
-  app.get('/feedback/:userid', function(req,res) {
-    var fromUser = getUserIdFromToken(req.get('Authorization'));
-    getAdmin(fromUser,function(err,admin){
-      if(admin){
-        getFeedback(function(err,result){
+    //post feedback
+    app.post('/feedback', validate({ body: FeedbackSchema }), function(req, res) {
+      var body = req.body;
+      var fromUser = getUserIdFromToken(req.get('Authorization'));
+      if (fromUser === body.userId) {
+        postFeedback(new ObjectID(fromUser), body.contents, function(err,result){
           if(err){
             res.status(500).send("A database error occured: " + err);
           }else{
             res.status(201);
-            console.log(result);
+            res.set('Location', '/feedback' + result._id);
             res.send(result);
           }
-        })
+        });
       } else {
         res.status(401).end();
-      }})
+      }
     });
 
-    // Starts the server on port 3000!
-    app.listen(3000, function () {
-      console.log('Example app listening on port 3000!');
+    function getAdmin(user,cb){
+      db.collection('users').findOne(new ObjectID(user),function(err,result){
+        if(err){
+          return cb(err);
+        }
+        return cb(null,result);
+      });
+
+    }
+
+    function getFeedback(cb){
+      db.collection('feedback').find().toArray(function(err,result){
+        if(err){
+          return cb(err);
+        }
+        return cb(null,result);
+      });
+    }
+
+    app.get('/feedback/:userid', function(req,res) {
+      var fromUser = getUserIdFromToken(req.get('Authorization'));
+      getAdmin(fromUser,function(err,admin){
+        if(admin){
+          getFeedback(function(err,result){
+            if(err){
+              res.status(500).send("A database error occured: " + err);
+            }else{
+              res.status(201);
+              console.log(result);
+              res.send(result);
+            }
+          })
+        } else {
+          res.status(401).end();
+        }})
+      });
+
+      // Starts the server on port 3000!
+      app.listen(3000, function () {
+        console.log('Example app listening on port 3000!');
+      });
     });
-  });
-  // The file ends here. Nothing should be after this.
+    // The file ends here. Nothing should be after this.
