@@ -75,7 +75,21 @@ export default class HomePage extends React.Component {
            'border-width': 4,
       'border-color': 'black'
          }
-       }
+       },
+       {
+         selector: 'node.implies',
+         style: {
+          'border-color': '#01b700',
+          'border-width': '5px'
+          }
+      },
+      {
+        selector: 'edge.implies',
+        style: {
+         'border-color': '#01b700',
+         'border-width': '5px'
+         }
+     }
      ],
      layout: {
        name: 'breadthfirst',
@@ -209,10 +223,13 @@ export default class HomePage extends React.Component {
    this.cy.on('mouseover', 'node', function(event) {
     var node = event.cyTarget;
     node.style({'width': '120px', 'height':'120px'});
+    node.outgoers().addClass('implies');
+    
 });
 this.cy.on('mouseout', 'node', function(event) {
  var node = event.cyTarget;
  node.style({'width': '100px', 'height':'100px'});
+ node.outgoers().removeClass('implies');
 });
    //this.cy.png()
  }
