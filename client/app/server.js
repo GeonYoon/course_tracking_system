@@ -181,7 +181,6 @@ function sendXHR(verb, resource, body, cb) {
     case 'object':
     // Tell the server we are sending JSON.
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    console.log(body);
     // Convert body into a JSON string.
     xhr.send(JSON.stringify(body));
     break;

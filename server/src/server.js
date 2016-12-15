@@ -540,7 +540,7 @@ MongoClient.connect(url, function(err, db) {
   //post a saved graph
 app.post('/savedgraph', validate({ body: SavedGraphSchema }), function(req, res) {
     var fromUser = getUserIdFromToken(req.get('Authorization'));
-    var body = body.graphName;
+    var body = req.body;
     var useridNumber = new ObjectID(body.userId);
 
     if (fromUser === body.userId) {
@@ -552,10 +552,10 @@ app.post('/savedgraph', validate({ body: SavedGraphSchema }), function(req, res)
           db.collection('savePage').updateOne(
             {_id : userData.savedGraphs}, {
               $addToSet : { pages:  {
-                "id": { $size: "$pages" },
-                "name": body,
+                "id": ObjectID.createFromTime(({ $size: "$pages" })),
+                "name": body.graphName,
                 "time": (new Date).getTime(),
-                "image": req.contents
+                "image": body.contents
               }}
             }, function(err) {
               if(err){
@@ -572,8 +572,7 @@ app.post('/savedgraph', validate({ body: SavedGraphSchema }), function(req, res)
                   else {
                     res.send(pageData)
                   }
-                }
-              )
+                });
             }
           }
         )
@@ -1047,7 +1046,6 @@ app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
         var fromUser = getUserIdFromToken(req.get('Authorization'));
         var pageId = req.params.pageid;
         var useridNumber = new ObjectID(req.params.userid);
-
         if (fromUser === req.params.userid) {
           db.collection('users').findOne({_id : useridNumber}, function(err, userData) {
             if (err){
