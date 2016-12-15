@@ -973,24 +973,24 @@ app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
         }
       });
 
-      //delete a course nextsemester
-      app.delete('/user/:userid/courses/:courseid/nextsem/', function(req, res){
-        var fromUser = getUserIdFromToken(req.get('Authorization'));
-        // Convert params from string to number.
-        var userId = parseInt(req.params.userid, 10);
-        var courseId = parseInt(req.params.courseid, 10);
-        if (fromUser === userId) {
-          var userItem = readDocument('users', userId);
-          var courseIndex = userItem.nextSemester.indexOf(courseId);
-          userItem.nextSemester.splice(courseIndex, 1);
-          writeDocument('users', userItem);
-
-          res.send(readDocument('users', userId));
-        } else {
-          // 401: Unauthorized.
-          res.status(401).end();
-        }
-      });
+      // //delete a course nextsemester
+      // app.delete('/user/:userid/courses/:courseid/nextsem/', function(req, res){
+      //   var fromUser = getUserIdFromToken(req.get('Authorization'));
+      //   // Convert params from string to number.
+      //   var userId = parseInt(req.params.userid, 10);
+      //   var courseId = parseInt(req.params.courseid, 10);
+      //   if (fromUser === userId) {
+      //     var userItem = readDocument('users', userId);
+      //     var courseIndex = userItem.nextSemester.indexOf(courseId);
+      //     userItem.nextSemester.splice(courseIndex, 1);
+      //     writeDocument('users', userItem);
+      //
+      //     res.send(readDocument('users', userId));
+      //   } else {
+      //     // 401: Unauthorized.
+      //     res.status(401).end();
+      //   }
+      // });
 
       //Delete page item
       app.delete('/user/:userid/page/:pageid', function(req,res) {
@@ -1049,7 +1049,7 @@ app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
           {
             // Only removes the userId from the likeCounter, if it is in the likeCounter.
             $pull: {
-              nextsemester: new ObjectID(courseId)
+              nextSemester: new ObjectID(courseId)
             }
           }, function(err) {
             if (err) {
