@@ -898,24 +898,62 @@ app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
     //   }
     // });
 
-    //delete a course
-    app.delete('/user/:userid/courses/:courseid', function(req, res){
-      var fromUser = getUserIdFromToken(req.get('Authorization'));
-      // Convert params from string to number.
-      var userId = parseInt(req.params.userid, 10);
-      var courseId = parseInt(req.params.courseid, 10);
-      if (fromUser === userId) {
-        var userItem = readDocument('users', userId);
-        var courseIndex = userItem.classesTaken.indexOf(courseId);
-        userItem.classesTaken.splice(courseIndex, 1);
-        writeDocument('users', userItem);
+    // //delete a course
+    // app.delete('/user/:userid/courses/:courseid', function(req, res){
+    //   var fromUser = getUserIdFromToken(req.get('Authorization'));
+    //   // Convert params from string to number.
+    //   var userId = parseInt(req.params.userid, 10);
+    //   var courseId = parseInt(req.params.courseid, 10);
+    //   if (fromUser === userId) {
+    //     var userItem = readDocument('users', userId);
+    //     var courseIndex = userItem.classesTaken.indexOf(courseId);
+    //     userItem.classesTaken.splice(courseIndex, 1);
+    //     writeDocument('users', userItem);
+    //
+    //     res.send(readDocument('users', userId));
+    //   } else {
+    //     // 401: Unauthorized.
+    //     res.status(401).end();
+    //   }
+    // });
 
-        res.send(readDocument('users', userId));
-      } else {
-        // 401: Unauthorized.
-        res.status(401).end();
-      }
-    });
+    //delete shown major
+    app.delete('/user/:userid/courses/:courseid', function(req, res) {
+      var fromUser = getUserIdFromToken(req.get('Authorization'));
+      var userId = new ObjectID(req.params.userid);
+      var courseId = req.params.courseid;
+      if (fromUser === req.params.userid) {
+        // Step 1: Remove userId from the likeCounter.
+        db.collection('users').updateOne({ _id: userId },
+          {
+            // Only removes the userId from the likeCounter, if it is in the likeCounter.
+            $pull: {
+              classesTaken: new ObjectID(courseId)
+            }
+          }, function(err) {
+            if (err) {
+              return sendDatabaseError(res, err);
+            }
+            // Step 2: Get the feed item.
+            db.collection('users').findOne({ _id: userId }, function(err, feedItem) {
+              if (err) {
+                return sendDatabaseError(res, err);
+              }
+              // Step 3: Resolve the user IDs in the like counter into user objects.
+              resolveCourseObjects2(feedItem.classesTaken, function(err, userMap) {
+                if (err) {
+                  return sendDatabaseError(res, err);
+                }
+                // Return a resolved version of the likeCounter
+                res.send(feedItem.classesTaken.map((userId) => userMap[userId]));
+              });
+            });
+          });
+        } else {
+          // 401: Unauthorized.
+          res.status(401).end();
+        }
+      });
 
     //delete a course nextsemester
     app.delete('/user/:userid/courses/:courseid/nextsem/', function(req, res){
