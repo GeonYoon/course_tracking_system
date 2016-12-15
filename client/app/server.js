@@ -22,8 +22,8 @@ export function getPageData(user, cb){
 export function deletePageItem(user,pageid, cb){
    sendXHR('DELETE', '/user/' + user + '/page/' + pageid,
    undefined, (xhr) => {
-      cb();
-    });
+     cb();
+   });
 }
 
 export function saveAGraph(user, graphTitle, newIMG, cb) {
@@ -87,22 +87,20 @@ export function postFeedback(user, content, cb){
   }, (xhr) => {
     cb(JSON.parse(xhr.responseText));
   });
-  }
+}
 
-  export function getFeedback(user, cb){
-    sendXHR('GET', '/feedback/' + user, undefined, (xhr) => {
-      cb(JSON.parse(xhr.responseText));
-      });
-      }
+export function getFeedback(user, cb){
+  sendXHR('GET', '/feedback/' + user, undefined, (xhr) => {
+    cb(JSON.parse(xhr.responseText));
+  });
+}
 
-    // Return the new status update.
 export function addCourseNextSemester(user, course, cb){
   sendXHR('PUT', '/user/'+ user + '/courses/' + course + '/nextsem/',
   undefined, (xhr) => {
     cb(JSON.parse(xhr.responseText));
   });
 }
-
 
 export function removeCourseNextSemester(user, course, cb){
   sendXHR('DELETE', '/user/'+ user + '/courses/' + course + '/nextsem/',
@@ -115,9 +113,6 @@ export function unixTimeToString(time) {
   return new Date(time).toLocaleString();
 }
 
-/**
- * If shouldHide is true, returns a CSS class that hides the element.
- */
 export function hideElement(shouldHide) {
   if (shouldHide) {
     return 'hidden';
@@ -170,21 +165,21 @@ function sendXHR(verb, resource, body, cb) {
   });
   switch (typeof(body)) {
     case 'undefined':
-    // No body to send.
-    xhr.send();
-    break;
+      // No body to send.
+      xhr.send();
+      break;
     case 'string':
-    // Tell the server we are sending text.
-    xhr.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
-    xhr.send(body);
-    break;
+      // Tell the server we are sending text.
+      xhr.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
+      xhr.send(body);
+      break;
     case 'object':
-    // Tell the server we are sending JSON.
-    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    // Convert body into a JSON string.
-    xhr.send(JSON.stringify(body));
-    break;
+      // Tell the server we are sending JSON.
+      xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+      // Convert body into a JSON string.
+      xhr.send(JSON.stringify(body));
+      break;
     default:
-    throw new Error('Unknown body type: ' + typeof(body));
+      throw new Error('Unknown body type: ' + typeof(body));
   }
 }

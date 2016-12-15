@@ -121,16 +121,11 @@ export default class Sidebar extends React.Component{
     var func = this.props.genp;
     var button = document.getElementById('exportP');
     button.addEventListener('click', function () {
-    var dataURL = func();
-    button.href = dataURL;
-});
-  // var button2 = document.getElementById('saveG');
-  // button2.addEventListener('click', function () {
-  //   saveAGraph();
-  // });
+      var dataURL = func();
+    button.href = dataURL;});
   }
+
   render(){
-    // var userInfo = getUserData(this.props.user);
     return(
       <div className="main-app-settings main-app-border">
         <p id="settings-title"> Graph Settings </p>

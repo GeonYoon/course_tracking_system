@@ -1,33 +1,30 @@
 import React from 'react';
 import Sidebar from './sidebar';
 import cytoscape from '../../build/js/cytoscape.js';
-// import {Link} from 'react-router';
 import {getUserData, getCourseData, saveAGraph} from '../server.js';
 
-// var addedAlready = [];
-// var preAlready = [];
+
 export default class HomePage extends React.Component {
   constructor(props){
     super(props);
     this.state = {
       "_id":"000000000000000000000001",
-      "fullName": "Student One",
+      "fullName": "Placeholder",
       "classesTaken":[],
-      "sId":12345678,
+      "sId": 11111111,
       "savedGraphs":"000000000000000000000001",
       "majors":[],
       "minors":[],
-      "gradDate":"May 2018",
-      "email":"sone@umass.edu",
+      "gradDate":"Placeholder",
+      "email":"Placeholder",
       "nextSemester":[],
       "shown_majors":[],
       "shown_minors":[]
     }
     this.renderCytoscapeElement = this.renderCytoscapeElement.bind(this);
 }
+
  renderCytoscapeElement(){
-   //console.log('* Cytoscape.js is rendering the graph..');
-   //this.refresh();
    this.cy = cytoscape({
      container: document.getElementById('cy'),
      elements: [],
@@ -96,17 +93,11 @@ export default class HomePage extends React.Component {
        directed: true
      }
    });
-   //this.refresh();
-   //this.userInfo = getUserData(this.props.user);
-   //getUserData2(this.props.user, (info)=>this.setState(info))
 
-   //this.userInfo = this.state;
-// console.log(this.state);
    //ALL COURSES FROM THE MAJORS:
    this.state.shown_majors.map((maj)=>{
      maj.courses.map((crse)=>{
        getCourseData(crse, (course)=>{
-        //  console.log(course);
          var taken = false;
           this.state.classesTaken.map((clss)=>{
             if(clss._id == course._id){
@@ -121,36 +112,25 @@ export default class HomePage extends React.Component {
          });
          var takentext = "notTaken";
          if(taken){
-          //  console.log(course);
            takentext = "isTaken";
          }
          if(nextTerm){
            takentext = "nextSemester";
          }
-        //  if(addedAlready.indexOf(course._id) == -1 ){
+         this.cy.add({
+           data: {id: course._id, info: course.department + course.number, take: takentext, majmin: "maj"}});
+           course.prereqs.map((prereq)=>{
              this.cy.add({
-               data: {id: course._id, info: course.department + course.number, take: takentext, majmin: "maj"}
+               data: {id: prereq._id+''+course._id, source: prereq._id, target: course._id}
              });
-             // console.log(data);
-             course.prereqs.map((prereq)=>{
-              //  if(preAlready.indexOf(prereq) == -1){
-                 // getCourseData(prereq, prq=>{
-                   this.cy.add({
-                     data: {id: prereq._id+''+course._id, source: prereq._id, target: course._id}
-                   });
-                 // });
-              //  preAlready.push(prereq)
-            //  }
           });
           this.cy.layout({
             name: 'breadthfirst'
           });
-        //  addedAlready.push(course._id);
-      //  }
+        });
+      });
+
     });
-  });
-      //  console.log(this.state);
- });
    //small bug note:
    //overlapping classes across majors causes the prereq links to disappear
    //ALL COURSES FROM THE MINORS:
@@ -171,117 +151,80 @@ export default class HomePage extends React.Component {
          });
          var takentext = "notTaken";
          if(taken){
-          //  console.log(course);
            takentext = "isTaken";
          }
          if(nextTerm){
            takentext = "nextSemester";
          }
 
-             this.cy.add({
-               data: {id: course._id, info: course.department + course.number, take: takentext, majmin: "min"}
-             });
-            //  console.log(data);
-             course.prereqs.map((prereq)=>{
-              //  if(preAlready.indexOf(prereq) == -1){
-                 // getCourseData(prereq, prq=>{
-                   this.cy.add({
-                     data: {id: prereq._id+''+course._id, source: prereq._id, target: course._id}
-                   });
-                   this.cy.layout({
-                     name: 'breadthfirst'
-                   });
-                 // });
-              //  preAlready.push(prereq)
-            //  }
-          });
+         this.cy.add({
+           data: {id: course._id, info: course.department + course.number, take: takentext, majmin: "min"}
+         });
+
+         course.prereqs.map((prereq)=>{
+           this.cy.add({
+             data: {id: prereq._id+''+course._id, source: prereq._id, target: course._id}
            });
-        });
 
-  });
+           this.cy.layout({
+             name: 'breadthfirst'
+           });
+         });
+       });
+     });
+   });
 
-
-
-
-  //  this.cy.add({
-  //    data: {id: 'z', info: 'testAdd'}
-  //  });
-  //  this.cy.add({
-  //    data: {id: 'cz', source:'c', target:'z'}
-  //  });
-  //  this.cy.add({
-  //    data: {id: 'zd', source:'z', target:'d'}
-  //  });
   this.cy.layout({
     name: 'breadthfirst'
   });
-   this.cy.on('tap', 'node', function () {
-     //console.log(this.id())
-     window.location.assign(("#/course/"+this.id()));
-     //browserHistory.push('/course/'+this.id());//This is broken, not sure how to fix.
-   });
-   this.cy.on('mouseover', 'node', function(event) {
+
+  this.cy.on('tap', 'node', function () {
+    window.location.assign(("#/course/"+this.id()));
+  });
+
+  this.cy.on('mouseover', 'node', function(event) {
     var node = event.cyTarget;
     node.style({'width': '120px', 'height':'120px'});
-    node.outgoers().addClass('implies');
-    
-});
-this.cy.on('mouseout', 'node', function(event) {
- var node = event.cyTarget;
- node.style({'width': '100px', 'height':'100px'});
- node.outgoers().removeClass('implies');
-});
-   //this.cy.png()
- }
- ref(){
-    // console.log(this.state);
+    node.outgoers().addClass('implies')
+  });
 
-   getUserData(this.props.user, (info) => {
-     this.setState(info);
-   });
-  //  console.log(this.state);
-   //this.userInfo = getUserData(this.props.user);
-  //  this.renderCytoscapeElement();
- }
- // componentWillReceiveProps(nextProps){
- //   getUserData2(this.props.user, (info) => {
- //     this.setState(info);
- //   });
- // }
+  this.cy.on('mouseout', 'node', function(event) {
+    var node = event.cyTarget;
+    node.style({'width': '100px', 'height':'100px'});
+    node.outgoers().removeClass('implies')
+  });
+}
+
+ref(){
+  getUserData(this.props.user, (info) => {
+    this.setState(info);
+  });
+}
+
  componentWillMount(){
    this.ref();
-  // this.renderCytoscapeElement();
  }
 
  componentDidUpdate(){
-    //this.refresh();
-    this.renderCytoscapeElement();
-}
-// addMajor2(maj){
-//   console.log(maj);
-// }
-   saveAsPNG(){
-    //  var element = new Image();
-    //  element.src = this.cy.png()
-    //  console.log(this.cy.png());
+    this.renderCytoscapeElement()
+  }
+
+  saveAsPNG(){
     var graphName = "";
     graphName = prompt("Please enter a name for the graph", "");
-    //  console.log(graphName);
     if(!(graphName == "" || graphName == null)){
-     saveAGraph(this.props.user, graphName, this.cy.png(), ()=>{});
+      saveAGraph(this.props.user, graphName, this.cy.png(), ()=>{});
     }
     //  saveAGraph(this.props.user, this.cy.png());
      // once we get the server working for the png, we can save it right here
    }
-    generatePNG(){
-     var img = this.cy.png();
-    //  console.log("generatePNG");
-     return img;
-   }
+
+  generatePNG(){
+    var img = this.cy.png();
+    return img;
+  }
 
   render() {
-    //getUserData2(this.props.user, (info)=>this.setState(info))
-    //this.refresh();
     return (
       <div>
         <div className="container">

@@ -21,13 +21,13 @@ export default class SavePages extends React.Component {
   }
 
   componentDidMount() {
-      this.refresh();
-    }
+    this.refresh();
+  }
 
   refresh() {
-     getPageData(this.props.user, (pageData) => {
-       this.setState({temp: pageData})
-     });
+    getPageData(this.props.user, (pageData) => {
+      this.setState({temp: pageData})
+    });
   }
 
   deletePageItem(id) {
@@ -41,12 +41,14 @@ export default class SavePages extends React.Component {
   }
 
   render() {
+
     let filteredDAta = this.state.temp.pages.filter(
       (page) => {
         return page.name.toLowerCase().indexOf(
           this.state.search.toLowerCase()) !== -1;
       }
     )
+
     return (
       <div className="container">
         <div className="row">

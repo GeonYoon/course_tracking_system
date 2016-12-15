@@ -8,14 +8,14 @@ export default class Profile extends React.Component{
     super(props);
     this.state = { //THIS IS JUST A DUMMY VARIABLE, IT GETS OVERWRITTEN BY THE STATE
       "_id":"000000000000000000000001",
-      "fullName": "WRONG",
+      "fullName": "Placeholder",
       "classesTaken":["000000000000000000000001"],
       "sId":11111111,
       "savedGraphs":"000000000000000000000001",
       "majors":["000000000000000000000001"],
       "minors":["000000000000000000000001"],
-      "gradDate":"WRONG",
-      "email":"WRONG"
+      "gradDate":"Placeholder",
+      "email":"Placeholder"
     }
   }
 

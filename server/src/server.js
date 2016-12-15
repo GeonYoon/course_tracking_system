@@ -1,8 +1,5 @@
 // Implement your server in this file.
 // We should be able to run your server with node src/server.js
-var database = require('./database');
-var readDocument = database.readDocument;
-var writeDocument = database.writeDocument;
 var validate = require('express-jsonschema').validate;
 var SavedGraphSchema = require('./schemas/savedgraph.json');
 var FeedbackSchema = require('./schemas/feedback.json');
@@ -48,14 +45,8 @@ var ObjectID = MongoDB.ObjectID;
 var url = 'mongodb://localhost:27017/faucet';
 
 MongoClient.connect(url, function(err, db) {
-  // function getUserData(user) {
-  //   var userData = getUserItemSync(user);
-  //   return userData;
-  // }
 
   function getUserData(user, callback) {
-    // console.log("test");
-    //right here is happening 3 times
     db.collection('users').findOne({
       _id: user
     }, function(err, userData) {
@@ -66,67 +57,10 @@ MongoClient.connect(url, function(err, db) {
         return callback(null, null);
       }
       getUserItem(user, callback);
-
-
     });
   }
 
-  /*** Resolves a list of major objects. Returns an object that maps major IDs to
-  * major objects.
-  */
   function resolveMajorObjects(majorList, callback) {
-    // Special case: userList is empty.
-    // It would be invalid to query the database with a logical OR
-    // query with an empty array.
-    if (majorList.length === 0) {
-      callback(null, {});
-    } else {
-      // Build up a MongoDB "OR" query to resolve all of the user objects
-      // in the userList.
-      var query = {
-        $or: majorList.map((id) => { return {_id: id } })
-      };
-      // Resolve 'like' counter
-      db.collection('majors').find(query).toArray(function(err, majors) {
-        if (err) {
-          return callback(err);
-        }
-        // Build a map from ID to user object.
-        // (so userMap["4"] will give the user with ID 4)
-        var majorMap = {};
-        majors = majors.forEach((major) => {
-          if(major.courses.length > 0){
-            var newMajorList = [];
-            newMajorList = newMajorList.concat(major.courses);
-            resolveCourseObjects(newMajorList, function(err, courseMap2) {
-              if (err) {
-                return callback(err);
-              }
-              major.courses = major.courses.map((userId) => courseMap2[userId]);
-              // console.log("yes courses " + major._id);
-              // console.log(major.courses);
-              // callback(null, majorMap);
-              // majorMap[major._id] = major;
-              // callback(null, majorMap);
-            });
-            // majorMap[major._id] = major;
-
-          }
-          else{
-            // console.log("no courses " + major._id);
-
-            // majorMap[major._id] = major;
-          }
-
-          majorMap[major._id] = major;
-        });
-        callback(null, majorMap);
-      });
-    }
-  }
-
-  //gotta add the calls to resolveCourse and resolveMajor in all of them. make the list, use the callback, all that.
-  function resolveMajorObjects2(majorList, callback) {
     if (majorList.length === 0) {
       callback(null, {});
     } else {
@@ -146,7 +80,7 @@ MongoClient.connect(url, function(err, db) {
     }
   }
 
-  function resolveCourseObjects2(courseList, callback) {
+  function resolveCourseObjects(courseList, callback) {
     if (courseList.length === 0) {
       callback(null, {});
     } else {
@@ -176,100 +110,6 @@ MongoClient.connect(url, function(err, db) {
     }
   }
 
-  /*** Resolves a list of course objects. Returns an object that maps course IDs to
-  * course objects.
-  */
-  function resolveCourseObjects(courseList, callback) {
-    // Special case: userList is empty.
-    // It would be invalid to query the database with a logical OR
-    // query with an empty array.
-    if (courseList.length === 0) {
-      callback(null, {});
-    } else {
-      // Build up a MongoDB "OR" query to resolve all of the user objects
-      // in the userList.
-      var query = {
-        $or: courseList.map((id) => { return {_id: id } })
-      };
-      // console.log(courseList);
-      // Resolve 'like' counter
-      db.collection('courses').find(query).toArray(function(err, courses) {
-        if (err) {
-          return callback(err);
-        }
-        // Build a map from ID to user object.
-        // (so userMap["4"] will give the user with ID 4)
-        var courseMap = {};
-        courses.forEach((course) => {
-          // if(course.prereqs.length > 0){
-          // var newCourseList = [];
-          // newCourseList = newCourseList.concat(course.prereqs);
-          //
-          // resolveCourseObjects(newCourseList, function(err, courseMap2) {
-          //   if (err) {
-          //     return callback(err);
-          //   }
-          //   // console.log(course.prereqs);
-          //   course.prereqs = course.prereqs.map((userId) => courseMap2[userId]);
-          //   // console.log(course);
-          //   // console.log(course.prereqs);
-          //   // callback(null, course);
-          //   // courseMap[course._id] = course;
-          //   // callback(null, courseMap);
-          // });
-          courseMap[course._id] = course;
-          // callback(null, courseMap);
-          // console.log(course);
-          // console.log(course.prereqs); //THIS IS WHAT'S NOT RIGHT
-          // courseMap[course._id] = course;
-        });
-        // console.log(courseMap); //sometimes the courses are undefined... hm
-        callback(null, courseMap);
-      });
-    }
-  }
-
-  /*** Resolves a list of user objects. Returns an object that maps user IDs to
-  * user objects.
-  */
-  function resolveUserObjects(userList, callback) {
-    // Special case: userList is empty.
-    // It would be invalid to query the database with a logical OR
-    // query with an empty array.
-    if (userList.length === 0) {
-      callback(null, {});
-    } else {
-      // Build up a MongoDB "OR" query to resolve all of the user objects
-      // in the userList.
-      var query = {
-        $or: userList.map((id) => { return {_id: id } })
-      };
-      // Resolve 'like' counter
-      db.collection('users').find(query).toArray(function(err, users) {
-        if (err) {
-          return callback(err);
-        }
-        // Build a map from ID to user object.
-        // (so userMap["4"] will give the user with ID 4)
-        var userMap = {};
-        users.forEach((user) => {
-          userMap[user._id] = user;
-        });
-        callback(null, userMap);
-      });
-    }
-  }
-  // function getUserItemSync(userId) {
-  //   var user = readDocument('users', userId);
-  //   user.majors = user.majors.map((id) => getMajorItemSync(id));
-  //   user.minors = user.minors.map((id) => getMajorItemSync(id));
-  //   user.classesTaken = user.classesTaken.map((id) => getCourseItemSync(id));
-  //   user.nextSemester = user.nextSemester.map((id) => getCourseItemSync(id));
-  //   user.shown_minors = user.shown_minors.map((id) => getMajorItemSync(id));
-  //   user.shown_majors = user.shown_majors.map((id) => getMajorItemSync(id));
-  //   return user;
-  // }
-
   function getCourseItem(courseId, callback) {
     db.collection('courses').findOne({
       _id: new ObjectID(courseId)
@@ -292,37 +132,26 @@ MongoClient.connect(url, function(err, db) {
   }
 
   function getUserItem(userId, callback) {
-    // Get the user item with the given ID.
     db.collection('users').findOne({
       _id: userId
     }, function(err, userItem) {
       if (err) {
-        // An error occurred.
         return callback(err);
       } else if (userItem === null) {
-        // Feed item not found!
         return callback(null, null);
       }
 
-      // Build a list of all of the user objects we need to resolve.
-      // Start off with the author of the feedItem.
       var majorList = [];
-      // Add all of the user IDs in the likeCounter.
+
       majorList = majorList.concat(userItem.majors);
       majorList = majorList.concat(userItem.minors);
       majorList = majorList.concat(userItem.shown_majors);
       majorList = majorList.concat(userItem.shown_minors);
-      // Add all of the authors of the comments.
-      // feedItem.comments.forEach((comment) => userList.push(comment.author));
-      // Resolve all of the user objects!
-      resolveMajorObjects2(majorList, function(err, majorMap) {
+
+      resolveMajorObjects(majorList, function(err, majorMap) {
         if (err) {
           return callback(err);
         }
-        // Use the userMap to look up the author's user object
-        // feedItem.contents.author = userMap[feedItem.contents.author];
-        // Look up the user objects for all users in the like counter.
-        // console.log(majorMap);
 
         userItem.majors = userItem.majors.map((userId) => majorMap[userId]);
         userItem.minors = userItem.minors.map((userId) => majorMap[userId]);
@@ -338,27 +167,13 @@ MongoClient.connect(url, function(err, db) {
           }
           userItem.classesTaken = userItem.classesTaken.map((userId) => courseMap[userId]);
           userItem.nextSemester = userItem.nextSemester.map((userId) => courseMap[userId]);
-          //for some reason, everything is loading 3 times
-          // console.log(userItem);
           callback(null,userItem);
         });
-        // Look up each comment's author's user object.
-        // feedItem.comments.forEach((comment) => {
-        //   comment.author = userMap[comment.author];
-        // });
-        // Return the resolved feedItem!
-        // callback(null, userItem);
       });
     });
   }
-  // function getCourseData(courseId){
-  //   var courseItem = getCourseItemSync(courseId);
-  //   return courseItem;
-  // }
 
   function getCourseData(course, callback) {``
-    //  console.log("test");
-    //right here is happening 3 times
     db.collection('courses').findOne({
       _id: new ObjectID(course)
     }, function(err, userData) {
@@ -371,88 +186,7 @@ MongoClient.connect(url, function(err, db) {
       getCourseItem(course, callback);
     });
   }
-  // function getCourseItemSync(courseId){
-  //   var courseItem = readDocument('courses', courseId);
-  //   courseItem.prereqs = courseItem.prereqs.map((id) => getCourseItemSync(id));
-  //   return courseItem;
-  // }
-  //
-  //
-  // function getMajorItemSync(majorId){
-  //   var majorItem = readDocument('majors', majorId);
-  //   majorItem.courses = majorItem.courses.map((id) => getCourseItemSync(id));
-  //   return majorItem;
-  // }
 
-  function postSavedGraph(user, graphName, newIMG, callback) {
-  // Get the current UNIX time.
-  var time = new Date().getTime();
-  // The new status update. The database will assign the ID for us.
-  var newSaved = {
-    "name": graphName,
-    "time": time,
-    "image": newIMG
-  };
-
-  // Add the status update to the database.
-  db.collection('savePageItems').insertOne(newSaved, function(err, result) {
-    if (err) {
-      return callback(err);
-    }
-    // Unlike the mock database, MongoDB does not return the newly added object
-    // with the _id set.
-    // Attach the new feed item's ID to the newStatusUpdate object. We will
-    // return this object to the client when we are done.
-    // (When performing an insert operation, result.insertedId contains the new
-    // document's ID.)
-    newSaved._id = result.insertedId;
-
-    // Retrieve the author's user object.
-    db.collection('users').findOne({ _id: user }, function(err, userObject) {
-      if (err) {
-        return callback(err);
-      }
-      // Update the author's feed with the new status update's ID.
-      db.collection('savePage').updateOne({ _id: userObject.savedGraphs },
-        {
-          $push: {
-            pages: {
-              $each: [newSaved._id],
-              $position: 0
-            }
-          }
-        },
-        function(err) {
-          if (err) {
-            return callback(err);
-          }
-          // Return the new status update to the application.
-          callback(null, newSaved);
-        }
-      );
-    });
-  });
-}
-
-  // function postSavedGraph(user, graphName, newIMG) {
-  //   var newNew = readDocument('savePage',
-  //   readDocument('users',user).savedGraphs)
-  //   var newSaved = {
-  //     "id": newNew['pages'].length,
-  //     "name": graphName,
-  //     "time": (new Date).getTime(),
-  //     "image": newIMG
-  //   };
-  //
-  //   newNew['pages'].push(newSaved);
-  //   writeDocument('savePage', newNew);
-  //   // console.log("Should have saved graph to server");
-  //   return newNew;
-  // }
-
-  /*** Get the user ID from a token. Returns -1 (an invalid ID)
-  * if it fails.
-  */
   function getUserIdFromToken(authorizationLine) {
     try {
       // Cut off "Bearer " from the header value.
@@ -475,54 +209,95 @@ MongoClient.connect(url, function(err, db) {
     }
   }
 
-  /*** Get the data for a particular user.*/
-  app.get('/user/:userid', function(req, res) {
-    var userid = req.params.userid;
-    var fromUser = getUserIdFromToken(req.get('Authorization'));
-    if (fromUser === userid) {
-      // Convert userid into an ObjectID before passing it to database queries.
-      // console.log("test");
-      getUserData(new ObjectID(userid), function(err, feedData) {
-        if (err) {
-          // A database error happened.
-          // Internal Error: 500.
-          res.status(500).send("Database error: " + err);
-        } else if (feedData === null) {
-          // Couldn't find the feed in the database.
-          res.status(400).send("Could not look up feed for user " + userid);
-        } else {
-          // Send data.
-          res.send(feedData);
-        }
-      });
-    } else {
-      // 403: Unauthorized request.
-      res.status(403).end();
+  function getAdmin(user,cb){
+    db.collection('users').findOne(new ObjectID(user),function(err,result){
+      if(err){
+        return cb(err);
+      }
+      return cb(null,result);
+    });
+
+  }
+
+  function getFeedback(cb){
+    db.collection('feedback').find().toArray(function(err,result){
+      if(err){
+        return cb(err);
+      }
+      return cb(null,result);
+    });
+  }
+
+  function postFeedback(user, contents, cb){
+    var newFeedback = {
+      "user": user,
+      "contents": contents
+    };
+    db.collection('feedback').insertOne(newFeedback,function(err,result){
+      if(err){
+        return cb(err);
+      }
+      newFeedback._id = result.insertedId;
+      return cb(null,result);
+    });
+  }
+
+  function postSavedGraph(user, graphName, newIMG, callback) {
+  // Get the current UNIX time.
+  var time = new Date().getTime();
+  // The new status update. The database will assign the ID for us.
+  var newSaved = {
+    "name": graphName,
+    "time": time,
+    "image": newIMG
+  };
+
+  db.collection('savePageItems').insertOne(newSaved, function(err, result) {
+    if (err) {
+      return callback(err);
     }
+    newSaved._id = result.insertedId;
+
+    db.collection('users').findOne({ _id: user }, function(err, userObject) {
+      if (err) {
+        return callback(err);
+      }
+      db.collection('savePage').updateOne({ _id: userObject.savedGraphs },
+        {
+          $push: {
+            pages: {
+              $each: [newSaved._id],
+              $position: 0
+            }
+          }
+        },
+        function(err) {
+          if (err) {
+            return callback(err);
+          }
+          callback(null, newSaved);
+        }
+      );
+    });
   });
+}
+
 
   function getPageItem(feedItemId, callback) {
-    // Get the feed item with the given ID.
-    // console.log(feedItemId);
     db.collection('savePageItems').findOne({
       _id: feedItemId
     }, function(err, feedItem) {
       if (err) {
-        // An error occurred.
         return callback(err);
       } else if (feedItem === null) {
-        // Feed item not found!
         return callback(null, null);
       }
-      // Return the resolved feedItem!
-      // console.log(feedItem);
       callback(null, feedItem);
     });
   }
 
   // Get savePage data
   function getPageData(user,callback){
-
     db.collection('users').findOne({
       _id: new ObjectID(user)
     }, function(err, userData) {
@@ -540,67 +315,77 @@ MongoClient.connect(url, function(err, db) {
         } else if (pageData === null) {
           return callback(null,null);
         }
-var resolvedContents = [];
-        function processNextFeedItem(i) {
-          // Asynchronously resolve a feed item.
+        var resolvedContents = [];
+        function processNextPageItem(i) {
           getPageItem(pageData.pages[i], function(err, pageItem) {
             if (err) {
-              // Pass an error to the callback.
               callback(err);
             } else {
-              // Success!
-              // console.log(pageItem);
-              // console.log(resolvedContents.length + "  " + pageData.pages.length);
               resolvedContents.push(pageItem);
               if (resolvedContents.length === pageData.pages.length) {
-                // I am the final feed item; all others are resolved.
-                // Pass the resolved feed document back to the callback.
                 pageData.pages = resolvedContents;
-                // console.log(pageData.pages);
                 callback(null, pageData);
               } else {
-                // Process the next feed item.
-                processNextFeedItem(i + 1);
+                processNextPageItem(i + 1);
               }
             }
           });
         }
 
-        // Special case: Feed is empty.
         if (pageData.pages.length === 0) {
           callback(null, pageData);
         } else {
-          processNextFeedItem(0);
+          processNextPageItem(0);
         }
-
-        // callback(null,pageData.pages);
       });
     });
   }
 
-  /*** Get the data for a course.
+
+
+  function sendDatabaseError(res, err) {
+    res.status(500).send("A database error occurred: " + err);
+  }
+
+  /*
+  ** Get the data for a course.
   */
   app.get('/courses/:course', function(req, res){
     getCourseData(req.params.course, function(err, courseData) {
       if (err) {
-        // A database error happened.
-        // Internal Error: 500.
+
         res.status(500).send("Database error: " + err);
       } else if (courseData === null) {
-        // Couldn't find the feed in the database.
         res.status(400).send("Could not look up course number " + req.params.course);
       } else {
-        // Send data.
         res.send(courseData);
       }
     });
   })
 
+  /*** Get the data for a particular user.*/
+  app.get('/user/:userid', function(req, res) {
+    var userid = req.params.userid;
+    var fromUser = getUserIdFromToken(req.get('Authorization'));
+    if (fromUser === userid) {
+      getUserData(new ObjectID(userid), function(err, feedData) {
+        if (err) {
+          res.status(500).send("Database error: " + err);
+        } else if (feedData === null) {
+          res.status(400).send("Could not look up feed for user " + userid);
+        } else {
+          res.send(feedData);
+        }
+      });
+    } else {
+      res.status(403).end();
+    }
+  });
+
   // get page data
   app.get('/user/:userid/page',function(req,res) {
     var userid = req.params.userid;
     var fromUser = getUserIdFromToken(req.get('Authorization'));
-    var useridNumber = parseInt(userid,10);
     if(fromUser === userid){
       getPageData(userid,function(err,pageData) {
         if(err) {
@@ -615,55 +400,63 @@ var resolvedContents = [];
       })
     }
     else {
-      // 401: Unathorized request.
       res.status(401).end();
     }
   });
 
-  // app.post('/savedgraph', validate({ body: SavedGraphSchema }), function(req, res) {
-  //   var body = req.body;
-  //   var fromUser = getUserIdFromToken(req.get('Authorization'));
-  //   var userId = parseInt(body.userId, 10);
-  //   // console.log(fromUser + " " +userId+ " "+body.userId);
-  //   // Check if requester is authorized to post this status update.
-  //   // (The requester must be the author of the update.)
-  //   if (fromUser === userId) {
-  //     var newSavedGraph = postSavedGraph(body.userId, body.graphName, body.contents);
-  //     // When POST creates a new resource, we should tell the client about it
-  //     // in the 'Location' header and use status code 201.
-  //     res.status(201);
-  //     // Send the update!
-  //     res.send(newSavedGraph);
-  //   } else {
-  //     // 401: Unauthorized.
-  //     res.status(401).end();
-  //   }
-  // });
+  app.get('/feedback/:userid', function(req,res) {
+    var fromUser = getUserIdFromToken(req.get('Authorization'));
+    getAdmin(fromUser,function(err,admin){
+      if(admin){
+        getFeedback(function(err,result){
+          if(err){
+            res.status(500).send("A database error occured: " + err);
+          }else{
+            res.status(201);
+            console.log(result);
+            res.send(result);
+          }
+        })
+      } else {
+        res.status(401).end();
+      }})
+    });
+
+  //post feedback
+  app.post('/feedback', validate({ body: FeedbackSchema }), function(req, res) {
+    var body = req.body;
+    var fromUser = getUserIdFromToken(req.get('Authorization'));
+    if (fromUser === body.userId) {
+      postFeedback(new ObjectID(fromUser), body.contents, function(err,result){
+        if(err){
+          res.status(500).send("A database error occured: " + err);
+        }else{
+          res.status(201);
+          res.set('Location', '/feedback' + result._id);
+          res.send(result);
+        }
+      });
+    } else {
+      res.status(401).end();
+    }
+  });
 
   //post a saved graph
   app.post('/savedgraph', validate({ body: SavedGraphSchema }), function(req, res) {
     var fromUser = getUserIdFromToken(req.get('Authorization'));
     var body = req.body;
-    var useridNumber = new ObjectID(body.userId);
 
     if (fromUser === body.userId) {
       postSavedGraph(new ObjectID(fromUser), body.graphName, body.contents, function(err, newUpdate) {
       if (err) {
-        // A database error happened.
-        // 500: Internal error.
         res.status(500).send("A database error occurred: " + err);
       } else {
-        // When POST creates a new resource, we should tell the client about it
-        // in the 'Location' header and use status code 201.
         res.status(201);
-        //res.set('Location', '/feeditem/' + newUpdate._id);
-          // Send the update!
         res.send(newUpdate);
       }
     });
     }
     else {
-      // 401: Unauthorized.
       res.status(401).end();
     }
 
@@ -677,12 +470,6 @@ var resolvedContents = [];
     });
   });
 
-  /*** Helper function: Sends back HTTP response with error code 500 due to
-  * a database error.
-  */
-  function sendDatabaseError(res, err) {
-    res.status(500).send("A database error occurred: " + err);
-  }
 
   // add shown major
   app.put('/user/:userid/majortoshow/:majorid', function(req, res) {
@@ -708,7 +495,7 @@ var resolvedContents = [];
               return sendDatabaseError(res, err);
             }
             // Return a resolved version of the likeCounter
-            resolveMajorObjects2(userItem.shown_majors, function(err, majorMap) {
+            resolveMajorObjects(userItem.shown_majors, function(err, majorMap) {
               if (err) {
                 return sendDatabaseError(res, err);
               }
@@ -723,44 +510,6 @@ var resolvedContents = [];
       res.status(401).end();
     }
   });
-
-  // //add shown major
-  // app.put('/user/:userid/majortoshow/:majorid', function(req, res) {
-  //   var fromUser = getUserIdFromToken(req.get('Authorization'));
-  //   // Convert params from string to number.
-  //   var userId = parseInt(req.params.userid, 10);
-  //   var majorId = parseInt(req.params.majorid, 10);
-  //   if (fromUser === userId) {
-  //     var userItem = readDocument('users', userId);
-  //     userItem.shown_majors.push(majorId);
-  //     writeDocument('users', userItem);
-  //     // Return a resolved version of the likeCounter
-  //     res.send(userItem.shown_majors.map((majId) =>
-  //     readDocument('majors', majId)));
-  //   } else {
-  //     // 401: Unauthorized.
-  //     res.status(401).end();
-  //   }
-  // });
-
-  // //add shown minor
-  // app.put('/user/:userid/minortoshow/:minorid', function(req, res) {
-  //   var fromUser = getUserIdFromToken(req.get('Authorization'));
-  //   // Convert params from string to number.
-  //   var userId = parseInt(req.params.userid, 10);
-  //   var minorId = parseInt(req.params.minorid, 10);
-  //   if (fromUser === userId) {
-  //     var userItem = readDocument('users', userId);
-  //     userItem.shown_minors.push(minorId);
-  //     writeDocument('users', userItem);
-  //     // Return a resolved version of the likeCounter
-  //     res.send(userItem.shown_minors.map((majId) =>
-  //     readDocument('majors', majId)));
-  //   } else {
-  //     // 401: Unauthorized.
-  //     res.status(401).end();
-  //   }
-  // });
 
   // add shown minor
   app.put('/user/:userid/minortoshow/:minorid', function(req, res) {
@@ -786,7 +535,7 @@ var resolvedContents = [];
               return sendDatabaseError(res, err);
             }
             // Return a resolved version of the likeCounter
-            resolveMajorObjects2(userItem.shown_minors, function(err, majorMap) {
+            resolveMajorObjects(userItem.shown_minors, function(err, majorMap) {
               if (err) {
                 return sendDatabaseError(res, err);
               }
@@ -804,9 +553,7 @@ var resolvedContents = [];
 
   //add a course
   app.put('/user/:userid/courses/:courseid', function(req, res){
-
     var fromUser = getUserIdFromToken(req.get('Authorization'));
-    // Convert params from string to number.
     var userId = req.params.userid;
     var courseId = new ObjectID(req.params.courseid);
     if (fromUser === userId){
@@ -827,13 +574,11 @@ var resolvedContents = [];
             if (err) {
               return sendDatabaseError(res, err);
             }
-            // Return a resolved version of the likeCounter
             res.send(userItem.classesTaken.map((userId) => coursemap[userId]));
           });
         });
       });
     } else {
-      // 401: Unauthorized.
       res.status(401).end();
     }
   });
@@ -841,14 +586,9 @@ var resolvedContents = [];
   //add a course next semester
   app.put('/user/:userid/courses/:courseid/nextsem/', function(req, res){
     var fromUser = getUserIdFromToken(req.get('Authorization'));
-    // Convert params from string to number.
     var userId = req.params.userid;
     var courseId = new ObjectID(req.params.courseid);
     if (fromUser === userId){
-      // userId = 1;
-      //skip this
-      // var userItem = readDocument('users', userId);
-      //replace this with an update one.
       db.collection('users').updateOne({_id: new ObjectID(userId)},
       {
         $addToSet: {
@@ -868,102 +608,45 @@ var resolvedContents = [];
             if (err) {
               return sendDatabaseError(res, err);
             }
-            // Return a resolved version of the likeCounter
             res.send(userItem.nextSemester.map((userId) => coursemap[userId]));
           });
 
         });
 
       });
-      // function(err,data){console.log("err: " +err+ " data: " + data)})
-      // userItem.nextSemester.push(courseId);
-      // writeDocument('users', userItem);
-      //replace with a find
-      /*db.collection("users").find({_id:new ObjectID("000000000000000000000001")},{nextSemester:1},
-      function(err,data){
-      if(err) {
-      return console.log("error: " + err);
-    } else if (data === null) {
-    console.log("null");
-    return console.log(null,null)
-  }
-  else{
-  console.log("data");
-  console.log(data);
-}
-*/
-//console.log(readDocument('users', userId));
-// res.send(readDocument('users', userId));
-// } else {
-//   // 401: Unauthorized.
-//   res.status(401).end();
-// }
-// });
-//       db.collection("users").updateOne({"_id": new ObjectID("000000000000000000000001")},{$addToSet: {"nextSemester":new ObjectID(req.params.courseid)}},
-//         function(err,data){
-//           if(err) {
-//             return res.send(err);
-//           } else if (data === null) {
-//             return res.send(null);
-//           }else{
-//             db.collection("users").findOne({"_id":new ObjectID("000000000000000000000001")},
-//               function(err,data){
-//                 if(err) {
-//                   return res.send(err);
-//                 } else if (data === null) {
-//                   return res.send(null)
-//                 }
-//                 else{
-//                   res.send(data);
-//                 }
-//               })
-//           }})
-//userItem.nextSemester.push(courseId);
-//writeDocument('users', userItem);
-//replace with a find
+    } else {
+      res.status(401).end();
+    }
+  });
 
-//console.log(readDocument('users', userId));
-// res.send(readDocument('users', userId));
-} else {
-  // 401: Unauthorized.
-  res.status(401).end();
-}
-});
-
-//delete shown major
-app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
-  var fromUser = getUserIdFromToken(req.get('Authorization'));
-  var userId = new ObjectID(req.params.userid);
-  var majorId = req.params.majorid;
-  if (fromUser === req.params.userid) {
-    // Step 1: Remove userId from the likeCounter.
-    db.collection('users').updateOne({ _id: userId },
-      {
-        // Only removes the userId from the likeCounter, if it is in the likeCounter.
-        $pull: {
-          shown_majors: new ObjectID(majorId)
-        }
-      }, function(err) {
+  //delete shown major
+  app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
+    var fromUser = getUserIdFromToken(req.get('Authorization'));
+    var userId = new ObjectID(req.params.userid);
+    var majorId = req.params.majorid;
+    if (fromUser === req.params.userid) {
+      db.collection('users').updateOne({ _id: userId },
+        {
+          $pull: {
+            shown_majors: new ObjectID(majorId)
+          }
+        }, function(err) {
         if (err) {
           return sendDatabaseError(res, err);
         }
-        // Step 2: Get the feed item.
         db.collection('users').findOne({ _id: userId }, function(err, feedItem) {
           if (err) {
             return sendDatabaseError(res, err);
           }
-          // Step 3: Resolve the user IDs in the like counter into user objects.
-          resolveMajorObjects2(feedItem.shown_majors, function(err, userMap) {
+          resolveMajorObjects(feedItem.shown_majors, function(err, userMap) {
             if (err) {
               return sendDatabaseError(res, err);
             }
-            // Return a resolved version of the likeCounter
             res.send(feedItem.shown_majors.map((userId) => userMap[userId]));
           });
         });
       });
     } else {
-      // 401: Unauthorized.
       res.status(401).end();
     }
   });
@@ -974,10 +657,8 @@ app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
     var userId = new ObjectID(req.params.userid);
     var minorId = req.params.minorid;
     if (fromUser === req.params.userid) {
-      // Step 1: Remove userId from the likeCounter.
       db.collection('users').updateOne({ _id: userId },
         {
-          // Only removes the userId from the likeCounter, if it is in the likeCounter.
           $pull: {
             shown_minors: new ObjectID(minorId)
           }
@@ -985,87 +666,22 @@ app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
           if (err) {
             return sendDatabaseError(res, err);
           }
-          // Step 2: Get the feed item.
           db.collection('users').findOne({ _id: userId }, function(err, feedItem) {
             if (err) {
               return sendDatabaseError(res, err);
             }
-            // Step 3: Resolve the user IDs in the like counter into user objects.
-            resolveMajorObjects2(feedItem.shown_minors, function(err, userMap) {
+            resolveMajorObjects(feedItem.shown_minors, function(err, userMap) {
               if (err) {
                 return sendDatabaseError(res, err);
               }
-              // Return a resolved version of the likeCounter
               res.send(feedItem.shown_minors.map((userId) => userMap[userId]));
             });
           });
         });
       } else {
-        // 401: Unauthorized.
         res.status(401).end();
       }
     });
-
-    // // delete a shown major
-    // app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
-    // var fromUser = getUserIdFromToken(req.get('Authorization'));
-    // // Convert params from string to number.
-    // var majorId = parseInt(req.params.majorid, 10);
-    // var userId = parseInt(req.params.userid, 10);
-    // if (fromUser === userId) {
-    //   var majItem = readDocument('users', userId);
-    //   var courseIndex = majItem.shown_majors.indexOf(majorId);
-    //   if(courseIndex !== -1){
-    //     majItem.shown_majors.splice(courseIndex, 1);
-    //     writeDocument('users', majItem);
-    //   }
-    //   res.send(majItem.shown_majors.map((majId) =>
-    //     readDocument('majors', majId)));
-    // } else {
-    //   // 401: Unauthorized.
-    //   res.status(401).end();
-    //   }
-    // });
-
-    // // delete a shown minor
-    // app.delete('/user/:userid/minortoshow/:minorid', function(req, res) {
-    //   var fromUser = getUserIdFromToken(req.get('Authorization'));
-    //   // Convert params from string to number.
-    //   var minorId = parseInt(req.params.minorid, 10);
-    //   var userId = parseInt(req.params.userid, 10);
-    //   if (fromUser === userId) {
-    //     var majItem = readDocument('users', userId);
-    //     var courseIndex = majItem.shown_minors.indexOf(minorId);
-    //     if(courseIndex !== -1){
-    //       majItem.shown_minors.splice(courseIndex, 1);
-    //       writeDocument('users', majItem);
-    //     }
-    //     res.send(majItem.shown_minors.map((majId) =>
-    //       readDocument('majors', majId)));
-    //   } else {
-    //     // 401: Unauthorized.
-    //     res.status(401).end();
-    //   }
-    // });
-
-    // //delete a course
-    // app.delete('/user/:userid/courses/:courseid', function(req, res){
-    //   var fromUser = getUserIdFromToken(req.get('Authorization'));
-    //   // Convert params from string to number.
-    //   var userId = parseInt(req.params.userid, 10);
-    //   var courseId = parseInt(req.params.courseid, 10);
-    //   if (fromUser === userId) {
-    //     var userItem = readDocument('users', userId);
-    //     var courseIndex = userItem.classesTaken.indexOf(courseId);
-    //     userItem.classesTaken.splice(courseIndex, 1);
-    //     writeDocument('users', userItem);
-    //
-    //     res.send(readDocument('users', userId));
-    //   } else {
-    //     // 401: Unauthorized.
-    //     res.status(401).end();
-    //   }
-    // });
 
     // //delete a course
     app.delete('/user/:userid/courses/:courseid', function(req, res) {
@@ -1073,10 +689,8 @@ app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
       var userId = new ObjectID(req.params.userid);
       var courseId = req.params.courseid;
       if (fromUser === req.params.userid) {
-        // Step 1: Remove userId from the likeCounter.
         db.collection('users').updateOne({ _id: userId },
           {
-            // Only removes the userId from the likeCounter, if it is in the likeCounter.
             $pull: {
               classesTaken: new ObjectID(courseId)
             }
@@ -1084,133 +698,58 @@ app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
             if (err) {
               return sendDatabaseError(res, err);
             }
-            // Step 2: Get the feed item.
             db.collection('users').findOne({ _id: userId }, function(err, feedItem) {
               if (err) {
                 return sendDatabaseError(res, err);
               }
-              // Step 3: Resolve the user IDs in the like counter into user objects.
-              resolveCourseObjects2(feedItem.classesTaken, function(err, userMap) {
+              resolveCourseObjects(feedItem.classesTaken, function(err, userMap) {
                 if (err) {
                   return sendDatabaseError(res, err);
                 }
-                // Return a resolved version of the likeCounter
                 res.send(feedItem.classesTaken.map((userId) => userMap[userId]));
               });
             });
           });
         } else {
-          // 401: Unauthorized.
           res.status(401).end();
         }
       });
 
-      // //delete a course nextsemester
-      // app.delete('/user/:userid/courses/:courseid/nextsem/', function(req, res){
-      //   var fromUser = getUserIdFromToken(req.get('Authorization'));
-      //   // Convert params from string to number.
-      //   var userId = parseInt(req.params.userid, 10);
-      //   var courseId = parseInt(req.params.courseid, 10);
-      //   if (fromUser === userId) {
-      //     var userItem = readDocument('users', userId);
-      //     var courseIndex = userItem.nextSemester.indexOf(courseId);
-      //     userItem.nextSemester.splice(courseIndex, 1);
-      //     writeDocument('users', userItem);
-      //
-      //     res.send(readDocument('users', userId));
-      //   } else {
-      //     // 401: Unauthorized.
-      //     res.status(401).end();
-      //   }
-      // });
 
-      // `DELETE /feeditem/:id`
-app.delete('/user/:userid/page/:pageid', function(req,res) {
-var fromUser = new ObjectID(getUserIdFromToken(req.get('Authorization')));
-var feedItemId = new ObjectID(req.params.pageid);
-
-// Check if authenticated user has access to delete the feed item.
-db.collection('savePageItems').findOne({
-  _id: feedItemId
-}, function(err, feedItem) {
-  if (err) {
-    return sendDatabaseError(res, err);
-  } else if (feedItem === null) {
-    // Could not find the specified feed item. Perhaps it does not exist, or
-    // is not authored by the user.
-    // 400: Bad request.
-    return res.status(400).end();
-  }
-
-  // User authored the feed item!
-  // Remove feed item from all feeds using $pull and a blank filter.
-  // A blank filter matches every document in the collection.
-  db.collection('savePage').updateMany({}, {
-    $pull: {
-      pages: feedItemId
-    }
-  }, function(err) {
-    if (err) {
-      return sendDatabaseError(res, err);
-    }
-
-    // Finally, remove the feed item.
-    db.collection('savePageItems').deleteOne({
-      _id: feedItemId
-    }, function(err) {
-      if (err) {
-        return sendDatabaseError(res, err);
-      }
-      // Send a blank response to indicate success.
-      res.send();
-    });
-  });
-});
-});
-
-    //   //Delete page item
-    //   app.delete('/user/:userid/page/:pageid', function(req,res) {
-    //     var fromUser = getUserIdFromToken(req.get('Authorization'));
-    //     var pageId = req.params.pageid;
-    //     var useridNumber = new ObjectID(req.params.userid);
-    //     if (fromUser === req.params.userid) {
-    //       db.collection('users').findOne({_id : useridNumber}, function(err, userData) {
-    //         if (err){
-    //           res.status(500).send("Database error: " + err);
-    //         }
-    //         else {
-    //           db.collection('savePage').updateOne(
-    //             {_id : userData.savedGraphs}, {
-    //               $pull : { pages : {_id : new ObjectID(pageId)} }
-    //             }, function(err) {
-    //               if(err){
-    //                 return sendDatabaseError(res, err);
-    //               }
-    //               else{
-    //                 getPageData(useridNumber,function(err,pageData) {
-    //                   if(err) {
-    //                     res.status(500).send("Database error: " + err);
-    //                   }
-    //                   else if (pageData === null) {
-    //                     res.status(400).send("Could not look up page");
-    //                   }
-    //                   else {
-    //                     res.send(pageData)
-    //                   }
-    //                 }
-    //               )
-    //             }
-    //           }
-    //         )
-    //       }
-    //     });
-    //   }
-    //   else {
-    //     // 401: Unauthorized.
-    //     res.status(401).end();
-    //   }
-    //
-    // });
+      app.delete('/user/:userid/page/:pageid', function(req,res) {
+        var fromUser = new ObjectID(getUserIdFromToken(req.get('Authorization')));
+        var feedItemId = new ObjectID(req.params.pageid);
+        if (fromUser === req.params.userid) {
+          db.collection('savePageItems').findOne({
+            _id: feedItemId
+          }, function(err, feedItem) {
+            if (err) {
+              return sendDatabaseError(res, err);
+            } else if (feedItem === null) {
+              return res.status(400).end();
+            }
+            db.collection('savePage').updateMany({}, {
+              $pull: {
+                pages: feedItemId
+              }
+            }, function(err) {
+              if (err) {
+                return sendDatabaseError(res, err);
+              }
+              db.collection('savePageItems').deleteOne({
+                _id: feedItemId
+              }, function(err) {
+                if (err) {
+                  return sendDatabaseError(res, err);
+                }
+                res.send();
+              });
+            });
+          });
+        }else{
+          res.status(401).end();
+        }
+      });
 
     //delete a course nextsemester
     //still needs a little work
@@ -1219,10 +758,8 @@ db.collection('savePageItems').findOne({
       var userId = new ObjectID(req.params.userid);
       var courseId = req.params.courseid;
       if (fromUser === req.params.userid) {
-        // Step 1: Remove userId from the likeCounter.
         db.collection('users').updateOne({ _id: userId },
           {
-            // Only removes the userId from the likeCounter, if it is in the likeCounter.
             $pull: {
               nextSemester: new ObjectID(courseId)
             }
@@ -1230,159 +767,61 @@ db.collection('savePageItems').findOne({
             if (err) {
               return sendDatabaseError(res, err);
             }
-            // Step 2: Get the feed item.
             db.collection('users').findOne({ _id: userId }, function(err, feedItem) {
               if (err) {
                 return sendDatabaseError(res, err);
               }
-              // Step 3: Resolve the user IDs in the like counter into user objects.
-              resolveCourseObjects2(feedItem.classesTaken, function(err, userMap) {
+              resolveCourseObjects(feedItem.classesTaken, function(err, userMap) {
                 if (err) {
                   return sendDatabaseError(res, err);
                 }
-                // Return a resolved version of the likeCounter
                 res.send(feedItem.classesTaken.map((userId) => userMap[userId]));
               });
             });
           });
         } else {
-          // 401: Unauthorized.
           res.status(401).end();
         }
       });
 
-      /*delete a course nextsemester
-      app.delete('/user/:userid/courses/:courseid/nextsem/', function(req, res){
-      var fromUser = getUserIdFromToken(req.get('Authorization'));
-      // Convert params from string to number.
-      var userId = parseInt(req.params.userid, 10);
-      var courseId = parseInt(req.params.courseid, 10);
-      if (fromUser === userId) {
-      var userItem = readDocument('users', userId);
-      var courseIndex = userItem.nextSemester.indexOf(courseId);
-      userItem.nextSemester.splice(courseIndex, 1);
-      writeDocument('users', userItem);
-      res.send(readDocument('users', userId));
-    } else {
-    // 401: Unauthorized.
-    res.status(401).end();
-  }
-});*/
+      //Delete page item
+      app.delete('/user/:userid/page/:pageid', function(req,res) {
+        var fromUser = getUserIdFromToken(req.get('Authorization'));
+        var pageId = req.params.pageid;
+        var useridNumber = new ObjectID(req.params.userid);
 
-//Delete page item
-app.delete('/user/:userid/page/:pageid', function(req,res) {
-  var fromUser = getUserIdFromToken(req.get('Authorization'));
-  var pageId = req.params.pageid;
-  var useridNumber = new ObjectID(req.params.userid);
-
-  if (fromUser === req.params.userid) {
-    db.collection('users').findOne({_id : useridNumber}, function(err, userData) {
-      if (err){
-        res.status(500).send("Database error: " + err);
-      }
-      else {
-        db.collection('savePage').updateOne(
-          {_id : userData.savedGraphs}, {
-            $pull : { pages : {id : new ObjectID(pageId)} }
-          }, function(err) {
-            if(err){
-              return sendDatabaseError(res, err);
-            }
-            else{
-              getPageData(useridNumber,function(err,pageData) {
-                if(err) {
-                  res.status(500).send("Database error: " + err);
-                }
-                else if (pageData === null) {
-                  res.status(400).send("Could not look up page");
-                }
-                else {
-                  res.send(pageData)
+        if (fromUser === req.params.userid) {
+          db.collection('users').findOne({_id : useridNumber}, function(err, userData) {
+            if (err){
+              res.status(500).send("Database error: " + err);
+            }else {
+              db.collection('savePage').updateOne(
+                {_id : userData.savedGraphs}, {
+                  $pull : { pages : {id : new ObjectID(pageId)} }
+                }, function(err) {
+                  if(err){
+                    return sendDatabaseError(res, err);
+                  }else{
+                    getPageData(useridNumber,function(err,pageData) {
+                      if(err) {
+                        res.status(500).send("Database error: " + err);
+                      }else if (pageData === null) {
+                        res.status(400).send("Could not look up page");
+                      }else {
+                        res.send(pageData)
+                      }
+                    }
+                  )
                 }
               }
             )
           }
-        }
-      )
-    }
-  });
-}
-else {
-  // 401: Unauthorized.
-  res.status(401).end();
-}
-
-});
-
-
-function postFeedback(user, contents, cb){
-  var newFeedback = {
-    "user": user,
-    "contents": contents
-  };
-  db.collection('feedback').insertOne(newFeedback,function(err,result){
-    if(err){
-      return cb(err);
-    }
-    newFeedback._id = result.insertedId;
-    return cb(null,result);
-  });
-}
-//post feedback
-app.post('/feedback', validate({ body: FeedbackSchema }), function(req, res) {
-  var body = req.body;
-  var fromUser = getUserIdFromToken(req.get('Authorization'));
-  if (fromUser === body.userId) {
-    postFeedback(new ObjectID(fromUser), body.contents, function(err,result){
-      if(err){
-        res.status(500).send("A database error occured: " + err);
-      }else{
-        res.status(201);
-        res.set('Location', '/feedback' + result._id);
-        res.send(result);
+        });
+      }else {
+        res.status(401).end();
       }
     });
-  } else {
-    res.status(401).end();
-  }
-});
 
-function getAdmin(user,cb){
-  db.collection('users').findOne(new ObjectID(user),function(err,result){
-    if(err){
-      return cb(err);
-    }
-    return cb(null,result);
-  });
-
-}
-
-function getFeedback(cb){
-  db.collection('feedback').find().toArray(function(err,result){
-    if(err){
-      return cb(err);
-    }
-    return cb(null,result);
-  });
-}
-
-app.get('/feedback/:userid', function(req,res) {
-  var fromUser = getUserIdFromToken(req.get('Authorization'));
-  getAdmin(fromUser,function(err,admin){
-    if(admin){
-      getFeedback(function(err,result){
-        if(err){
-          res.status(500).send("A database error occured: " + err);
-        }else{
-          res.status(201);
-          console.log(result);
-          res.send(result);
-        }
-      })
-    } else {
-      res.status(401).end();
-    }})
-  });
 
   // Starts the server on port 3000!
   app.listen(3000, function () {

@@ -5,8 +5,6 @@ import CourseButton from './coursebutton'
 import CourseButtonNextSemester from './nextsemesterbutton'
 
 
-
-
 export default class CourseDetails extends React.Component{
 
   constructor(props){
@@ -21,7 +19,7 @@ export default class CourseDetails extends React.Component{
         "prereqs": [],
         "textbooks": ["Placeholder"]
       },
-      "takenText" : "placeholder"
+      "takenText" : "Placeholder"
     }
   }
 
