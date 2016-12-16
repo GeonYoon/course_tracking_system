@@ -243,45 +243,43 @@ MongoClient.connect(url, function(err, db) {
   }
 
   function postSavedGraph(user, graphName, newIMG, callback) {
-  // Get the current UNIX time.
-  var time = new Date().getTime();
-  // The new status update. The database will assign the ID for us.
-  var newSaved = {
-    "name": graphName,
-    "time": time,
-    "image": newIMG
-  };
-
-  db.collection('savePageItems').insertOne(newSaved, function(err, result) {
-    if (err) {
-      return callback(err);
-    }
-    newSaved._id = result.insertedId;
-
-    db.collection('users').findOne({ _id: user }, function(err, userObject) {
+    // Get the current UNIX time.
+    var time = new Date().getTime();
+    // The new status update. The database will assign the ID for us.
+    var newSaved = {
+      "name": graphName,
+      "time": time,
+      "image": newIMG
+    };
+    db.collection('savePageItems').insertOne(newSaved, function(err, result) {
       if (err) {
         return callback(err);
       }
-      db.collection('savePage').updateOne({ _id: userObject.savedGraphs },
-        {
-          $push: {
-            pages: {
-              $each: [newSaved._id],
-              $position: 0
-            }
-          }
-        },
-        function(err) {
-          if (err) {
-            return callback(err);
-          }
-          callback(null, newSaved);
-        }
-      );
-    });
-  });
-}
+      newSaved._id = result.insertedId;
 
+      db.collection('users').findOne({ _id: user }, function(err, userObject) {
+        if (err) {
+          return callback(err);
+        }
+        db.collection('savePage').updateOne({ _id: userObject.savedGraphs },
+          {
+            $push: {
+              pages: {
+                $each: [newSaved._id],
+                $position: 0
+              }
+            }
+          },
+          function(err) {
+            if (err) {
+              return callback(err);
+            }
+            callback(null, newSaved);
+          }
+        );
+      });
+    });
+  }
 
   function getPageItem(feedItemId, callback) {
     db.collection('savePageItems').findOne({
