@@ -293,7 +293,6 @@ MongoClient.connect(url, function(err, db) {
       callback(null, feedItem);
     });
   }
-
   // Get savePage data
   function getPageData(user,callback){
     db.collection('users').findOne({
@@ -338,15 +337,9 @@ MongoClient.connect(url, function(err, db) {
       });
     });
   }
-
-
-
+  //send a database error
   function sendDatabaseError(res, err) {
-    res.status(500).send("A database error occurred: " + err);
-  }
-
-  /*
-  ** Get the data for a course.
+  /*** Get the data for a course.
   */
   app.get('/courses/:course', function(req, res){
     getCourseData(req.params.course, function(err, courseData) {
@@ -360,7 +353,6 @@ MongoClient.connect(url, function(err, db) {
       }
     });
   })
-
   /*** Get the data for a particular user.*/
   app.get('/user/:userid', function(req, res) {
     var userid = req.params.userid;
@@ -379,7 +371,6 @@ MongoClient.connect(url, function(err, db) {
       res.status(403).end();
     }
   });
-
   // get page data
   app.get('/user/:userid/page',function(req,res) {
     var userid = req.params.userid;
@@ -401,7 +392,7 @@ MongoClient.connect(url, function(err, db) {
       res.status(401).end();
     }
   });
-
+  //get feedback for user
   app.get('/feedback/:userid', function(req,res) {
     var fromUser = getUserIdFromToken(req.get('Authorization'));
     getAdmin(fromUser,function(err,admin){
@@ -467,7 +458,6 @@ MongoClient.connect(url, function(err, db) {
       res.send();
     });
   });
-
 
   // add shown major
   app.put('/user/:userid/majortoshow/:majorid', function(req, res) {
@@ -819,7 +809,6 @@ MongoClient.connect(url, function(err, db) {
         res.status(401).end();
       }
     });
-
 
   // Starts the server on port 3000!
   app.listen(3000, function () {
