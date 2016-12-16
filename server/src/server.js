@@ -13,6 +13,7 @@ var mongo_express_config = require('mongo-express/config.default.js');
 
 // Creates an Express server.
 var app = express();
+
 app.use('/mongo_express', mongo_express(mongo_express_config));
 
 // Support receiving text in HTTP request bodies
@@ -20,10 +21,12 @@ app.use(bodyParser.text());
 
 // Support receiving JSON in HTTP request bodies
 // app.use(bodyParser.json());
+
 app.use(express.static('../client/build'));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
-// Translate JSON Schema Validation failures into error 400s.
+
+/*** Translate JSON Schema Validation failures into error 400s.*/
 app.use(function(err, req, res, next) {
   if (err.name === 'JsonSchemaValidation') {
     // Set a bad request http response status
@@ -168,7 +171,7 @@ MongoClient.connect(url, function(err, db) {
     });
   }
 
-  function getCourseData(course, callback) {``
+  function getCourseData(course, callback) {
     db.collection('courses').findOne({
       _id: new ObjectID(course)
     }, function(err, userData) {
@@ -238,43 +241,44 @@ MongoClient.connect(url, function(err, db) {
   }
 
   function postSavedGraph(user, graphName, newIMG, callback) {
-    // Get the current UNIX time.
-    var time = new Date().getTime();
-    // The new status update. The database will assign the ID for us.
-    var newSaved = {
-      "name": graphName,
-      "time": time,
-      "image": newIMG
-    };
-    db.collection('savePageItems').insertOne(newSaved, function(err, result) {
+  // Get the current UNIX time.
+  var time = new Date().getTime();
+  // The new status update. The database will assign the ID for us.
+  var newSaved = {
+    "name": graphName,
+    "time": time,
+    "image": newIMG
+  };
+
+  db.collection('savePageItems').insertOne(newSaved, function(err, result) {
+    if (err) {
+      return callback(err);
+    }
+    newSaved._id = result.insertedId;
+
+    db.collection('users').findOne({ _id: user }, function(err, userObject) {
       if (err) {
         return callback(err);
       }
-      newSaved._id = result.insertedId;
-
-      db.collection('users').findOne({ _id: user }, function(err, userObject) {
-        if (err) {
-          return callback(err);
-        }
-        db.collection('savePage').updateOne({ _id: userObject.savedGraphs },
-          {
-            $push: {
-              pages: {
-                $each: [newSaved._id],
-                $position: 0
-              }
+      db.collection('savePage').updateOne({ _id: userObject.savedGraphs },
+        {
+          $push: {
+            pages: {
+              $each: [newSaved._id],
+              $position: 0
             }
-          },
-          function(err) {
-            if (err) {
-              return callback(err);
-            }
-            callback(null, newSaved);
           }
-        );
-      });
+        },
+        function(err) {
+          if (err) {
+            return callback(err);
+          }
+          callback(null, newSaved);
+        }
+      );
     });
-  }
+  });
+}
 
   function getPageItem(feedItemId, callback) {
     db.collection('savePageItems').findOne({
@@ -332,8 +336,10 @@ MongoClient.connect(url, function(err, db) {
       });
     });
   }
-  //send a database error
+
   function sendDatabaseError(res, err) {
+    res.status(500).send("A database error occurred: " + err);
+  }
   /*** Get the data for a course.*/
   app.get('/courses/:course', function(req, res){
     getCourseData(req.params.course, function(err, courseData) {
@@ -386,7 +392,7 @@ MongoClient.connect(url, function(err, db) {
       res.status(401).end();
     }
   });
-  //get feedback for user
+
   app.get('/feedback/:userid', function(req,res) {
     var fromUser = getUserIdFromToken(req.get('Authorization'));
     getAdmin(fromUser,function(err,admin){
@@ -451,6 +457,43 @@ MongoClient.connect(url, function(err, db) {
   });
   // add shown major to user
   app.put('/user/:userid/majortoshow/:majorid', function(req, res) {
+    var fromUser = getUserIdFromToken(req.get('Authorization'));
+    var majorId = req.params.majorid;
+    var userId = new ObjectID(req.params.userid);
+    if (fromUser === req.params.userid) {
+      // First, we can update the like counter.
+      db.collection('users').updateOne({ _id: userId },
+        {
+          // Add `userId` to the likeCounter if it is not already
+          // in the array.
+          $addToSet: {
+            shown_majors: new ObjectID(majorId)
+          }
+        }, function(err) {
+          if (err) {
+            return sendDatabaseError(res, err);
+          }
+          // Second, grab the feed item now that we have updated it.
+          db.collection('users').findOne({ _id: userId }, function(err, userItem) {
+            if (err) {
+              return sendDatabaseError(res, err);
+            }
+            // Return a resolved version of the likeCounter
+            resolveMajorObjects(userItem.shown_majors, function(err, majorMap) {
+              if (err) {
+                return sendDatabaseError(res, err);
+              }
+              // Return a resolved version of the likeCounter
+              res.send(userItem.shown_majors.map((userId) => majorMap[userId]));
+            });
+          }
+        );
+      });
+    } else {
+      // 401: Unauthorized.
+      res.status(401).end();
+    }
+  });
   // add shown minor to user
   app.put('/user/:userid/minortoshow/:minorid', function(req, res) {
     var fromUser = getUserIdFromToken(req.get('Authorization'));
@@ -587,7 +630,7 @@ MongoClient.connect(url, function(err, db) {
       res.status(401).end();
     }
   });
-  //delete shown minor from user
+  //delete shown major from user
   app.delete('/user/:userid/minortoshow/:minorid', function(req, res) {
     var fromUser = getUserIdFromToken(req.get('Authorization'));
     var userId = new ObjectID(req.params.userid);
