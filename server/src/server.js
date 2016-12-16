@@ -13,7 +13,6 @@ var mongo_express_config = require('mongo-express/config.default.js');
 
 // Creates an Express server.
 var app = express();
-
 app.use('/mongo_express', mongo_express(mongo_express_config));
 
 // Support receiving text in HTTP request bodies
@@ -21,14 +20,10 @@ app.use(bodyParser.text());
 
 // Support receiving JSON in HTTP request bodies
 // app.use(bodyParser.json());
-
 app.use(express.static('../client/build'));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
-
-/**
-* Translate JSON Schema Validation failures into error 400s.
-*/
+// Translate JSON Schema Validation failures into error 400s.
 app.use(function(err, req, res, next) {
   if (err.name === 'JsonSchemaValidation') {
     // Set a bad request http response status
@@ -339,8 +334,7 @@ MongoClient.connect(url, function(err, db) {
   }
   //send a database error
   function sendDatabaseError(res, err) {
-  /*** Get the data for a course.
-  */
+  /*** Get the data for a course.*/
   app.get('/courses/:course', function(req, res){
     getCourseData(req.params.course, function(err, courseData) {
       if (err) {
@@ -410,7 +404,6 @@ MongoClient.connect(url, function(err, db) {
         res.status(401).end();
       }})
     });
-
   //post feedback
   app.post('/feedback', validate({ body: FeedbackSchema }), function(req, res) {
     var body = req.body;
@@ -429,7 +422,6 @@ MongoClient.connect(url, function(err, db) {
       res.status(401).end();
     }
   });
-
   //post a saved graph
   app.post('/savedgraph', validate({ body: SavedGraphSchema }), function(req, res) {
     var fromUser = getUserIdFromToken(req.get('Authorization'));
@@ -450,7 +442,6 @@ MongoClient.connect(url, function(err, db) {
     }
 
   });
-
   // Reset the database.
   app.post('/resetdb', function(req, res) {
     console.log("Resetting database...");
@@ -458,48 +449,9 @@ MongoClient.connect(url, function(err, db) {
       res.send();
     });
   });
-
-  // add shown major
+  // add shown major to user
   app.put('/user/:userid/majortoshow/:majorid', function(req, res) {
-    var fromUser = getUserIdFromToken(req.get('Authorization'));
-    var majorId = req.params.majorid;
-    var userId = new ObjectID(req.params.userid);
-    if (fromUser === req.params.userid) {
-      // First, we can update the like counter.
-      db.collection('users').updateOne({ _id: userId },
-        {
-          // Add `userId` to the likeCounter if it is not already
-          // in the array.
-          $addToSet: {
-            shown_majors: new ObjectID(majorId)
-          }
-        }, function(err) {
-          if (err) {
-            return sendDatabaseError(res, err);
-          }
-          // Second, grab the feed item now that we have updated it.
-          db.collection('users').findOne({ _id: userId }, function(err, userItem) {
-            if (err) {
-              return sendDatabaseError(res, err);
-            }
-            // Return a resolved version of the likeCounter
-            resolveMajorObjects(userItem.shown_majors, function(err, majorMap) {
-              if (err) {
-                return sendDatabaseError(res, err);
-              }
-              // Return a resolved version of the likeCounter
-              res.send(userItem.shown_majors.map((userId) => majorMap[userId]));
-            });
-          }
-        );
-      });
-    } else {
-      // 401: Unauthorized.
-      res.status(401).end();
-    }
-  });
-
-  // add shown minor
+  // add shown minor to user
   app.put('/user/:userid/minortoshow/:minorid', function(req, res) {
     var fromUser = getUserIdFromToken(req.get('Authorization'));
     var minorId = req.params.minorid;
@@ -538,8 +490,7 @@ MongoClient.connect(url, function(err, db) {
       res.status(401).end();
     }
   });
-
-  //add a course
+  //add a course to user
   app.put('/user/:userid/courses/:courseid', function(req, res){
     var fromUser = getUserIdFromToken(req.get('Authorization'));
     var userId = req.params.userid;
@@ -570,8 +521,7 @@ MongoClient.connect(url, function(err, db) {
       res.status(401).end();
     }
   });
-
-  //add a course next semester
+  //add a course next semester to user
   app.put('/user/:userid/courses/:courseid/nextsem/', function(req, res){
     var fromUser = getUserIdFromToken(req.get('Authorization'));
     var userId = req.params.userid;
@@ -606,8 +556,7 @@ MongoClient.connect(url, function(err, db) {
       res.status(401).end();
     }
   });
-
-  //delete shown major
+  //delete shown major from user
   app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
     var fromUser = getUserIdFromToken(req.get('Authorization'));
     var userId = new ObjectID(req.params.userid);
@@ -638,8 +587,7 @@ MongoClient.connect(url, function(err, db) {
       res.status(401).end();
     }
   });
-
-  //delete shown major
+  //delete shown minor from user
   app.delete('/user/:userid/minortoshow/:minorid', function(req, res) {
     var fromUser = getUserIdFromToken(req.get('Authorization'));
     var userId = new ObjectID(req.params.userid);
@@ -809,7 +757,6 @@ MongoClient.connect(url, function(err, db) {
         res.status(401).end();
       }
     });
-
   // Starts the server on port 3000!
   app.listen(3000, function () {
     console.log('Example app listening on port 3000!');
