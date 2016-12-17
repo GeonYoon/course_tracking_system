@@ -37,7 +37,7 @@ class SavePage extends React.Component {
 class CourseHistory extends React.Component {
   render() {
     return (
-      <CourseHistoryPage />
+      <CourseHistoryPage user={"000000000000000000000001"}/>
     );
   }
 }

@@ -26,9 +26,7 @@ app.use(express.static('../client/build'));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
-/**
-* Translate JSON Schema Validation failures into error 400s.
-*/
+/*** Translate JSON Schema Validation failures into error 400s.*/
 app.use(function(err, req, res, next) {
   if (err.name === 'JsonSchemaValidation') {
     // Set a bad request http response status
@@ -173,7 +171,7 @@ MongoClient.connect(url, function(err, db) {
     });
   }
 
-  function getCourseData(course, callback) {``
+  function getCourseData(course, callback) {
     db.collection('courses').findOne({
       _id: new ObjectID(course)
     }, function(err, userData) {
@@ -282,7 +280,6 @@ MongoClient.connect(url, function(err, db) {
   });
 }
 
-
   function getPageItem(feedItemId, callback) {
     db.collection('savePageItems').findOne({
       _id: feedItemId
@@ -295,7 +292,6 @@ MongoClient.connect(url, function(err, db) {
       callback(null, feedItem);
     });
   }
-
   // Get savePage data
   function getPageData(user,callback){
     db.collection('users').findOne({
@@ -341,15 +337,10 @@ MongoClient.connect(url, function(err, db) {
     });
   }
 
-
-
   function sendDatabaseError(res, err) {
     res.status(500).send("A database error occurred: " + err);
   }
-
-  /*
-  ** Get the data for a course.
-  */
+  /*** Get the data for a course.*/
   app.get('/courses/:course', function(req, res){
     getCourseData(req.params.course, function(err, courseData) {
       if (err) {
@@ -362,7 +353,6 @@ MongoClient.connect(url, function(err, db) {
       }
     });
   })
-
   /*** Get the data for a particular user.*/
   app.get('/user/:userid', function(req, res) {
     var userid = req.params.userid;
@@ -381,7 +371,6 @@ MongoClient.connect(url, function(err, db) {
       res.status(403).end();
     }
   });
-
   // get page data
   app.get('/user/:userid/page',function(req,res) {
     var userid = req.params.userid;
@@ -421,7 +410,6 @@ MongoClient.connect(url, function(err, db) {
         res.status(401).end();
       }})
     });
-
   //post feedback
   app.post('/feedback', validate({ body: FeedbackSchema }), function(req, res) {
     var body = req.body;
@@ -440,7 +428,6 @@ MongoClient.connect(url, function(err, db) {
       res.status(401).end();
     }
   });
-
   //post a saved graph
   app.post('/savedgraph', validate({ body: SavedGraphSchema }), function(req, res) {
     var fromUser = getUserIdFromToken(req.get('Authorization'));
@@ -461,7 +448,6 @@ MongoClient.connect(url, function(err, db) {
     }
 
   });
-
   // Reset the database.
   app.post('/resetdb', function(req, res) {
     console.log("Resetting database...");
@@ -469,9 +455,7 @@ MongoClient.connect(url, function(err, db) {
       res.send();
     });
   });
-
-
-  // add shown major
+  // add shown major to user
   app.put('/user/:userid/majortoshow/:majorid', function(req, res) {
     var fromUser = getUserIdFromToken(req.get('Authorization'));
     var majorId = req.params.majorid;
@@ -510,8 +494,7 @@ MongoClient.connect(url, function(err, db) {
       res.status(401).end();
     }
   });
-
-  // add shown minor
+  // add shown minor to user
   app.put('/user/:userid/minortoshow/:minorid', function(req, res) {
     var fromUser = getUserIdFromToken(req.get('Authorization'));
     var minorId = req.params.minorid;
@@ -550,8 +533,7 @@ MongoClient.connect(url, function(err, db) {
       res.status(401).end();
     }
   });
-
-  //add a course
+  //add a course to user
   app.put('/user/:userid/courses/:courseid', function(req, res){
     var fromUser = getUserIdFromToken(req.get('Authorization'));
     var userId = req.params.userid;
@@ -582,8 +564,7 @@ MongoClient.connect(url, function(err, db) {
       res.status(401).end();
     }
   });
-
-  //add a course next semester
+  //add a course next semester to user
   app.put('/user/:userid/courses/:courseid/nextsem/', function(req, res){
     var fromUser = getUserIdFromToken(req.get('Authorization'));
     var userId = req.params.userid;
@@ -618,8 +599,7 @@ MongoClient.connect(url, function(err, db) {
       res.status(401).end();
     }
   });
-
-  //delete shown major
+  //delete shown major from user
   app.delete('/user/:userid/majortoshow/:majorid', function(req, res) {
     var fromUser = getUserIdFromToken(req.get('Authorization'));
     var userId = new ObjectID(req.params.userid);
@@ -650,8 +630,7 @@ MongoClient.connect(url, function(err, db) {
       res.status(401).end();
     }
   });
-
-  //delete shown major
+  //delete shown major from user
   app.delete('/user/:userid/minortoshow/:minorid', function(req, res) {
     var fromUser = getUserIdFromToken(req.get('Authorization'));
     var userId = new ObjectID(req.params.userid);
@@ -821,8 +800,6 @@ MongoClient.connect(url, function(err, db) {
         res.status(401).end();
       }
     });
-
-
   // Starts the server on port 3000!
   app.listen(3000, function () {
     console.log('Example app listening on port 3000!');

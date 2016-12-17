@@ -7,7 +7,10 @@ export default class CourseHistory extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      "courses" : []
+      "courses" : [],
+      "fullName": "Placeholder",
+      "sId":11111111,
+      "gradDate":"Placeholder"
     }
   }
 
@@ -16,16 +19,18 @@ export default class CourseHistory extends React.Component {
   }
 
   refresh(){
-    getUserData("000000000000000000000001", user =>{
+    getUserData(this.props.user, user =>{
       this.setState({
-        "courses" : user.classesTaken
+        "courses" : user.classesTaken,
+        "fullName": user.fullName,
+        "sId":user.sId,
+        "gradDate":user.gradDate
       })
     });
   }
 
   render() {
     var rows = [];
-
     this.state.courses.map(course=>{
       rows.push(
         <tr key = {course.id}>
@@ -51,6 +56,14 @@ export default class CourseHistory extends React.Component {
                 <tr>
                   <td colSpan="9">
                     <h2 id="tabletitle">Course History</h2>
+                  </td>
+                </tr>
+                <tr>
+                  <td colSpan="2">
+                    Name: {this.state.fullName}
+                  </td>
+                  <td>
+                    ID: {this.state.sId}, Graduation Date: {this.state.gradDate}
                   </td>
                 </tr>
               </thead>
